@@ -7,7 +7,7 @@ name = "genogrove-ask"
 version = "0.1.0"
 description = "Natural-language interface for genogrove — ask plain-English questions over connected genomic intervals, powered by pygenogrove."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 license = "GPL-3.0-or-later"
 authors = [
     { name = "Richard A. Schaefer", email = "richard.schaefer@northwestern.edu" },
@@ -20,6 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -64,9 +65,9 @@ python_files = ["test_*.py"]
 
 [tool.black]
 line-length = 100
-target-version = ["py310", "py311", "py312"]
+target-version = ["py39", "py310", "py311", "py312"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true

@@ -8,20 +8,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.12"]  # exercise the supported floor and a current release
     steps:
       - uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Set up Python
-        run: uv python install 3.12
-
-      # NOTE: `uv sync` resolves pygenogrove from git, which builds the C++ core.
-      # Until that build is wired up in CI, install only this package's own deps
-      # and run the skeleton tests. Expand once pygenogrove builds here.
-      - name: Install (skeleton only)
-        run: uv pip install --system pytest
-
-      - name: Run tests
-        run: PYTHONPATH=src pytest -q
+      # NOTE: a full `uv sync` resolves pygenogrove from git, which builds the C++
+      # core. Until that build is wired up in CI, run the skeleton tests in an
+      # ephemeral env: `--no-project` skips project/pygenogrove resolution and
+      # `--with pytest` adds the runner. Expand to `uv sync` once pygenogrove
+      # builds here.
+      - name: Run skeleton tests
+        run: PYTHONPATH=src uv run --no-project --with pytest --python ${{ matrix.python }} pytest -q
