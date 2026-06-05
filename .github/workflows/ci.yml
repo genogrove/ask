@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      # NOTE: `uv sync` resolves pygenogrove from git, which builds the C++ core.
+      # Until that build is wired up in CI, install only this package's own deps
+      # and run the skeleton tests. Expand once pygenogrove builds here.
+      - name: Install (skeleton only)
+        run: uv pip install --system pytest
+
+      - name: Run tests
+        run: PYTHONPATH=src pytest -q
