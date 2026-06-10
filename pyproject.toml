@@ -30,7 +30,9 @@ classifiers = [
 # genogrove-ask depends on pygenogrove; pygenogrove never references this package.
 dependencies = [
     "anthropic>=0.92",
-    "pygenogrove",
+    # Pinned for Level 2 reproducibility; the exact build (commit) is pinned in
+    # [tool.uv.sources] below and mirrored in genogrove_ask.registry.
+    "pygenogrove==0.1.0",
 ]
 
 [project.optional-dependencies]
@@ -52,9 +54,10 @@ Repository = "https://github.com/genogrove/ask"
 Issues = "https://github.com/genogrove/ask/issues"
 
 # pygenogrove is not yet published to PyPI; resolve it from its GitHub repo.
-# Pinning a tag/commit here is part of the Level 2 reproducibility commitment.
+# Pinning an immutable commit here is part of the Level 2 reproducibility commitment
+# (a tag can be moved; a commit SHA cannot). rev below is tag v0.1.0.
 [tool.uv.sources]
-pygenogrove = { git = "https://github.com/genogrove/pygenogrove" }
+pygenogrove = { git = "https://github.com/genogrove/pygenogrove", rev = "70d77ea039cbb4bf16544a4edfd86a689a8720fb" }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/genogrove_ask"]
