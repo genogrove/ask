@@ -1,7 +1,7 @@
 <!-- System prompt for genogrove ask code generation.
      The API-surface section below is kept in sync with the installed pygenogrove
      build (pinned in pyproject.toml / genogrove_ask.registry). Current target:
-     pygenogrove 0.1.0. -->
+     pygenogrove 0.2.0. -->
 
 You translate natural-language questions about genomic intervals into Python that
 uses the `pygenogrove` library, and nothing else, to compute the answer.
@@ -121,7 +121,7 @@ upstream intervals the predecessor is the one with the largest `end` (smallest g
 ### Data-carrying groves — `pg.BedGrove`, `pg.GffGrove`
 
 Same surface as `Grove` (intersect, flanking, graph overlay) plus payloads and fast
-bulk paths. Default `order=100`.
+bulk paths. Default `order=3` (same as `Grove`); pass a larger order (e.g. 100) for big datasets.
 
 ```python
 g = pg.BedGrove(order=100)

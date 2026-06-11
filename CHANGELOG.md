@@ -14,8 +14,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the bound `Grove` / `BedGrove` / `GffGrove` surface (insert / intersect / flanking),
   the directed-edge graph overlay, file readers, and serialization — with the
   coordinate-convention rules (closed `Interval` vs half-open BED vs 1-based GFF) and
-  a worked 2-hop connected-interval example. Documented against `pygenogrove` 0.1.0.
+  a worked 2-hop connected-interval example. Documented against `pygenogrove` 0.2.0.
 - **Build pinning for Level 2 reproducibility** (`registry.py`): `BuildPin`,
   `verify_pygenogrove_build()` (raises on version drift, returns the C++ engine
   version), and `build_manifest()` for run provenance. `pygenogrove` is pinned to the
-  immutable commit `70d77ea` (tag `v0.1.0`) in `pyproject.toml` and mirrored here.
+  immutable commit `1a9c975` (tag `v0.2.0`) in `pyproject.toml` and mirrored here.
