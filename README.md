@@ -94,7 +94,9 @@ different release cadence and audience.
 - [ ] `llm.py` — Anthropic codegen loop (adaptive thinking, structured tool surface)
 - [ ] `sandbox.py` — restricted execution of generated Python
 - [ ] `registry.py` — curated dataset + pinned-build registry
-- [ ] `prompts/system.md` — flesh out the `pygenogrove` API surface and codegen rules
+- [x] `prompts/system.md` — flesh out the `pygenogrove` API surface and codegen rules
+      (done for the pinned v0.2.0 build; the dataset-gated "Available resources" block
+      lands with the registry item above)
 - [ ] End-to-end hero query (≥ 2-hop connected-interval question) for the paper demo
 
 ## License
