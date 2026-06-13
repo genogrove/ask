@@ -25,3 +25,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   check fails CI on drift instead of relying on manual review. Parses `pyproject.toml`
   with regexes (no `tomllib`) so it runs on the py3.9 floor
   ([#2](https://github.com/genogrove/ask/pull/2)).
+- **Out-of-process sandbox** (`sandbox.py`): runs untrusted model-generated Python in an
+  isolated subprocess with parent/OS-enforced hard guarantees (stripped env, `setrlimit`
+  CPU/memory/no-write/fd caps, whole-session wall-clock kill, byte-capped output) plus
+  in-child defense-in-depth (import allowlist with the network/exec primitives scrubbed,
+  read-only `open` restricted to registry data roots). The hard boundary is the parent/OS
+  layer; an OS-level backend (seccomp/namespaces) is the documented next step for
+  adversarial robustness. Covered by 22 isolation tests
+  ([#3](https://github.com/genogrove/ask/pull/3)).
