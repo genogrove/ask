@@ -33,3 +33,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   layer; an OS-level backend (seccomp/namespaces) is the documented next step for
   adversarial robustness. Covered by 22 isolation tests
   ([#3](https://github.com/genogrove/ask/pull/3)).
+
+### Changed
+- **Upgraded `pygenogrove` to v0.4.0** (the universal JSON Grove redesign): re-pinned to the
+  immutable commit `d6c75b9` (tag `v0.4.0`) across `pyproject.toml` + `registry.PYGENOGROVE`,
+  and rewrote the `prompts/system.md` codegen contract for the new surface — `GenomicCoordinate`
+  is the one key type (`Interval` removed; strand-aware, `'*'` wildcard query), `Grove` is the
+  universal `grove<genomic_coordinate, json>` storing arbitrary JSON payloads, plus strand-aware
+  `intersect`/`flanking` (predicate overload), `remove_key`/`compact`/counts, and typed
+  `BedGrove`/`GffGrove` for C++ interop ([#4](https://github.com/genogrove/ask/pull/4)).

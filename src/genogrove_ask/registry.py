@@ -40,9 +40,9 @@ class BuildPin:
 # Keep in lockstep with [tool.uv.sources] `rev` in pyproject.toml.
 PYGENOGROVE = BuildPin(
     name="pygenogrove",
-    version="0.2.0",
-    git_rev="1a9c97559a269bb53cf2a50083a27a4867287230",
-    git_tag="v0.2.0",
+    version="0.4.0",
+    git_rev="d6c75b918aa939ef1b8ab91b492ad3e081f7d826",
+    git_tag="v0.4.0",
 )
 
 
