@@ -67,21 +67,12 @@ def test_network_has_no_reachable_path() -> None:
     assert "blocked" in res.stderr.lower()
 
 
-def test_exotic_posix_reference_is_closed() -> None:
-    # The import machinery preloads `posix` and holds an internal reference to
-    # it; verify no module in sys.modules still exposes a posix-like `_os`.
-    code = (
-        "import sys\n"
-        "hit = None\n"
-        "for name, mod in list(sys.modules.items()):\n"
-        "    o = getattr(mod, '_os', None)\n"
-        "    if o is not None and getattr(o, 'system', None) is not None:\n"
-        "        hit = name\n"
-        "print('FOUND:' + hit if hit else 'NONE')\n"
-    )
-    res = run(code)
-    assert res.returncode == 0
-    assert res.stdout.strip() == "NONE", res.stdout
+def test_dunder_import_escape_blocked() -> None:
+    # The builtin __import__ goes through the same meta_path guard, so the
+    # common `__import__('os')` escape is refused too (not just the statement).
+    res = run("m = __import__('os')\nprint(m.getcwd())")
+    assert res.returncode != 0
+    assert "blocked" in res.stderr.lower()
 
 
 def test_allowlist_excludes_dangerous_modules() -> None:
@@ -114,6 +105,19 @@ def test_read_inside_registry_root_allowed(tmp_path: Path) -> None:
     )
     assert res.returncode == 0, res.stderr
     assert res.stdout.strip() == "chr1\t100\t200"
+
+
+def test_read_with_explicit_codec_works(tmp_path: Path) -> None:
+    # Regression: text-mode open lazily imports `encodings.<name>`; the guard
+    # must allow the codec machinery or this fails (e.g. ascii on a 3.9 runner).
+    data = (tmp_path / "peaks.txt").resolve()
+    data.write_text("chr1\n", encoding="utf-8")
+    res = run(
+        f"print(open({str(data)!r}, encoding='ascii').read().strip())",
+        data_paths={"peaks": data},
+    )
+    assert res.returncode == 0, res.stderr
+    assert res.stdout.strip() == "chr1"
 
 
 def test_read_sibling_outside_root_denied(tmp_path: Path) -> None:

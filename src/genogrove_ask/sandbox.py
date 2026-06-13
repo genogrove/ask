@@ -31,23 +31,28 @@ In-child guards (strong against generated code; defense-in-depth)
 A bootstrap prelude prepended to the code:
 
 * installs an **import allowlist** (``pygenogrove`` + a small compute-only set),
-* **scrubs** the dangerous primitives that the interpreter preloads (``posix``,
-  ``marshal``) and **nulls** the internal ``_frozen_importlib_external._os``
-  reference, which together close both the straightforward (``import os`` /
-  ``socket`` / ``subprocess``) and the known-internal (``posix.system`` via the
-  import machinery) escape paths — so **network has no reachable path**, and
+* **scrubs** the dangerous primitives the interpreter preloads (``posix``,
+  ``marshal``, and the network/exec extension modules) from ``sys.modules`` so a
+  later ``import os`` / ``socket`` / ``subprocess`` is refused at ``find_spec``,
+  before any loader runs — so **network has no path through the import system**
+  (no ``socket``/``_socket``/``ctypes`` can be imported), and
 * replaces ``open`` with a **read-only** variant restricted to registry-resolved
   data roots.
 
 Residual risk
 -------------
-The in-child guards run in the same interpreter as the untrusted code, so a
-*determined* adversary with arbitrary object-graph gymnastics is out of scope for
-them; the parent/OS layer (env, rlimits, session-kill, output cap) is the hard
-boundary. True isolation against an adversary needs an OS-level backend
-(seccomp-bpf / network + mount namespaces / a container / an unprivileged user in
-a jail); that is the documented next step and the architecture here keeps that
-backend pluggable (it would wrap the same ``subprocess`` invocation).
+The in-child guards run in the same interpreter as the untrusted code, so they
+are *not* adversary-proof: code that removes the guard from ``sys.meta_path`` and
+imports the built-in ``posix``, or reaches the import machinery's private ``os``
+reference, can call ``posix.system`` and from there shell out (which is also a
+network path). That is out of scope for the in-child layer by design — the
+**parent/OS layer** (stripped env, rlimits, ``RLIMIT_FSIZE=0``, session-kill,
+output cap) is the hard boundary, and it holds regardless. True isolation against
+a hostile child needs an OS-level backend (seccomp-bpf blocking ``execve`` /
+``socket`` / network + mount namespaces / a container / an unprivileged jail);
+that is the documented next step, and the architecture keeps it pluggable (it
+would wrap the same ``subprocess`` invocation). The threat model the in-child
+layer is sized to is LLM-generated code, not a human crafting escapes.
 """
 
 from __future__ import annotations
@@ -128,26 +133,30 @@ for _m in _ALLOW:
         pass
 
 # 2) Scrub the dangerous primitives (preloaded, or pulled in while warming a
-#    trusted module), then null the internal os reference the import machinery
-#    holds. Popping a name forces any later `import` of it back through the
-#    allowlist guard below, which refuses it. Together these remove every
-#    straightforward and known-internal path to posix/os/socket.
+#    trusted module). Popping a name forces any later `import` of it back through
+#    the allowlist guard below, which refuses it — so `import os` / `socket` /
+#    `subprocess` all fail at the find_spec stage, before any loader runs.
+#    (The import machinery keeps its own private os reference for file-based
+#    loads; reaching posix.system through it is the documented residual risk —
+#    see the module docstring — and is closed only by the OS-level backend.)
 for _m in (
     "posix", "marshal", "os", "socket", "_socket",
     "subprocess", "_posixsubprocess", "ctypes", "_ctypes",
 ):
     _sys.modules.pop(_m, None)
-try:
-    import _frozen_importlib_external as _ext
-    _ext._os = None
-except Exception:
-    pass
 
 # 3) Import allowlist: anything already cached (interpreter internals + the
 #    pre-warmed allowlist) is fine; any *new* top-level import must be allowed.
+#    _INFRA is the codec/text machinery the interpreter loads lazily — e.g.
+#    text-mode open() pulls in `encodings.<name>` for whatever the locale
+#    resolves to (ascii on a bare 3.9 runner). These are pure data transforms
+#    (no os/network/subprocess), so allowing them does not widen the boundary.
+_INFRA = {"encodings", "codecs", "_codecs"}
+
 class _Guard:
     def find_spec(self, name, path=None, target=None):
-        if name in _sys.modules or name.split(".")[0] in _ALLOW:
+        top = name.split(".")[0]
+        if name in _sys.modules or top in _ALLOW or top in _INFRA:
             return None
         raise ImportError("import %r is blocked in the sandbox" % name)
 
@@ -212,6 +221,10 @@ def _child_env() -> dict[str, str]:
         # Hardening flags for the child interpreter.
         "PYTHONDONTWRITEBYTECODE": "1",
         "PYTHONNOUSERSITE": "1",
+        # Force deterministic UTF-8 text I/O regardless of the host locale (a
+        # bare runner can resolve to ascii, which would otherwise need a codec
+        # the import guard hasn't pre-loaded). Also aids reproducibility.
+        "PYTHONUTF8": "1",
     }
     return env
 
