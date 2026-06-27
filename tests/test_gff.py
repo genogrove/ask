@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""GFF -> GffGrove load path. Runs only where pygenogrove is installed (CI);
-skipped in the bare skeleton env."""
+"""GFF -> universal Grove load path. Runs only where pygenogrove is installed
+(CI); skipped in the bare skeleton env."""
 
 from __future__ import annotations
 
@@ -51,3 +51,32 @@ def test_region_filter(tmp_path) -> None:
     assert load_gff(p, region=("chr1", 1400, 1600)).size() == 1  # overlaps the gene
     assert load_gff(p, region=("chr1", 2500, 3000)).size() == 0  # window past every chr1 feature
     assert load_gff(p, region=("chr2", 999, 1999)).size() == 0   # right window, wrong chromosome
+
+
+HIER = (
+    "##gff-version 3\n"
+    "chr1\tHAVANA\tgene\t1000\t3000\t.\t+\t.\tID=g1;gene_name=AAA;gene_type=protein_coding\n"
+    "chr1\tHAVANA\ttranscript\t1000\t3000\t.\t+\t.\tID=t1;Parent=g1\n"
+    "chr1\tHAVANA\texon\t1000\t1100\t.\t+\t.\tID=e1;Parent=t1\n"
+    "chr1\tHAVANA\texon\t2900\t3000\t.\t+\t.\tID=e2;Parent=t1\n"
+)
+
+
+def test_hierarchy_edges(tmp_path) -> None:
+    p = tmp_path / "hier.gff3"
+    p.write_text(HIER)
+    g = load_gff(p)  # all feature types, so the hierarchy is intact
+
+    gene = next(
+        k for k in g.intersect(pg.GenomicCoordinate("*", 1500, 1500), "chr1")
+        if k.data["type"] == "gene"
+    )
+    assert gene.data["name"] == "AAA"
+    assert gene.data["biotype"] == "protein_coding"
+
+    txs = list(g.get_neighbors(gene))  # gene -> transcript
+    assert [t.data["type"] for t in txs] == ["transcript"]
+    assert g.get_edges(gene)[0] == {"rel": "contains"}  # labelled containment edge
+
+    exons = list(g.get_neighbors(txs[0]))  # transcript -> exons
+    assert sorted(x.data["id"] for x in exons) == ["e1", "e2"]
