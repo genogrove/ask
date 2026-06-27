@@ -87,6 +87,40 @@ def test_hierarchy_edges(tmp_path) -> None:
     assert [n.data["id"] for n in g.get_neighbors(entry[0])] == ["e2"]
     assert g.get_edges(entry[0])[0] == {"rel": "next"}
 
+    # no CDS in this fixture -> exons are fully non-coding, transcript span is None
+    assert entry[0].data["cds"] is None
+    assert txs[0].data["cds_start"] is None
+
+
+CODING = (
+    "##gff-version 3\n"
+    "chr1\tHAVANA\tgene\t1000\t3000\t.\t+\t.\tID=g1;gene_name=AAA;gene_type=protein_coding\n"
+    "chr1\tHAVANA\ttranscript\t1000\t3000\t.\t+\t.\tID=t1;Parent=g1\n"
+    "chr1\tHAVANA\texon\t1000\t1200\t.\t+\t.\tID=e1;Parent=t1\n"
+    "chr1\tHAVANA\texon\t2800\t3000\t.\t+\t.\tID=e2;Parent=t1\n"
+    "chr1\tHAVANA\tCDS\t1100\t1200\t.\t+\t0\tID=c1;Parent=t1\n"
+    "chr1\tHAVANA\tCDS\t2800\t2900\t.\t+\t2\tID=c2;Parent=t1\n"
+    "chr1\tHAVANA\tfive_prime_UTR\t1000\t1099\t.\t+\t.\tID=u1;Parent=t1\n"
+)
+
+
+def test_cds_folded_into_exons(tmp_path) -> None:
+    p = tmp_path / "coding.gff3"
+    p.write_text(CODING)
+    g = load_gff(p)
+
+    everything = list(g.intersect(pg.GenomicCoordinate("*", 0, 5000), "chr1"))
+    # CDS and UTR are folded/derived, never inserted as keys
+    assert {k.data["type"] for k in everything} == {"gene", "transcript", "exon"}
+
+    tx = next(k for k in everything if k.data["type"] == "transcript")
+    assert (tx.data["cds_start"], tx.data["cds_end"]) == (1099, 2899)  # CDS span, 0-based closed
+
+    e1 = next(k for k in everything if k.data["id"] == "e1")  # exon 999..1199, coding from 1099
+    assert e1.data["cds"] == [1099, 1199]                     # 999..1098 is 5' UTR (derived)
+    e2 = next(k for k in everything if k.data["id"] == "e2")  # exon 2799..2999, coding to 2899
+    assert e2.data["cds"] == [2799, 2899]                     # 2900..2999 is 3' UTR (derived)
+
 
 MINUS = (
     "##gff-version 3\n"
