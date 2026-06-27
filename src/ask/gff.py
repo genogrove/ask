@@ -15,8 +15,11 @@ entry-deriving insert uses internally.
 
 GFF3's gene -> transcript -> exon/CDS hierarchy (column-9 ``ID`` / ``Parent``) is
 reconstructed as **directed containment edges** (parent -> child), labelled
-``{"rel": "contains"}`` so they stay distinguishable from other edge kinds added
-later. Walk down with ``get_neighbors``.
+``{"rel": "contains"}``. On top of that, each transcript's exons are chained in
+5'->3' (strand-aware) order with ``{"rel": "next"}`` edges — the splice path, from
+which junctions and introns (the gaps) can be derived. The two edge labels keep
+containment and splice-order distinguishable from each other and from regulatory
+edges added later. Walk both with ``get_neighbors``.
 """
 
 from __future__ import annotations
@@ -82,9 +85,22 @@ def load_gff(
         if parent is not None:
             pending.append((key, parent.split(",")))  # GFF3 allows multiple Parents
     # Resolve edges once every key exists — GFF3 doesn't guarantee parent-before-child.
+    children: dict[str, list] = {}  # parent_id -> child keys, for the splice chain below
     for child_key, parent_ids in pending:
         for pid in parent_ids:
             parent_key = by_id.get(pid)
             if parent_key is not None:  # skip Parents filtered out or absent (dangling edge)
                 g.add_edge(parent_key, child_key, {"rel": "contains"})
+            children.setdefault(pid, []).append(child_key)
+
+    # Splice chain: link each transcript's exons in 5'->3' order ('+' ascending,
+    # '-' descending). Only exons — chaining same-type siblings generally would
+    # wrongly link a gene's alternative transcripts into a sequence.
+    for kids in children.values():
+        exons = [k for k in kids if k.data["type"] == "exon"]
+        if len(exons) < 2:
+            continue
+        exons.sort(key=lambda k: k.value.start, reverse=(exons[0].value.strand == "-"))
+        for a, b in zip(exons, exons[1:]):
+            g.add_edge(a, b, {"rel": "next"})
     return g

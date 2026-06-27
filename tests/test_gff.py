@@ -78,5 +78,31 @@ def test_hierarchy_edges(tmp_path) -> None:
     assert [t.data["type"] for t in txs] == ["transcript"]
     assert g.get_edges(gene)[0] == {"rel": "contains"}  # labelled containment edge
 
-    exons = list(g.get_neighbors(txs[0]))  # transcript -> exons
+    exons = list(g.get_neighbors(txs[0]))  # transcript -> exons (containment)
     assert sorted(x.data["id"] for x in exons) == ["e1", "e2"]
+
+    # splice chain: '+' strand, ascending order e1 -> e2
+    e1 = next(x for x in exons if x.data["id"] == "e1")
+    assert [n.data["id"] for n in g.get_neighbors(e1)] == ["e2"]
+    assert g.get_edges(e1)[0] == {"rel": "next"}
+
+
+MINUS = (
+    "##gff-version 3\n"
+    "chr3\tHAVANA\tgene\t100\t400\t.\t-\t.\tID=mg\n"
+    "chr3\tHAVANA\ttranscript\t100\t400\t.\t-\t.\tID=mt;Parent=mg\n"
+    "chr3\tHAVANA\texon\t100\t200\t.\t-\t.\tID=lo;Parent=mt\n"
+    "chr3\tHAVANA\texon\t300\t400\t.\t-\t.\tID=hi;Parent=mt\n"
+)
+
+
+def test_splice_chain_is_strand_aware(tmp_path) -> None:
+    p = tmp_path / "minus.gff3"
+    p.write_text(MINUS)
+    g = load_gff(p)
+    # 5'->3' on the '-' strand runs high coordinate -> low: hi -> lo.
+    hi = next(
+        k for k in g.intersect(pg.GenomicCoordinate("*", 349, 349), "chr3")
+        if k.data["id"] == "hi"
+    )
+    assert [n.data["id"] for n in g.get_neighbors(hi)] == ["lo"]
