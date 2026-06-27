@@ -13,13 +13,15 @@ grove takes an explicit ``GenomicCoordinate``, so we do the GFF 1-based-inclusiv
 -> 0-based-closed conversion here ([start-1, end-1]) — the exact rule pygenogrove's
 entry-deriving insert uses internally.
 
-GFF3's gene -> transcript -> exon/CDS hierarchy (column-9 ``ID`` / ``Parent``) is
-reconstructed as **directed containment edges** (parent -> child), labelled
-``{"rel": "contains"}``. On top of that, each transcript's exons are chained in
-5'->3' (strand-aware) order with ``{"rel": "next"}`` edges — the splice path, from
-which junctions and introns (the gaps) can be derived. The two edge labels keep
-containment and splice-order distinguishable from each other and from regulatory
-edges added later. Walk both with ``get_neighbors``.
+GFF3's gene -> transcript -> exon hierarchy (column-9 ``ID`` / ``Parent``) is
+reconstructed as **directed edges**. Non-exon containment is parent -> child,
+labelled ``{"rel": "contains"}`` (gene -> transcript, transcript -> CDS/UTR). A
+transcript's exons are chained 5'->3' (strand-aware) with ``{"rel": "next"}`` —
+the splice path, from which junctions and introns (the gaps) derive — and the
+transcript's single ``{"rel": "contains"}`` edge points at the **first (5') exon**:
+enough to reach the isoform, then walk ``{"rel": "next"}`` for the rest. The two
+labels keep containment, splice-order, and later regulatory edges distinguishable.
+Walk all with ``get_neighbors``.
 """
 
 from __future__ import annotations
@@ -41,8 +43,9 @@ def load_gff(
     Each feature becomes a key with a JSON payload
     ``{"type", "id", "name", "biotype"}`` (``id`` = column-9 ``ID``, ``name`` =
     ``gene_name``, ``biotype`` = ``gene_type``; ``None`` when absent). The
-    GFF3 ``ID``/``Parent`` hierarchy becomes directed ``{"rel": "contains"}``
-    edges, parent -> child.
+    GFF3 ``ID``/``Parent`` hierarchy becomes directed edges: ``{"rel": "contains"}``
+    for non-exon parent -> child and transcript -> first exon, and ``{"rel":
+    "next"}`` chaining a transcript's exons 5'->3' (see the module docstring).
 
     Loads only the slice you ask for — GENCODE has millions of features, so
     filter (``None`` = no filter on that axis; avoid all-None on full GENCODE):
@@ -85,22 +88,29 @@ def load_gff(
         if parent is not None:
             pending.append((key, parent.split(",")))  # GFF3 allows multiple Parents
     # Resolve edges once every key exists — GFF3 doesn't guarantee parent-before-child.
-    children: dict[str, list] = {}  # parent_id -> child keys, for the splice chain below
+    exons_by_parent: dict[str, list] = {}  # transcript id -> its exon keys
     for child_key, parent_ids in pending:
+        is_exon = child_key.data["type"] == "exon"
         for pid in parent_ids:
+            if is_exon:
+                # Deferred: reached via transcript -> first exon + the splice chain
+                # below, not a containment edge to every exon.
+                exons_by_parent.setdefault(pid, []).append(child_key)
+                continue
             parent_key = by_id.get(pid)
             if parent_key is not None:  # skip Parents filtered out or absent (dangling edge)
                 g.add_edge(parent_key, child_key, {"rel": "contains"})
-            children.setdefault(pid, []).append(child_key)
 
-    # Splice chain: link each transcript's exons in 5'->3' order ('+' ascending,
-    # '-' descending). Only exons — chaining same-type siblings generally would
-    # wrongly link a gene's alternative transcripts into a sequence.
-    for kids in children.values():
-        exons = [k for k in kids if k.data["type"] == "exon"]
-        if len(exons) < 2:
-            continue
+    # Splice chain: order each transcript's exons 5'->3' ('+' ascending, '-'
+    # descending), link the transcript to the FIRST exon (enough to reach the
+    # isoform — walk {"rel": "next"} for the rest), then chain them. Only exons
+    # are chained; chaining same-type siblings generally would wrongly sequence a
+    # gene's alternative transcripts.
+    for pid, exons in exons_by_parent.items():
         exons.sort(key=lambda k: k.value.start, reverse=(exons[0].value.strand == "-"))
+        parent_key = by_id.get(pid)
+        if parent_key is not None:
+            g.add_edge(parent_key, exons[0], {"rel": "contains"})
         for a, b in zip(exons, exons[1:]):
             g.add_edge(a, b, {"rel": "next"})
     return g

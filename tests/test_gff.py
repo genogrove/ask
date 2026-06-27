@@ -78,13 +78,14 @@ def test_hierarchy_edges(tmp_path) -> None:
     assert [t.data["type"] for t in txs] == ["transcript"]
     assert g.get_edges(gene)[0] == {"rel": "contains"}  # labelled containment edge
 
-    exons = list(g.get_neighbors(txs[0]))  # transcript -> exons (containment)
-    assert sorted(x.data["id"] for x in exons) == ["e1", "e2"]
+    # transcript -> first (5') exon only; the rest hang off the splice chain
+    entry = list(g.get_neighbors(txs[0]))
+    assert [x.data["id"] for x in entry] == ["e1"]
+    assert g.get_edges(txs[0])[0] == {"rel": "contains"}
 
     # splice chain: '+' strand, ascending order e1 -> e2
-    e1 = next(x for x in exons if x.data["id"] == "e1")
-    assert [n.data["id"] for n in g.get_neighbors(e1)] == ["e2"]
-    assert g.get_edges(e1)[0] == {"rel": "next"}
+    assert [n.data["id"] for n in g.get_neighbors(entry[0])] == ["e2"]
+    assert g.get_edges(entry[0])[0] == {"rel": "next"}
 
 
 MINUS = (
