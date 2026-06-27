@@ -44,3 +44,10 @@ def test_intersect_finds_overlapping_gene(tmp_path) -> None:
 def test_seqid_filter(tmp_path) -> None:
     genes = load_gff(_write(tmp_path), types={"gene"}, seqids={"chr2"})
     assert genes.size() == 1
+
+
+def test_region_filter(tmp_path) -> None:
+    p = _write(tmp_path)  # chr1 gene 1-based [1000,2000] -> 0-based closed [999,1999]
+    assert load_gff(p, region=("chr1", 1400, 1600)).size() == 1  # overlaps the gene
+    assert load_gff(p, region=("chr1", 2500, 3000)).size() == 0  # window past every chr1 feature
+    assert load_gff(p, region=("chr2", 999, 1999)).size() == 0   # right window, wrong chromosome
