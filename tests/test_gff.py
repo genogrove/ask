@@ -33,7 +33,10 @@ def test_type_filter_keeps_only_genes(tmp_path) -> None:
 def test_intersect_finds_overlapping_gene(tmp_path) -> None:
     genes = load_gff(_write(tmp_path), types={"gene"})
     inside = pg.GenomicCoordinate("*", 1400, 1600)  # within the chr1 gene
-    assert len(list(genes.intersect(inside, "chr1"))) == 1
+    hits = list(genes.intersect(inside, "chr1"))
+    assert len(hits) == 1
+    assert hits[0].data["type"] == "gene"  # JSON payload on the universal Grove
+    assert hits[0].data["id"] == "ENSG1"
     outside = pg.GenomicCoordinate("*", 3000, 3100)  # past the chr1 gene
     assert len(list(genes.intersect(outside, "chr1"))) == 0
 
