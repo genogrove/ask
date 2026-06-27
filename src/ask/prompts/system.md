@@ -199,16 +199,31 @@ e = pg.GffEntry(seqid: str, start: int, end: int, type: str)   # 1-based inclusi
 Single-pass iterators; auto-detect plain / gzip / BGZF. (Only BED and GFF/GTF are
 supported in this build — there is no VCF/BAM/FASTA reader yet.)
 
+**Prefer loading into the universal `pg.Grove`** (JSON payloads) so one grove can mix
+data types and carry labelled edges. It takes an explicit `GenomicCoordinate`, so build
+the key and convert the reader's native coordinates to **0-based closed** yourself:
+
 ```python
+g = pg.Grove(order=100)
+
 for e in pg.BedReader(path: str, skip_invalid_lines=False):
-    g.insert(e.chrom, e)                                  # entry-deriving (preferred)
+    # BED 0-based half-open [start, end) -> 0-based closed [start, end-1].
+    coord = pg.GenomicCoordinate(e.strand or ".", e.start, e.end - 1)
+    g.insert(e.chrom, coord, {"name": e.name})
 
 for e in pg.GffReader(path: str, skip_invalid_lines=False, validate_gtf=False):
-    g.insert(e.seqid, e)        # entry-deriving handles the 1-based -> closed conversion + strand
+    # GFF 1-based inclusive [start, end] -> 0-based closed [start-1, end-1].
+    coord = pg.GenomicCoordinate(e.strand, e.start - 1, e.end - 1)
+    g.insert(e.seqid, coord, {"type": e.type, "id": e.get_attribute("ID"), "name": e.get_gene_name()})
 ```
 
 By default an invalid line raises; `skip_invalid_lines=True` skips it. `validate_gtf=True`
 rejects GTF records missing a mandatory `gene_id`.
+
+The typed `pg.BedGrove` / `pg.GffGrove` instead accept an **entry-deriving** insert that
+does the conversion for you — `g.insert(e.chrom, e)` / `g.insert(e.seqid, e)` — but they
+store typed records, not JSON, and keep void (unlabelled) edges. Use them only for pure
+BED/GFF interop, not when mixing data types or attaching labelled edges.
 
 ### Serialization
 
