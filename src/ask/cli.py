@@ -2,8 +2,8 @@
 """Command-line entry point for genogrove ask.
 
 This is a deliberately thin wrapper: it parses the question and options, then
-orchestrates the three stages — generate Python (:mod:`genogrove_ask.llm`),
-execute it under restrictions (:mod:`genogrove_ask.sandbox`), and print the
+orchestrates the three stages — generate Python (:mod:`ask.llm`),
+execute it under restrictions (:mod:`ask.sandbox`), and print the
 result. The orchestration itself is not implemented yet (see Roadmap in README).
 """
 
@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from genogrove_ask import __version__
+from ask import __version__
 
 # Default Anthropic model for code generation. Opus is the most capable tier and
 # the connected-interval reasoning here is the paper's headline contribution, so

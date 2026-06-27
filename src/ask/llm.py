@@ -3,7 +3,7 @@
 
 Given a natural-language question, ask Claude to emit Python that drives
 ``pygenogrove`` to compute the answer. The model is given the ``pygenogrove`` API
-surface and the curated resource context (see :mod:`genogrove_ask.resources`) via
+surface and the curated resource context (see :mod:`ask.resources`) via
 the system prompt in ``prompts/system.md``.
 
 Implementation notes for when this is built out:
@@ -16,7 +16,7 @@ Implementation notes for when this is built out:
 * Constrain the output to runnable Python — structured outputs
   (``output_config={"format": ...}``) or a fenced-code convention, then strip.
 * The generated code is untrusted: it must only ever run through
-  :mod:`genogrove_ask.sandbox`, never ``exec``'d directly here.
+  :mod:`ask.sandbox`, never ``exec``'d directly here.
 """
 
 from __future__ import annotations

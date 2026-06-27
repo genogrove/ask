@@ -9,8 +9,8 @@ import hashlib
 
 import pytest
 
-from genogrove_ask import resources
-from genogrove_ask.resources import Resource
+from ask import resources
+from ask.resources import Resource
 
 
 def _catalog_entry(monkeypatch, tmp_path, name, payload, sha256):
