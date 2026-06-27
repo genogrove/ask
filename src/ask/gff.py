@@ -14,14 +14,17 @@ grove takes an explicit ``GenomicCoordinate``, so we do the GFF 1-based-inclusiv
 entry-deriving insert uses internally.
 
 GFF3's gene -> transcript -> exon hierarchy (column-9 ``ID`` / ``Parent``) is
-reconstructed as **directed edges**. Non-exon containment is parent -> child,
-labelled ``{"rel": "contains"}`` (gene -> transcript, transcript -> CDS/UTR). A
-transcript's exons are chained 5'->3' (strand-aware) with ``{"rel": "next"}`` —
-the splice path, from which junctions and introns (the gaps) derive — and the
-transcript's single ``{"rel": "contains"}`` edge points at the **first (5') exon**:
-enough to reach the isoform, then walk ``{"rel": "next"}`` for the rest. The two
+reconstructed as **directed edges** with three relations:
+
+* ``{"rel": "contains"}`` — fully-enumerable structural children: gene -> each
+  transcript, transcript -> each CDS/UTR. ``get_neighbors`` gives them all.
+* ``{"rel": "first_exon"}`` — transcript -> its 5' exon, the splice-path entry
+  (NOT generic containment: it reaches one exon, not all of them).
+* ``{"rel": "next"}`` — a transcript's exons chained 5'->3' (strand-aware) from
+  that first exon; junctions and introns (the gaps) derive from this chain.
+
+So enumerate an isoform's exons by ``first_exon`` then walking ``next``; the
 labels keep containment, splice-order, and later regulatory edges distinguishable.
-Walk all with ``get_neighbors``.
 """
 
 from __future__ import annotations
@@ -44,8 +47,8 @@ def load_gff(
     ``{"type", "id", "name", "biotype"}`` (``id`` = column-9 ``ID``, ``name`` =
     ``gene_name``, ``biotype`` = ``gene_type``; ``None`` when absent). The
     GFF3 ``ID``/``Parent`` hierarchy becomes directed edges: ``{"rel": "contains"}``
-    for non-exon parent -> child and transcript -> first exon, and ``{"rel":
-    "next"}`` chaining a transcript's exons 5'->3' (see the module docstring).
+    for fully-enumerable children, ``{"rel": "first_exon"}`` for transcript -> 5'
+    exon, and ``{"rel": "next"}`` chaining exons 5'->3' (see the module docstring).
 
     Loads only the slice you ask for — GENCODE has millions of features, so
     filter (``None`` = no filter on that axis; avoid all-None on full GENCODE):
@@ -110,7 +113,7 @@ def load_gff(
         exons.sort(key=lambda k: k.value.start, reverse=(exons[0].value.strand == "-"))
         parent_key = by_id.get(pid)
         if parent_key is not None:
-            g.add_edge(parent_key, exons[0], {"rel": "contains"})
+            g.add_edge(parent_key, exons[0], {"rel": "first_exon"})
         for a, b in zip(exons, exons[1:]):
             g.add_edge(a, b, {"rel": "next"})
     return g

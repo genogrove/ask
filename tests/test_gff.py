@@ -81,7 +81,7 @@ def test_hierarchy_edges(tmp_path) -> None:
     # transcript -> first (5') exon only; the rest hang off the splice chain
     entry = list(g.get_neighbors(txs[0]))
     assert [x.data["id"] for x in entry] == ["e1"]
-    assert g.get_edges(txs[0])[0] == {"rel": "contains"}
+    assert g.get_edges(txs[0])[0] == {"rel": "first_exon"}
 
     # splice chain: '+' strand, ascending order e1 -> e2
     assert [n.data["id"] for n in g.get_neighbors(entry[0])] == ["e2"]
