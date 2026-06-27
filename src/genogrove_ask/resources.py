@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Curated resource registry — the Level 2 reproducibility layer.
+"""Curated resource catalog — the Level 2 reproducibility layer.
 
 A run is reproducible when the question, the resolved datasets, and the library
 builds are all pinned. This module is the single source of truth for those pins:
@@ -9,13 +9,20 @@ builds are all pinned. This module is the single source of truth for those pins:
 * **Builds** — the exact ``pygenogrove`` / ``genogrove`` versions a run was made
   against, recorded so results can be regenerated.
 
-Open-web resource discovery (Level 3) is intentionally out of scope; only entries
-present in the curated registry are available to a query.
+Open-web resource discovery (Level 3) is intentionally out of scope. ``resolve``
+takes a curated *name*, never a URL — so the only data ever fetched is what
+``RESOURCES`` explicitly defines.
 """
 
 from __future__ import annotations
 
+import hashlib
+import tempfile
+import urllib.request
+from collections.abc import Iterable
 from dataclasses import dataclass
+from pathlib import Path
+from urllib.parse import urlsplit
 
 
 # --------------------------------------------------------------------------- #
@@ -40,9 +47,9 @@ class BuildPin:
 # Keep in lockstep with [tool.uv.sources] `rev` in pyproject.toml.
 PYGENOGROVE = BuildPin(
     name="pygenogrove",
-    version="0.4.0",
-    git_rev="d6c75b918aa939ef1b8ab91b492ad3e081f7d826",
-    git_tag="v0.4.0",
+    version="0.6.2",
+    git_rev="56602a4aef8059cd4bf31d34ac80e5a868c0a122",
+    git_tag="v0.6.2",
 )
 
 
@@ -87,7 +94,7 @@ def build_manifest() -> dict[str, str]:
 
 @dataclass(frozen=True)
 class Resource:
-    """A pinned genomic dataset in the curated registry."""
+    """A pinned genomic dataset in the curated catalog."""
 
     name: str
     url: str
@@ -95,11 +102,59 @@ class Resource:
     description: str = ""
 
 
-# Curated dataset registry. Populated as hero-query resources are added; each
-# entry must carry a pinned URL and checksum.
-REGISTRY: dict[str, Resource] = {}
+# Curated dataset catalog. Each entry pins an *immutable* release (an explicit
+# version, never a "latest"/"current" symlink) by URL + sha256. Only names listed
+# here are ever fetched.
+RESOURCES: dict[str, Resource] = {
+    "gencode.human": Resource(
+        name="gencode.human",
+        url="https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_50/gencode.v50.annotation.gff3.gz",
+        sha256="2aaf245c91ed00e80920953add6cfaffcccc876dc0aceeb6ca0c86d15875899a",
+        description="GENCODE v50 comprehensive gene annotation, GRCh38 (GFF3, gzip, 1-based).",
+    ),
+}
 
 
-def resolve(name: str) -> Resource:
-    """Look up a registry entry by name. Raises ``KeyError`` if not curated."""
-    return REGISTRY[name]
+# Content-addressed cache: <CACHE>/<sha256>/<filename>. A file only lands here
+# after its checksum is verified, so a cache hit needs no re-verification.
+_CACHE = Path.home() / ".cache" / "genogrove-ask"
+
+
+def resolve(name: str) -> Path:
+    """Resolve a curated resource to a verified local file path.
+
+    ``name`` is a catalog key (``KeyError`` if not curated) — never a URL, so the
+    only data ever fetched is what ``RESOURCES`` defines. On a cache miss, streams
+    the pinned URL to a temp file while hashing, and only commits it to the cache
+    if the sha256 matches. A mismatch is a hard failure: the partial download is
+    discarded and nothing is cached.
+    """
+    res = RESOURCES[name]
+    dest = _CACHE / res.sha256 / Path(urlsplit(res.url).path).name
+    if dest.exists():
+        return dest
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    digest = hashlib.sha256()
+    tmp = tempfile.NamedTemporaryFile(dir=dest.parent, delete=False)
+    tmp_path = Path(tmp.name)
+    try:
+        with tmp, urllib.request.urlopen(res.url) as resp:  # noqa: S310 — pinned catalog URL
+            for chunk in iter(lambda: resp.read(1 << 20), b""):
+                digest.update(chunk)
+                tmp.write(chunk)
+        if digest.hexdigest() != res.sha256:
+            raise ValueError(
+                f"checksum mismatch for {name!r}: expected {res.sha256}, "
+                f"got {digest.hexdigest()}"
+            )
+        tmp_path.replace(dest)  # atomic within the same directory
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)
+        raise
+    return dest
+
+
+def data_roots(names: Iterable[str]) -> list[str]:
+    """Resolve ``names`` to local file paths for the sandbox's read-only roots."""
+    return [str(resolve(n)) for n in names]

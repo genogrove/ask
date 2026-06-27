@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Guard the Level 2 reproducibility invariant: the pinned ``pygenogrove`` build
 must be described identically in three places — the ``==`` dependency pin and the
-``[tool.uv.sources]`` ``rev`` in ``pyproject.toml``, and ``registry.PYGENOGROVE``.
+``[tool.uv.sources]`` ``rev`` in ``pyproject.toml``, and ``resources.PYGENOGROVE``.
 
 If any of the three drifts, a run records a build it was not actually made
 against. This test mechanizes the manual "all three agree" QC check so drift
@@ -17,7 +17,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from genogrove_ask.registry import PYGENOGROVE
+from genogrove_ask.resources import PYGENOGROVE
 
 PYPROJECT = Path(__file__).resolve().parent.parent / "pyproject.toml"
 

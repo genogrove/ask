@@ -3,7 +3,7 @@
 
 Given a natural-language question, ask Claude to emit Python that drives
 ``pygenogrove`` to compute the answer. The model is given the ``pygenogrove`` API
-surface and the curated resource context (see :mod:`genogrove_ask.registry`) via
+surface and the curated resource context (see :mod:`genogrove_ask.resources`) via
 the system prompt in ``prompts/system.md``.
 
 Implementation notes for when this is built out:
