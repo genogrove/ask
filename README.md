@@ -86,8 +86,15 @@ $ env CMAKE_PREFIX_PATH=/opt/homebrew CMAKE_ARGS="-DCMAKE_PREFIX_PATH=/opt/homeb
 $ uv run python -c "import pygenogrove as pg; print(pg.__version__)"   # -> 0.6.2
 ```
 
-The natural-language loop additionally needs `ANTHROPIC_API_KEY` set — but that part
-isn't built yet, and everything in **Try it** below runs without it.
+Ask a plain-English question (needs `ANTHROPIC_API_KEY`; the first run builds the
+whole-genome GENCODE grove and caches it, which takes a few minutes):
+
+```console
+$ env ANTHROPIC_API_KEY=sk-ant-... uv run genogrove-ask --show-code \
+    "Which gene contains the variant at chr7:55,191,822?"
+```
+
+The data layer in **Try it** below runs without a key.
 
 ## Try it: the GFF → Grove model
 
@@ -138,7 +145,8 @@ different release cadence and audience.
 
 ## Roadmap
 
-- [ ] `llm.py` — Anthropic codegen loop (adaptive thinking, structured tool surface)
+- [x] `llm.py` + `cli` — Anthropic codegen loop (Opus 4.8, adaptive thinking) wired
+      end-to-end: question → generated pygenogrove code → sandbox → answer
 - [x] `sandbox.py` — restricted execution of generated Python (out-of-process
       isolation; OS-level hardening backend tracked as a follow-up)
 - [x] `resources.py` — curated dataset catalog + pinned-build registry (`resolve` +
@@ -149,7 +157,7 @@ different release cadence and audience.
       edges, CDS folded onto exons)
 - [x] `prompts/system.md` — `pygenogrove` API surface + the GENCODE grove model and
       codegen rules (pinned v0.6.2 build)
-- [ ] End-to-end hero query (≥ 2-hop connected-interval question) for the paper demo
+- [ ] Validate the end-to-end hero query (≥ 2-hop connected-interval question) for the paper demo
 
 ## License
 
