@@ -10,6 +10,7 @@ injects its path as a variable; the generated code only deserializes and queries
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -79,6 +80,49 @@ def _dataset_context(names):
     return "\n".join(block_lines), "\n".join(preamble_lines) + "\n", data_paths
 
 
+def _render(text: str, fmt: str) -> str:
+    """Render the generated code's stdout. JSONL feature records become ``fmt``;
+    non-JSON lines (a scalar ``label: value``) pass through unchanged."""
+    records, passthrough = [], []
+    for line in text.splitlines():
+        s = line.strip()
+        if not s:
+            continue
+        try:
+            obj = json.loads(s)
+        except ValueError:
+            obj = None
+        if isinstance(obj, dict):
+            records.append(obj)
+        else:
+            passthrough.append(line)
+    out = [_format_records(records, fmt)] if records else []
+    out.extend(passthrough)
+    return "\n".join(p for p in out if p) + "\n"
+
+
+def _format_records(records: list[dict], fmt: str) -> str:
+    if fmt == "json":
+        return "\n".join(json.dumps(r) for r in records)
+    if fmt == "tsv":
+        cols = list(records[0])
+        rows = ["\t".join(cols)]
+        rows += ["\t".join(str(r.get(c, "")) for c in cols) for r in records]
+        return "\n".join(rows)
+    # BED: 0-based closed -> half-open (end + 1); host owns the conversion, once.
+    rows = ["#chrom\tstart\tend\tname\tscore\tstrand"]
+    for r in records:
+        if "start" not in r or "end" not in r:
+            rows.append(json.dumps(r))  # not an interval record; emit verbatim
+            continue
+        rows.append("\t".join(str(v) for v in (
+            r.get("chrom", "."), r["start"], int(r["end"]) + 1,
+            r.get("name") or r.get("id") or ".", r.get("score", "."),
+            r.get("strand", "."),
+        )))
+    return "\n".join(rows)
+
+
 def _pygenogrove_site_dir() -> str:
     """The site-packages dir holding ``pygenogrove``, for the sandbox's sys.path."""
     import pygenogrove
@@ -102,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
 
-        system_prompt = llm.build_system_prompt(resources_block, output_format=args.format)
+        system_prompt = llm.build_system_prompt(resources_block)
         code = llm.generate_query(args.question, system_prompt, model=args.model)
         if args.show_code:
             print("# --- generated code ---", file=sys.stderr)
@@ -115,14 +159,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"genogrove-ask: {exc}", file=sys.stderr)
         return 1
 
-    if result.stdout:
-        sys.stdout.write(result.stdout if result.stdout.endswith("\n") else result.stdout + "\n")
     if result.returncode != 0 or result.timed_out:
         print(result.stderr.strip() or "(the generated code failed with no output)", file=sys.stderr)
         return 1
-    if not result.stdout:
+    rendered = _render(result.stdout, args.format)
+    if not rendered.strip():
         print("(the generated code produced no output)", file=sys.stderr)
         return 1
+    sys.stdout.write(rendered)
     return 0
 
 

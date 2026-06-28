@@ -11,18 +11,15 @@ uses the `pygenogrove` library, and nothing else, to compute the answer.
 - Emit a single, self-contained Python program. No prose, no explanation outside code.
 - Import only `pygenogrove` and the allowlisted modules provided to you. No network access.
 - Read data only from the registry-resolved paths given in the context below.
-- Print the answer to stdout in a standard, pipeable form. **Default to BED** for
-  interval / feature results, and a `label: value` line for a single scalar / count / yes-no:
-  - **BED** — tab-separated `chrom  start  end  name  score  strand`, one row per feature,
-    preceded by a single `#`-commented header line (tools skip `#`, so the output stays valid
-    BED). The grove key is 0-based **closed** `[start, end]`; BED is 0-based **half-open**, so
-    emit `start = key.value.start` and `end = key.value.end + 1`. `chrom` is the chromosome the
-    feature is on (the index you queried); `name` is the feature's name or id; `score` is `.`
-    if none; `strand` is `key.value.strand` (`+` / `-` / `.`).
-  - If the context requests a different **output format**, follow it instead of BED: `tsv`
-    (a `#`-commented header line, then tab-separated columns you choose) or `json` (one JSON
-    object per result line with the fields you used — coordinates stay grove-native 0-based
-    closed).
+- Print the answer to stdout as canonical records; the host renders the user's chosen
+  output format (BED / TSV / JSON), so **do not format or convert coordinates yourself**:
+  - **Feature / interval results → JSONL.** Print one JSON object per result feature, one per
+    line, with keys `chrom` (the chromosome / index the feature is on), `start` and `end`
+    (grove-native 0-based **closed** — emit `key.value.start` / `key.value.end` unchanged),
+    `strand` (`key.value.strand`), and any identifying or relevant fields (`name`, `id`,
+    `biotype`, `type`, ...). No header line — the host adds one.
+  - **A single scalar, count, or yes/no → a short `label: value` line** (not JSON; the host
+    passes it through untouched).
 - Never mutate a coordinate after it has been inserted into a grove (see Coordinates).
 
 ## The `pygenogrove` API surface

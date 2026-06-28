@@ -1,8 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Pure codegen helpers — no API key or pygenogrove needed."""
 
+import json
+
 from ask import llm
-from ask.cli import _var_name
+from ask.cli import _render, _var_name
 
 
 def test_build_system_prompt_injects_resources_block():
@@ -12,11 +14,24 @@ def test_build_system_prompt_injects_resources_block():
     assert "## The GENCODE Grove model" in prompt  # earlier sections preserved
     assert "TODO: injected at runtime" not in prompt  # placeholder dropped
     assert prompt.index("GENCODE Grove model") < prompt.index("Available resources")
-    assert "Emit the results as `bed`" in prompt  # default format stated
 
 
-def test_build_system_prompt_honors_format():
-    assert "Emit the results as `json`" in llm.build_system_prompt("x", output_format="json")
+_REC = '{"chrom": "chr7", "start": 100, "end": 200, "name": "EGFR", "strand": "+"}'
+
+
+def test_render_bed_converts_to_half_open():
+    out = _render(_REC, "bed")
+    assert out.startswith("#chrom\tstart\tend\tname\tscore\tstrand\n")
+    assert "chr7\t100\t201\tEGFR\t.\t+" in out  # end 200 -> 201, default score "."
+
+
+def test_render_tsv_and_json():
+    assert "chrom\tstart\tend\tname\tstrand" in _render(_REC, "tsv")
+    assert json.loads(_render(_REC, "json").strip())["name"] == "EGFR"  # grove-native, unconverted
+
+
+def test_render_scalar_passes_through():
+    assert _render("count: 42", "bed").strip() == "count: 42"
 
 
 def test_strip_code_fence():
