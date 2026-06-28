@@ -144,8 +144,9 @@ different release cadence and audience.
 - [x] `sandbox.py` — restricted execution of generated Python (out-of-process
       isolation; OS-level hardening backend tracked as a follow-up)
 - [x] `resources.py` — curated dataset catalog + pinned-build registry (`resolve` +
-      sha256 cache; GENCODE v50 pinned). _Remaining: runtime "Available resources"
-      injection, and a cached serialized `.gg` per resource._
+      sha256 cache; GENCODE v50 pinned; `load_grove` builds + caches a serialized `.gg`
+      per resource, deserialized fast on reuse). _Remaining: runtime "Available
+      resources" prompt injection._
 - [x] `gff.py` — load GFF/GENCODE into the universal `Grove` (hierarchy + splice-chain
       edges, CDS folded onto exons)
 - [x] `prompts/system.md` — `pygenogrove` API surface + the GENCODE grove model and
