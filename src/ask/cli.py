@@ -152,9 +152,10 @@ def main(argv: list[str] | None = None) -> int:
             print("# --- generated code ---", file=sys.stderr)
             print(code, file=sys.stderr)
 
-        result = sandbox.run(
-            preamble + code, data_paths=data_paths, extra_syspath=[site_dir]
-        )
+        # JSONL is the output contract, so guarantee `json` is importable even if
+        # the generated code forgets the import (it's already in the allowlist).
+        script = "import json\n" + preamble + code
+        result = sandbox.run(script, data_paths=data_paths, extra_syspath=[site_dir])
     except Exception as exc:  # surface a clean message, not a traceback
         print(f"genogrove-ask: {exc}", file=sys.stderr)
         return 1

@@ -17,7 +17,8 @@ uses the `pygenogrove` library, and nothing else, to compute the answer.
     line, with keys `chrom` (the chromosome / index the feature is on), `start` and `end`
     (grove-native 0-based **closed** — emit `key.value.start` / `key.value.end` unchanged),
     `strand` (`key.value.strand`), and any identifying or relevant fields (`name`, `id`,
-    `biotype`, `type`, ...). No header line — the host adds one.
+    `biotype`, `type`, ...). No header line — the host adds one. Emit each line with
+    `json.dumps(...)` (the `json` module is already imported for you).
   - **A single scalar, count, or yes/no → a short `label: value` line** (not JSON; the host
     passes it through untouched).
 - Never mutate a coordinate after it has been inserted into a grove (see Coordinates).
