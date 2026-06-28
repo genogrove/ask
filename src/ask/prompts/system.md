@@ -262,6 +262,49 @@ for gid in sorted(genes):
     print(gid, genes[gid].start, genes[gid].end)
 ```
 
+## The GENCODE Grove model
+
+A GENCODE (GFF3) annotation is provided as a universal `Grove` (deserialize the
+registry-resolved `.gg`). Keys are features indexed by chromosome (`seqid`),
+payloads are dicts, and the gene structure is encoded as **labelled edges** — so
+you traverse it, you don't re-parse it.
+
+**Node payloads** (`key.data`):
+
+```python
+# every feature:
+{"type": "gene" | "transcript" | "exon", "id": <GFF ID>, "name": <gene_name>, "biotype": <gene_type>}
+# a transcript also carries its coding span (0-based closed; None = non-coding):
+{..., "cds_start": int | None, "cds_end": int | None}
+# an exon also carries its coding sub-range (None = the exon is entirely UTR):
+{..., "cds": [start, end] | None}
+```
+
+**Edges** — every edge carries a `{"rel": ...}` payload; when a grove mixes edge
+kinds, filter with `get_neighbors_if(node, lambda m: m and m["rel"] == "...")`:
+
+```python
+{"rel": "contains"}    # fully-enumerable children: gene -> each transcript
+{"rel": "first_exon"}  # transcript -> its 5' exon ONLY (the splice-path entry, not every exon)
+{"rel": "next"}        # exon -> next exon, 5'->3' strand-aware: the splice chain
+```
+
+Enumerate an isoform's exons by following `first_exon` then walking `next`:
+
+```python
+gene = next(k for k in g.intersect(q, "chr7") if k.data["type"] == "gene")
+for tx in g.get_neighbors(gene):                  # contains: gene -> transcripts
+    exon = g.get_neighbors(tx)[0]                 # first_exon: transcript -> 5' exon
+    while exon is not None:
+        coding = exon.data["cds"]                 # [start, end] coding part, or None if all-UTR
+        nxt = g.get_neighbors_if(exon, lambda m: m and m["rel"] == "next")
+        exon = nxt[0] if nxt else None
+```
+
+**There are no CDS or UTR nodes.** A coding region is an exon's `cds`; a UTR is the
+exon interval minus `cds` (5' vs 3' by strand); an intron is the gap between two
+exons on the `next` chain. Derive these — don't look for separate features.
+
 ## Available resources
 
 <!-- TODO: injected at runtime from ask.resources — name, local path, description.
