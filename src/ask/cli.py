@@ -1,23 +1,29 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Command-line entry point for genogrove ask.
 
-This is a deliberately thin wrapper: it parses the question and options, then
-orchestrates the three stages — generate Python (:mod:`ask.llm`),
-execute it under restrictions (:mod:`ask.sandbox`), and print the
-result. The orchestration itself is not implemented yet (see Roadmap in README).
+A thin wrapper: parse the question, then orchestrate the three stages — generate
+Python (:mod:`ask.llm`), execute it under restrictions (:mod:`ask.sandbox`), and
+print the result. The host resolves each dataset to a serialized ``.gg`` and
+injects its path as a variable; the generated code only deserializes and queries.
 """
 
 from __future__ import annotations
 
 import argparse
+import re
 import sys
+from pathlib import Path
 
-from ask import __version__
+from ask import __version__, llm, resources, sandbox
 
 # Default Anthropic model for code generation. Opus is the most capable tier and
 # the connected-interval reasoning here is the paper's headline contribution, so
 # we do not downgrade by default.
 DEFAULT_MODEL = "claude-opus-4-8"
+
+# Datasets exposed to a query. One curated entry for now; the loop generalizes to
+# the whole catalog once more resources are added.
+_DATASETS = ("gencode.human",)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -26,11 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="genogrove-ask",
         description="Ask plain-English questions over connected genomic intervals.",
     )
-    parser.add_argument(
-        "question",
-        nargs="?",
-        help="The natural-language question to answer.",
-    )
+    parser.add_argument("question", nargs="?", help="The natural-language question to answer.")
     parser.add_argument(
         "--model",
         default=DEFAULT_MODEL,
@@ -41,16 +43,46 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print the generated Python before running it.",
     )
-    parser.add_argument(
-        "--version",
-        action="version",
-        version=f"%(prog)s {__version__}",
-    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
 
 
+def _var_name(resource_name: str) -> str:
+    """A Python identifier for a dataset's injected path variable."""
+    return re.sub(r"\W", "_", resource_name).upper()
+
+
+def _dataset_context(names):
+    """Resolve datasets to (resources_block, code_preamble, data_paths).
+
+    For each dataset: build/cache its ``.gg``, bind its path to an injected
+    variable the generated code can deserialize, and whitelist it for the sandbox.
+    """
+    block_lines, preamble_lines, data_paths = [], [], {}
+    for name in names:
+        gg = resources.grove_path(name)  # builds + caches the .gg on first use (slow once)
+        var = _var_name(name)
+        desc = resources.RESOURCES[name].description
+        block_lines.append(
+            f"- `{var}` (str): filesystem path to a serialized universal Grove — {desc} "
+            f'Load it with `pg.Grove.deserialize({var})`; its structure is the '
+            f'"GENCODE Grove model" section above.'
+        )
+        preamble_lines.append(f"{var} = {str(gg)!r}")
+        data_paths[name] = str(gg)
+    return "\n".join(block_lines), "\n".join(preamble_lines) + "\n", data_paths
+
+
+def _pygenogrove_site_dir() -> str:
+    """The site-packages dir holding ``pygenogrove``, for the sandbox's sys.path."""
+    import pygenogrove
+
+    f = Path(pygenogrove.__file__).resolve()
+    return str(f.parent.parent if f.name == "__init__.py" else f.parent)
+
+
 def main(argv: list[str] | None = None) -> int:
-    """Parse arguments and dispatch. Returns a process exit code."""
+    """Parse arguments and run the end-to-end loop. Returns a process exit code."""
     parser = build_parser()
     args = parser.parse_args(argv)
 
@@ -58,17 +90,34 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help()
         return 0
 
-    # TODO(roadmap): wire the end-to-end loop:
-    #   1. code = llm.generate_query(args.question, model=args.model)
-    #   2. if args.show_code: print(code)
-    #   3. result = sandbox.run(code)
-    #   4. print(result)
-    print(
-        "genogrove ask is not implemented yet — this is a pre-alpha skeleton.\n"
-        f"Would answer: {args.question!r} (model={args.model}).",
-        file=sys.stderr,
-    )
-    return 1
+    try:
+        print("Preparing datasets (first run builds a cache; this can take a few minutes)…",
+              file=sys.stderr)
+        resources_block, preamble, data_paths = _dataset_context(_DATASETS)
+        site_dir = _pygenogrove_site_dir()
+
+        system_prompt = llm.build_system_prompt(resources_block)
+        code = llm.generate_query(args.question, system_prompt, model=args.model)
+        if args.show_code:
+            print("# --- generated code ---", file=sys.stderr)
+            print(code, file=sys.stderr)
+
+        result = sandbox.run(
+            preamble + code, data_paths=data_paths, extra_syspath=[site_dir]
+        )
+    except Exception as exc:  # surface a clean message, not a traceback
+        print(f"genogrove-ask: {exc}", file=sys.stderr)
+        return 1
+
+    if result.stdout:
+        sys.stdout.write(result.stdout if result.stdout.endswith("\n") else result.stdout + "\n")
+    if result.returncode != 0 or result.timed_out:
+        print(result.stderr.strip() or "(the generated code failed with no output)", file=sys.stderr)
+        return 1
+    if not result.stdout:
+        print("(the generated code produced no output)", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":

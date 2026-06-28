@@ -165,31 +165,46 @@ def data_roots(names: Iterable[str]) -> list[str]:
 _GROVE_SCHEMA = "1"
 
 
-def load_grove(name: str):
-    """Resolve ``name`` to a ready-to-query universal ``pg.Grove``, cached as a `.gg`.
+def grove_path(name: str) -> Path:
+    """Resolve ``name`` to a serialized `.gg` Grove path, building + caching once.
 
-    Builds the full gene/transcript/exon grove from the source GFF once
-    (``ask.gff.load_gff``), serializes it next to the source cache, and on later
-    calls just ``deserialize``s it — turning a multi-second streaming build into a
-    fast load. A cache that won't deserialize (pygenogrove format drift, partial
-    write, corruption) is discarded and rebuilt; bump ``_GROVE_SCHEMA`` for model
-    changes that deserialize cleanly but are semantically stale.
+    Builds the full gene/transcript/exon grove from the source GFF
+    (``ask.gff.load_gff``) the first time and serializes it to
+    ``<cache>/groves/<sha>.<schema>.gg``; later calls just return the existing
+    path. A cached file that won't ``deserialize`` (format drift, partial write,
+    corruption) is discarded and rebuilt; bump ``_GROVE_SCHEMA`` for model changes
+    that deserialize cleanly but are semantically stale.
+
+    This is the path the codegen contract tells generated code to deserialize, and
+    the path to whitelist for the sandbox.
     """
-    import pygenogrove as pg
-
     from ask.gff import load_gff
 
-    src = resolve(name)  # downloads + sha256-verifies the source once
     gg = _CACHE / "groves" / f"{RESOURCES[name].sha256}.{_GROVE_SCHEMA}.gg"
     if gg.exists():
-        try:
-            return pg.Grove.deserialize(str(gg))
-        except Exception:
-            gg.unlink(missing_ok=True)  # unreadable cache -> rebuild below
+        return gg  # validation (and self-heal) lives in load_grove, not the hot path
 
+    src = resolve(name)  # downloads + sha256-verifies the source once
     g = load_gff(src, types={"gene", "transcript", "exon"})  # CDS still read, folded onto exons
     gg.parent.mkdir(parents=True, exist_ok=True)
     tmp = gg.with_name(gg.name + ".tmp")
     g.serialize(str(tmp))
     tmp.replace(gg)  # atomic within the same directory
-    return g
+    return gg
+
+
+def load_grove(name: str):
+    """Resolve ``name`` to a ready-to-query universal ``pg.Grove`` (cached `.gg`).
+
+    Deserializes the cached grove from :func:`grove_path` — turning a multi-second
+    streaming build into a fast load on reuse. A cached file that won't deserialize
+    (format drift, partial write, corruption) is discarded and rebuilt once.
+    """
+    import pygenogrove as pg
+
+    gg = grove_path(name)
+    try:
+        return pg.Grove.deserialize(str(gg))
+    except Exception:
+        gg.unlink(missing_ok=True)  # unreadable cache -> rebuild once
+        return pg.Grove.deserialize(str(grove_path(name)))

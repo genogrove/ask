@@ -123,6 +123,13 @@ import sys as _sys, builtins as _builtins
 _ALLOW = set(_ALLOW_JSON)
 _ROOTS = tuple(_ROOTS_JSON)
 
+# 0) Make allowlisted *installed* packages importable. The child runs with -S
+#    (no site processing), so site-packages is not on sys.path; the parent passes
+#    the interpreter's site dir(s) here so e.g. `pygenogrove` can load. The import
+#    guard installed below still refuses every non-allowlisted top-level import,
+#    so widening sys.path does not widen what the untrusted code can import.
+_sys.path[:0] = [p for p in _SYSPATH_JSON if p not in _sys.path]
+
 # 1) Pre-warm the allowlist so no later import needs the file-import machinery
 #    (which we are about to disable). A module that is not installed is skipped;
 #    importing it from user code then fails cleanly via the normal import error.
@@ -198,11 +205,12 @@ _builtins.open = _guarded_open
 '''
 
 
-def _build_script(code: str, roots: list[str]) -> str:
-    """Prepend the bootstrap (with the allowlist and data roots baked in)."""
+def _build_script(code: str, roots: list[str], syspath: list[str]) -> str:
+    """Prepend the bootstrap (with the allowlist, data roots, and site path baked in)."""
     header = (
         f"_ALLOW_JSON = {json.dumps(sorted(ALLOWED_IMPORTS))}\n"
         f"_ROOTS_JSON = {json.dumps(roots)}\n"
+        f"_SYSPATH_JSON = {json.dumps(syspath)}\n"
     )
     return header + _BOOTSTRAP + "\n" + code
 
@@ -278,6 +286,7 @@ def run(
     code: str,
     *,
     data_paths: Mapping[str, object] | Iterable[object] | None = None,
+    extra_syspath: Iterable[object] | None = None,
     timeout_s: float = DEFAULT_TIMEOUT_S,
     output_cap: int = DEFAULT_OUTPUT_CAP,
 ) -> SandboxResult:
@@ -285,11 +294,15 @@ def run(
 
     ``data_paths`` are the registry-resolved paths the code is allowed to read
     (a mapping ``{name: path}`` or a plain iterable of paths); all other reads
-    and every write are refused. See the module docstring for the full set of
-    guarantees and the residual risk.
+    and every write are refused. ``extra_syspath`` is prepended to the child's
+    ``sys.path`` so an allowlisted installed package (e.g. ``pygenogrove``) can be
+    imported despite the child running with ``-S``; the import guard still blocks
+    every non-allowlisted import, so this does not widen the boundary. See the
+    module docstring for the full set of guarantees and the residual risk.
     """
     roots = _normalize_roots(data_paths)
-    script = _build_script(code, roots)
+    syspath = _normalize_roots(extra_syspath)
+    script = _build_script(code, roots, syspath)
 
     with tempfile.TemporaryDirectory(prefix="ggask-sandbox-") as tmp:
         script_path = Path(tmp) / "query.py"
