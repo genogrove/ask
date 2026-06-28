@@ -141,8 +141,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     try:
-        print("Preparing datasets (first run builds a cache; this can take a few minutes)…",
-              file=sys.stderr)
+        uncached = [n for n in _DATASETS if not resources.is_grove_cached(n)]
+        if uncached:
+            print(f"Building grove cache for {', '.join(uncached)} "
+                  "(first run only; this can take a few minutes)…", file=sys.stderr)
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
 

@@ -193,6 +193,11 @@ def grove_path(name: str) -> Path:
     return gg
 
 
+def is_grove_cached(name: str) -> bool:
+    """True if ``name``'s `.gg` is already built (so resolving it won't rebuild)."""
+    return (_CACHE / "groves" / f"{RESOURCES[name].sha256}.{_GROVE_SCHEMA}.gg").exists()
+
+
 def load_grove(name: str):
     """Resolve ``name`` to a ready-to-query universal ``pg.Grove`` (cached `.gg`).
 
