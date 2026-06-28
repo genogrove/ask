@@ -118,8 +118,11 @@ from ask import gff, resources
 path = resources.resolve("gencode.human")   # downloads + sha256-verifies v50 (~70 MB) once, then caches
 g = gff.load_gff(path, region=("chr7", 55_000_000, 55_300_000))
 
-# Which gene overlaps chr7:55,191,822 ?  (1-based -> 0-based closed = 55,191,821)
-q = pg.GenomicCoordinate("*", 55_191_821, 55_191_821)
+# Which gene overlaps the variant at chr7:55,191,822 ?
+# GenomicCoordinate is 0-based closed, so a single base at 1-based position P is
+# the interval [P-1, P-1] (start == end == one nucleotide); '*' matches any strand.
+pos = 55_191_822 - 1                       # 1-based 55,191,822 -> 0-based 55,191,821
+q = pg.GenomicCoordinate("*", pos, pos)    # point query: just that base
 for k in g.intersect(q, "chr7"):
     if k.data["type"] == "gene":
         print(k.data["name"], k.data["id"], k.data["biotype"])
