@@ -81,33 +81,39 @@ def load_gff(
     before exons are inserted, and there's no payload-update API). The filters
     bound what's buffered and the grove's size, not the read.
     """
+    return _assemble(*_parse(
+        path, types=types, seqids=seqids, region=region,
+        skip_invalid_lines=skip_invalid_lines,
+    ))
+
+
+def _parse(path, *, types, seqids, region, skip_invalid_lines):
+    """Stream the file once: buffer node-feature tuples + each transcript's CDS span."""
     import pygenogrove as pg
 
     rseqid, rstart, rend = region if region is not None else (None, None, None)
 
-    def passes(seqid: str, start: int, end: int) -> bool:
+    def passes(seqid, start, end):
         if seqids is not None and seqid not in seqids:
             return False
         if region is not None and (seqid != rseqid or start > rend or end < rstart):
             return False
         return True
 
-    # Pass 1: stream once. Buffer node features; collect each transcript's CDS span.
     feats = []  # (seqid, start, end, strand, type, id, name, biotype, parent_ids)
-    cds_span: dict[str, tuple[int, int]] = {}  # transcript id -> (min start, max end), 0-based closed
+    cds_span: dict[str, tuple[int, int]] = {}  # transcript id -> (min, max) 0-based closed
     for e in pg.GffReader(str(path), skip_invalid_lines=skip_invalid_lines):
-        # GFF 1-based inclusive [start, end] -> 0-based closed [start-1, end-1].
-        start, end = e.start - 1, e.end - 1
+        start, end = e.start - 1, e.end - 1  # GFF 1-based inclusive -> 0-based closed
         if not passes(e.seqid, start, end):
             continue
-        if e.type == "CDS":  # fold into exons below; never a node
+        if e.type == "CDS":  # fold into exons; never a node
             parent = e.get_attribute("Parent") or ""
             for pid in parent.split(","):
                 if pid:
                     lo, hi = cds_span.get(pid, (start, end))
                     cds_span[pid] = (min(lo, start), max(hi, end))
             continue
-        if e.type in _DROP_TYPES:  # UTR/codon: derived from cds, never stored
+        if e.type in _DROP_TYPES:  # UTR/codon: derived, never stored
             continue
         if types is not None and e.type not in types:
             continue
@@ -117,8 +123,14 @@ def load_gff(
             e.get_gene_name(), e.get_gene_biotype(),
             parent.split(",") if parent else [],
         ))
+    return feats, cds_span
 
-    # Pass 2: insert keys (with coding annotation baked in), recording links.
+
+def _assemble(feats, cds_span):
+    """Build a universal ``pg.Grove`` from parsed features: insert keys (with coding
+    annotation baked in), then the contains / first_exon / next edges."""
+    import pygenogrove as pg
+
     g = pg.Grove(order=100)
     by_id: dict[str, object] = {}  # GFF3 ID -> Key, for resolving Parent references
     pending: list[tuple[str, object]] = []  # (parent_id, child_key) for non-exon children
@@ -156,6 +168,26 @@ def load_gff(
         for (_, _, a), (_, _, b) in zip(exons, exons[1:]):
             g.add_edge(a, b, {"rel": "next"})
     return g
+
+
+def write_sharded_groves(path, out_dir, *, types=None, skip_invalid_lines=False):
+    """Parse ``path`` once and serialize a whole-genome ``_all.gg`` plus one
+    ``<seqid>.gg`` per chromosome into ``out_dir``; return the seqids written.
+
+    Per-chromosome shards let a query deserialize only the chromosome(s) it needs;
+    ``_all.gg`` is the whole-genome grove for genome-wide or cross-chromosome
+    queries. The GFF hierarchy edges are all within-chromosome, so sharding by
+    chromosome splits no edge.
+    """
+    out_dir = Path(out_dir)
+    feats, cds_span = _parse(
+        path, types=types, seqids=None, region=None, skip_invalid_lines=skip_invalid_lines
+    )
+    _assemble(feats, cds_span).serialize(str(out_dir / "_all.gg"))
+    seqids = sorted({f[0] for f in feats})
+    for sid in seqids:
+        _assemble([f for f in feats if f[0] == sid], cds_span).serialize(str(out_dir / f"{sid}.gg"))
+    return seqids
 
 
 def _exon_cds(start: int, end: int, cds_span: dict, parent_ids: list) -> list | None:

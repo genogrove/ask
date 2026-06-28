@@ -17,6 +17,7 @@ takes a curated *name*, never a URL — so the only data ever fetched is what
 from __future__ import annotations
 
 import hashlib
+import shutil
 import tempfile
 import urllib.request
 from collections.abc import Iterable
@@ -165,51 +166,52 @@ def data_roots(names: Iterable[str]) -> list[str]:
 _GROVE_SCHEMA = "1"
 
 
-def grove_path(name: str) -> Path:
-    """Resolve ``name`` to a serialized `.gg` Grove path, building + caching once.
+def _grove_dir(name: str) -> Path:
+    return _CACHE / "groves" / f"{RESOURCES[name].sha256}.{_GROVE_SCHEMA}"
 
-    Builds the full gene/transcript/exon grove from the source GFF
-    (``ask.gff.load_gff``) the first time and serializes it to
-    ``<cache>/groves/<sha>.<schema>.gg``; later calls just return the existing
-    path. A cached file that won't ``deserialize`` (format drift, partial write,
-    corruption) is discarded and rebuilt; bump ``_GROVE_SCHEMA`` for model changes
-    that deserialize cleanly but are semantically stale.
 
-    This is the path the codegen contract tells generated code to deserialize, and
-    the path to whitelist for the sandbox.
+def grove_index(name: str) -> tuple[dict[str, str], str]:
+    """Resolve ``name`` to its sharded grove index, building + caching once.
+
+    Returns ``({seqid: shard_path}, all_path)``: one serialized `.gg` per
+    chromosome plus a whole-genome ``_all.gg``. A query deserializes only the
+    shard(s) for the chromosome(s) it touches (fast, low-memory); ``_all`` is the
+    whole-genome grove for genome-wide or cross-chromosome queries. Built in one
+    streaming pass on first use (``ask.gff.write_sharded_groves``) and cached under
+    ``<cache>/groves/<sha>.<schema>/``; bump ``_GROVE_SCHEMA`` for model changes.
     """
-    from ask.gff import load_gff
+    from ask.gff import write_sharded_groves
 
-    gg = _CACHE / "groves" / f"{RESOURCES[name].sha256}.{_GROVE_SCHEMA}.gg"
-    if gg.exists():
-        return gg  # validation (and self-heal) lives in load_grove, not the hot path
+    d = _grove_dir(name)
+    if not (d / "_all.gg").exists():
+        src = resolve(name)  # downloads + sha256-verifies the source once
+        tmp = d.with_name(d.name + ".tmp")
+        shutil.rmtree(tmp, ignore_errors=True)
+        tmp.mkdir(parents=True, exist_ok=True)
+        write_sharded_groves(src, tmp, types={"gene", "transcript", "exon"})
+        shutil.rmtree(d, ignore_errors=True)
+        tmp.replace(d)  # swap the finished index in atomically
+    shards = {p.stem: str(p) for p in d.glob("*.gg") if p.name != "_all.gg"}
+    return shards, str(d / "_all.gg")
 
-    src = resolve(name)  # downloads + sha256-verifies the source once
-    g = load_gff(src, types={"gene", "transcript", "exon"})  # CDS still read, folded onto exons
-    gg.parent.mkdir(parents=True, exist_ok=True)
-    tmp = gg.with_name(gg.name + ".tmp")
-    g.serialize(str(tmp))
-    tmp.replace(gg)  # atomic within the same directory
-    return gg
+
+def grove_path(name: str) -> Path:
+    """The whole-genome `.gg` for ``name`` (the ``_all`` grove); builds the index if absent."""
+    return Path(grove_index(name)[1])
 
 
 def is_grove_cached(name: str) -> bool:
-    """True if ``name``'s `.gg` is already built (so resolving it won't rebuild)."""
-    return (_CACHE / "groves" / f"{RESOURCES[name].sha256}.{_GROVE_SCHEMA}.gg").exists()
+    """True if ``name``'s grove index is already built (so resolving it won't rebuild)."""
+    return (_grove_dir(name) / "_all.gg").exists()
 
 
 def load_grove(name: str):
-    """Resolve ``name`` to a ready-to-query universal ``pg.Grove`` (cached `.gg`).
-
-    Deserializes the cached grove from :func:`grove_path` — turning a multi-second
-    streaming build into a fast load on reuse. A cached file that won't deserialize
-    (format drift, partial write, corruption) is discarded and rebuilt once.
-    """
+    """Deserialize the whole-genome grove for ``name`` (cached). Self-heals once
+    if the cached index won't deserialize."""
     import pygenogrove as pg
 
-    gg = grove_path(name)
     try:
-        return pg.Grove.deserialize(str(gg))
+        return pg.Grove.deserialize(str(grove_path(name)))
     except Exception:
-        gg.unlink(missing_ok=True)  # unreadable cache -> rebuild once
+        shutil.rmtree(_grove_dir(name), ignore_errors=True)  # nuke the index -> rebuild
         return pg.Grove.deserialize(str(grove_path(name)))

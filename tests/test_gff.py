@@ -131,6 +131,28 @@ MINUS = (
 )
 
 
+SHARDED = (
+    "##gff-version 3\n"
+    "chr1\tH\tgene\t1000\t2000\t.\t+\t.\tID=g1\n"
+    "chr2\tH\tgene\t3000\t4000\t.\t-\t.\tID=g2\n"
+)
+
+
+def test_write_sharded_groves_splits_by_chromosome(tmp_path) -> None:
+    from ask.gff import write_sharded_groves
+
+    p = tmp_path / "two.gff3"
+    p.write_text(SHARDED)
+    out = tmp_path / "out"
+    out.mkdir()
+
+    seqids = write_sharded_groves(p, out)
+    assert set(seqids) == {"chr1", "chr2"}
+    assert pg.Grove.deserialize(str(out / "_all.gg")).size() == 2   # whole genome
+    assert pg.Grove.deserialize(str(out / "chr1.gg")).size() == 1   # one shard, one gene
+    assert pg.Grove.deserialize(str(out / "chr2.gg")).size() == 1
+
+
 def test_splice_chain_is_strand_aware(tmp_path) -> None:
     p = tmp_path / "minus.gff3"
     p.write_text(MINUS)

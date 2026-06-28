@@ -30,29 +30,30 @@ def _register(monkeypatch, tmp_path) -> str:
     return sha
 
 
-def _gg_path(tmp_path, sha):
-    return tmp_path / "cache" / "groves" / f"{sha}.{resources._GROVE_SCHEMA}.gg"
+def _all_gg(tmp_path, sha):
+    return tmp_path / "cache" / "groves" / f"{sha}.{resources._GROVE_SCHEMA}" / "_all.gg"
 
 
-def test_load_grove_builds_caches_and_deserializes(monkeypatch, tmp_path) -> None:
+def test_grove_index_builds_shards_and_whole(monkeypatch, tmp_path) -> None:
     sha = _register(monkeypatch, tmp_path)
 
-    g = resources.load_grove("_mini")        # first call builds + serializes
-    assert g.size() == 3
-    assert _gg_path(tmp_path, sha).exists()
-
-    g2 = resources.load_grove("_mini")       # second call deserializes the .gg
-    assert g2.size() == 3
-    # edges survive the roundtrip: gene -> transcript (contains)
-    gene = next(k for k in g2.intersect(pg.GenomicCoordinate("*", 1500, 1500), "chr1")
+    shards, all_path = resources.grove_index("_mini")  # first call builds the index
+    assert set(shards) == {"chr1"}                      # the fixture is single-chromosome
+    assert _all_gg(tmp_path, sha).exists()
+    # the chr1 shard and the whole grove both hold the 3 features, edges intact
+    chr1 = pg.Grove.deserialize(shards["chr1"])
+    assert chr1.size() == 3
+    gene = next(k for k in chr1.intersect(pg.GenomicCoordinate("*", 1500, 1500), "chr1")
                 if k.data["type"] == "gene")
-    assert [n.data["type"] for n in g2.get_neighbors(gene)] == ["transcript"]
+    assert [n.data["type"] for n in chr1.get_neighbors(gene)] == ["transcript"]
+    assert pg.Grove.deserialize(all_path).size() == 3
+
+    assert resources.grove_index("_mini")[1] == all_path  # second call: cache hit, no rebuild
 
 
-def test_load_grove_rebuilds_unreadable_cache(monkeypatch, tmp_path) -> None:
+def test_load_grove_returns_whole_and_self_heals(monkeypatch, tmp_path) -> None:
     sha = _register(monkeypatch, tmp_path)
-    resources.load_grove("_mini")            # build the cache
-    _gg_path(tmp_path, sha).write_bytes(b"not a grove")  # corrupt it
+    assert resources.load_grove("_mini").size() == 3      # whole-genome grove
 
-    g = resources.load_grove("_mini")        # self-heals: rebuild rather than crash
-    assert g.size() == 3
+    _all_gg(tmp_path, sha).write_bytes(b"not a grove")    # corrupt the cached index
+    assert resources.load_grove("_mini").size() == 3      # self-heals: rebuild rather than crash

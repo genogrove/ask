@@ -62,21 +62,29 @@ def _var_name(resource_name: str) -> str:
 def _dataset_context(names):
     """Resolve datasets to (resources_block, code_preamble, data_paths).
 
-    For each dataset: build/cache its ``.gg``, bind its path to an injected
-    variable the generated code can deserialize, and whitelist it for the sandbox.
+    For each dataset: build/cache its sharded grove index, inject a
+    ``{chrom: path}`` dict of per-chromosome shards plus a whole-genome ``_ALL``
+    path the generated code deserializes, and whitelist every path for the sandbox.
     """
-    block_lines, preamble_lines, data_paths = [], [], {}
+    block_lines, preamble_lines, data_paths = [], [], []
     for name in names:
-        gg = resources.grove_path(name)  # builds + caches the .gg on first use (slow once)
+        shards, all_path = resources.grove_index(name)  # builds + caches on first use (slow once)
         var = _var_name(name)
         desc = resources.RESOURCES[name].description
         block_lines.append(
-            f"- `{var}` (str): filesystem path to a serialized universal Grove — {desc} "
-            f'Load it with `pg.Grove.deserialize({var})`; its structure is the '
-            f'"GENCODE Grove model" section above.'
+            f"- `{var}` (dict[str, str]): chromosome -> path to a `{name}` Grove **restricted to "
+            f"that chromosome**. For a query confined to one or a few chromosomes, deserialize "
+            f'only those: `g = pg.Grove.deserialize({var}["chr7"])` — a fast, low-memory load.\n'
+            f"- `{var}_ALL` (str): path to the **whole-genome** `{name}` Grove ({desc}) Use it for "
+            f"genome-wide queries, gene-name lookups where the chromosome is unknown, or any query "
+            f"that follows edges across chromosomes. **When unsure, use `{var}_ALL`** — a "
+            f"per-chromosome shard cannot answer a query that needs another chromosome. Both have "
+            f'the structure in "The GENCODE Grove model" above.'
         )
-        preamble_lines.append(f"{var} = {str(gg)!r}")
-        data_paths[name] = str(gg)
+        preamble_lines.append(f"{var} = {json.dumps(shards)}")
+        preamble_lines.append(f"{var}_ALL = {json.dumps(all_path)}")
+        data_paths.extend(shards.values())
+        data_paths.append(all_path)
     return "\n".join(block_lines), "\n".join(preamble_lines) + "\n", data_paths
 
 
