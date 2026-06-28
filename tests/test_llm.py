@@ -12,6 +12,11 @@ def test_build_system_prompt_injects_resources_block():
     assert "## The GENCODE Grove model" in prompt  # earlier sections preserved
     assert "TODO: injected at runtime" not in prompt  # placeholder dropped
     assert prompt.index("GENCODE Grove model") < prompt.index("Available resources")
+    assert "Emit the results as `bed`" in prompt  # default format stated
+
+
+def test_build_system_prompt_honors_format():
+    assert "Emit the results as `json`" in llm.build_system_prompt("x", output_format="json")
 
 
 def test_strip_code_fence():

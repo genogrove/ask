@@ -22,15 +22,20 @@ _SYSTEM_MD = Path(__file__).with_name("prompts") / "system.md"
 _RESOURCES_HEADING = "## Available resources"
 
 
-def build_system_prompt(resources_block: str) -> str:
+def build_system_prompt(resources_block: str, output_format: str = "bed") -> str:
     """The codegen system prompt: ``system.md`` with the resources block injected.
 
     ``resources_block`` replaces the placeholder under "Available resources" — it
     names the variables holding each dataset path and what they are.
+    ``output_format`` is the requested result format (default ``bed``); it's stated
+    so the model honors the user's ``--format`` choice (see the Rules).
     """
     text = _SYSTEM_MD.read_text(encoding="utf-8")
     head, _, _tail = text.partition(_RESOURCES_HEADING)
-    return f"{head}{_RESOURCES_HEADING}\n\n{resources_block.strip()}\n"
+    return (
+        f"{head}{_RESOURCES_HEADING}\n\n{resources_block.strip()}\n"
+        f"\n## Output format\n\nEmit the results as `{output_format}` (see the Rules).\n"
+    )
 
 
 def generate_query(question: str, system_prompt: str, *, model: str = DEFAULT_MODEL) -> str:

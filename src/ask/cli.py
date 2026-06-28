@@ -39,6 +39,12 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"Anthropic model to use for code generation (default: {DEFAULT_MODEL}).",
     )
     parser.add_argument(
+        "--format",
+        choices=("bed", "tsv", "json"),
+        default="bed",
+        help="Output format for results (default: bed). Scalar answers ignore this.",
+    )
+    parser.add_argument(
         "--show-code",
         action="store_true",
         help="Print the generated Python before running it.",
@@ -96,7 +102,7 @@ def main(argv: list[str] | None = None) -> int:
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
 
-        system_prompt = llm.build_system_prompt(resources_block)
+        system_prompt = llm.build_system_prompt(resources_block, output_format=args.format)
         code = llm.generate_query(args.question, system_prompt, model=args.model)
         if args.show_code:
             print("# --- generated code ---", file=sys.stderr)
