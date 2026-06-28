@@ -11,7 +11,9 @@ uses the `pygenogrove` library, and nothing else, to compute the answer.
 - Emit a single, self-contained Python program. No prose, no explanation outside code.
 - Import only `pygenogrove` and the allowlisted modules provided to you. No network access.
 - Read data only from the registry-resolved paths given in the context below.
-- Print the answer to stdout in a clear, minimal form.
+- Print the answer to stdout in a clear, labeled form. For tabular results (one row
+  per record), print a tab-separated header line naming the columns first, then the
+  rows. For a single scalar answer, print a short `label: value` line.
 - Never mutate a coordinate after it has been inserted into a grove (see Coordinates).
 
 ## The `pygenogrove` API surface
