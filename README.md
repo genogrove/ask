@@ -70,50 +70,46 @@ discovery (Level 3) is explicitly out of scope.
 
 ## Installation
 
-This project uses [`uv`](https://docs.astral.sh/uv/).
+This project uses [`uv`](https://docs.astral.sh/uv/). `pygenogrove` is resolved from
+its GitHub repository (see `[tool.uv.sources]`) and **built from source** — it's a
+C++/htslib extension, not yet on PyPI — so you need a compiler, CMake, and htslib first.
 
 ```console
+# prerequisites (macOS / Homebrew). On Linux: your package manager, or see
+# pygenogrove's .github/scripts/install-htslib-linux.sh
+$ brew install uv htslib cmake
+
 $ git clone https://github.com/genogrove/ask
 $ cd ask
-$ uv sync                  # creates the venv and resolves deps (incl. pygenogrove from git)
-$ export ANTHROPIC_API_KEY=sk-ant-...
-$ uv run genogrove-ask --help
+# `env VAR=… cmd` works in bash, zsh AND fish; it points CMake at htslib for the build.
+$ env CMAKE_PREFIX_PATH=/opt/homebrew CMAKE_ARGS="-DCMAKE_PREFIX_PATH=/opt/homebrew/opt/htslib" uv sync
+$ uv run python -c "import pygenogrove as pg; print(pg.__version__)"   # -> 0.6.2
 ```
 
-`pygenogrove` is resolved from its GitHub repository (see `[tool.uv.sources]` in
-`pyproject.toml`); it is not yet on PyPI.
+The natural-language loop additionally needs `ANTHROPIC_API_KEY` set — but that part
+isn't built yet, and everything in **Try it** below runs without it.
 
 ## Try it: the GFF → Grove model
 
-The annotation-loading layer (`ask.gff.load_gff`) is implemented and tested. Running it
-needs a local `pygenogrove` build (it's a C++/htslib extension, not yet on PyPI).
-
-**macOS** (Homebrew):
-
-```console
-$ brew install htslib cmake
-$ git clone https://github.com/genogrove/pygenogrove      # sibling checkout
-$ python3 -m venv .venv && source .venv/bin/activate
-$ CMAKE_PREFIX_PATH=/opt/homebrew CMAKE_ARGS="-DCMAKE_PREFIX_PATH=/opt/homebrew/opt/htslib" \
-    pip install ./pygenogrove pytest
-```
-
-(On Linux, `pygenogrove` builds htslib from source — see its `.github/scripts`.)
-
-Run the loader tests against the real bindings (they `importorskip` when pygenogrove is absent):
+The data layer (`ask.gff` + `ask.resources`) is implemented and tested — **no Claude /
+API key needed.** After the `uv sync` above, run the loader tests against the real
+bindings (they `importorskip`, so they actually run here rather than skip):
 
 ```console
-$ PYTHONPATH=src pytest tests/test_gff.py -q
+$ uv run --extra dev pytest tests/test_gff.py tests/test_load_grove.py -q
 ```
 
-Load a GENCODE locus and query it (`PYTHONPATH=src python try.py`):
+(`--extra dev` pulls in `pytest`, which lives in the optional `dev` dependencies.)
+
+Load a GENCODE locus and query it. Save this as `query.py`, then `uv run python query.py`:
 
 ```python
 import pygenogrove as pg
 from ask import gff, resources
 
+# Quick single-locus load (~20s; streams the gzip once, no whole-genome build):
 path = resources.resolve("gencode.human")   # downloads + sha256-verifies v50 (~70 MB) once, then caches
-g = gff.load_gff(path, region=("chr7", 55_000_000, 55_300_000))   # streams the gzip (~20s), builds the locus
+g = gff.load_gff(path, region=("chr7", 55_000_000, 55_300_000))
 
 # Which gene overlaps chr7:55,191,822 ?  (1-based -> 0-based closed = 55,191,821)
 q = pg.GenomicCoordinate("*", 55_191_821, 55_191_821)
@@ -128,8 +124,10 @@ Then traverse: `get_neighbors(gene)` gives transcripts (`contains`), and `first_
 `next` walks a transcript's splice chain, each exon carrying its `cds` range. The full
 schema is in [`prompts/system.md`](src/ask/prompts/system.md) under "The GENCODE Grove model".
 
-> The region load streams the whole annotation gzip (no tabix index), ~20s. A cached
-> serialized `.gg` per resource (build once, `deserialize` in ms) is the planned fix.
+For repeated use, `resources.load_grove("gencode.human")` builds the **whole-genome** grove
+once (a few minutes, a few GB RAM), caches it as a serialized `.gg`, and `deserialize`s in
+well under a second on every later call. `load_gff(region=…)` above is the lighter path for
+a one-off locus.
 
 ## The `genogrove ask` surface
 
