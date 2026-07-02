@@ -86,8 +86,9 @@ $ env CMAKE_PREFIX_PATH=/opt/homebrew CMAKE_ARGS="-DCMAKE_PREFIX_PATH=/opt/homeb
 $ uv run python -c "import pygenogrove as pg; print(pg.__version__)"   # -> 0.6.2
 ```
 
-Ask a plain-English question (needs `ANTHROPIC_API_KEY`; the first run builds the
-whole-genome GENCODE grove and caches it, which takes a few minutes):
+Ask a plain-English question (needs `ANTHROPIC_API_KEY`; the first run downloads the
+pre-indexed GENCODE dataset — a few hundred MB — and caches it, then located queries
+read only their locus via tabix):
 
 ```console
 $ env ANTHROPIC_API_KEY=sk-ant-... uv run genogrove-ask --show-code \
@@ -114,9 +115,9 @@ Load a GENCODE locus and query it. Save this as `query.py`, then `uv run python 
 import pygenogrove as pg
 from ask import gff, resources
 
-# Quick single-locus load (~20s; streams the gzip once, no whole-genome build):
-path = resources.resolve("gencode.human")   # downloads + sha256-verifies v50 (~70 MB) once, then caches
-g = gff.load_gff(path, region=("chr7", 55_000_000, 55_300_000))
+# Sub-second locus load via tabix (downloads the pre-indexed GENCODE — a few hundred MB — once):
+path = resources.indexed_path("gencode.human")   # bgzip+tabix GFF (+ .tbi), sha256-verified, cached
+g = gff.build_grove(path, region="chr7:55000000-55300000")   # reads only this region (tabix seek)
 
 # Which gene overlaps the variant at chr7:55,191,822 ?
 # GenomicCoordinate is 0-based closed, so a single base at 1-based position P is
@@ -134,10 +135,10 @@ Then traverse: `get_neighbors(gene)` gives transcripts (`contains`), and `first_
 `next` walks a transcript's splice chain, each exon carrying its `cds` range. The full
 schema is in [`prompts/system.md`](src/ask/prompts/system.md) under "The GENCODE Grove model".
 
-For repeated use, `resources.load_grove("gencode.human")` builds the **whole-genome** grove
-once (a few minutes, a few GB RAM), caches it as a serialized `.gg`, and `deserialize`s in
-well under a second on every later call. `load_gff(region=…)` above is the lighter path for
-a one-off locus.
+`build_grove(path, region)` reads only the locus, so it stays fast for any query that names
+one. For **genome-wide** questions (no locus — "count all protein-coding genes"), build the
+whole-genome grove once with `resources.ensure_all_grove("gencode.human")` (slow first call,
+then a fast `deserialize`).
 
 ## The `genogrove ask` surface
 

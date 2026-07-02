@@ -97,12 +97,22 @@ def build_manifest() -> dict[str, str]:
 
 @dataclass(frozen=True)
 class Resource:
-    """A pinned genomic dataset in the curated catalog."""
+    """A pinned genomic dataset in the curated catalog.
+
+    ``url`` + ``sha256`` pin the annotation file. For region access it must be
+    **bgzip-compressed and tabix-indexed**; when the ``.tbi`` is hosted too,
+    ``index_url`` + ``index_sha256`` pin it and ``resolve``/``indexed_path`` fetch
+    the pair (no local indexing). ``filename`` overrides the local name when it
+    can't be derived from the URL (e.g. Zenodo's ``…/files/<name>/content``).
+    """
 
     name: str
     url: str
     sha256: str
     description: str = ""
+    filename: str = ""
+    index_url: str = ""
+    index_sha256: str = ""
 
 
 # Curated dataset catalog. Each entry pins an *immutable* release (an explicit
@@ -111,9 +121,14 @@ class Resource:
 RESOURCES: dict[str, Resource] = {
     "gencode.human": Resource(
         name="gencode.human",
-        url="https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_50/gencode.v50.annotation.gff3.gz",
-        sha256="2aaf245c91ed00e80920953add6cfaffcccc876dc0aceeb6ca0c86d15875899a",
-        description="GENCODE v50 comprehensive gene annotation, GRCh38 (GFF3, gzip, 1-based).",
+        # Coordinate-sorted, bgzip+tabix build of GENCODE v50 (Zenodo 21123308),
+        # derived from GENCODE v50 (upstream sha 2aaf245c…875899a) — see the record.
+        url="https://zenodo.org/api/records/21123308/files/gencode.v50.annotation.sorted.gff3.gz/content",
+        sha256="2a87d3a39f9e3be6f0c49359724223ba5e0a094f2fc059b2655635888bb223f5",
+        filename="gencode.v50.annotation.sorted.gff3.gz",
+        index_url="https://zenodo.org/api/records/21123308/files/gencode.v50.annotation.sorted.gff3.gz.tbi/content",
+        index_sha256="52020642c93f01c24488d98b446d705a655d31ea39339fad36cced3b9cc9480a",
+        description="GENCODE v50 comprehensive gene annotation, GRCh38 (GFF3, sorted + bgzip + tabix).",
     ),
 }
 
@@ -133,25 +148,32 @@ def resolve(name: str) -> Path:
     discarded and nothing is cached.
     """
     res = RESOURCES[name]
-    dest = _CACHE / res.sha256 / Path(urlsplit(res.url).path).name
+    fname = res.filename or Path(urlsplit(res.url).path).name
+    return _download(res.url, res.sha256, _CACHE / res.sha256 / fname)
+
+
+def _download(url: str, sha256: str, dest: Path) -> Path:
+    """Stream ``url`` to ``dest`` (cache hit = no-op), verifying its sha256.
+
+    A mismatch is a hard failure: the partial download is discarded, nothing is
+    committed. The commit is an atomic rename within ``dest``'s directory.
+    """
     if dest.exists():
         return dest
-
     dest.parent.mkdir(parents=True, exist_ok=True)
     digest = hashlib.sha256()
     tmp = tempfile.NamedTemporaryFile(dir=dest.parent, delete=False)
     tmp_path = Path(tmp.name)
     try:
-        with tmp, urllib.request.urlopen(res.url) as resp:  # noqa: S310 — pinned catalog URL
+        with tmp, urllib.request.urlopen(url) as resp:  # noqa: S310 — pinned catalog URL
             for chunk in iter(lambda: resp.read(1 << 20), b""):
                 digest.update(chunk)
                 tmp.write(chunk)
-        if digest.hexdigest() != res.sha256:
+        if digest.hexdigest() != sha256:
             raise ValueError(
-                f"checksum mismatch for {name!r}: expected {res.sha256}, "
-                f"got {digest.hexdigest()}"
+                f"checksum mismatch for {url!r}: expected {sha256}, got {digest.hexdigest()}"
             )
-        tmp_path.replace(dest)  # atomic within the same directory
+        tmp_path.replace(dest)
     except BaseException:
         tmp_path.unlink(missing_ok=True)
         raise
@@ -170,12 +192,22 @@ def data_roots(names: Iterable[str]) -> list[str]:
 
 
 def indexed_path(name: str) -> Path:
-    """A bgzip-compressed, coordinate-sorted, tabix-indexed copy of ``name``'s GFF.
+    """A bgzip-compressed, coordinate-sorted, tabix-indexed GFF for ``name``.
 
-    Built once from the plain-gzip download (``resolve``) and cached next to it;
-    region reads (``pg.GffReader(path, region=...)``) require this. Needs htslib's
-    ``bgzip`` and ``tabix`` on PATH. Raises ``RuntimeError`` if they're missing.
+    If the resource pins a hosted index (``index_url``), download the annotation +
+    its ``.tbi`` (no local work). Otherwise fall back to building the index locally
+    from the plain-gzip download with htslib's ``bgzip``/``tabix`` — a one-time
+    ~minutes step; ``RuntimeError`` if those tools are missing.
+
+    Region reads (``pg.GffReader(path, region=...)``) need the ``.tbi`` next to the
+    returned ``.gff3.gz``; both paths are placed accordingly.
     """
+    res = RESOURCES[name]
+    if res.index_url:  # hosted pair — download, don't build
+        gff = resolve(name)  # the sorted-bgzip annotation
+        _download(res.index_url, res.index_sha256, gff.with_name(gff.name + ".tbi"))
+        return gff
+
     src = resolve(name)  # plain-gzip download
     out = src.with_name("indexed.gff3.gz")
     tbi = out.with_name(out.name + ".tbi")
@@ -202,8 +234,13 @@ def indexed_path(name: str) -> Path:
 
 
 def is_indexed(name: str) -> bool:
-    """True if ``name``'s bgzip+tabix index already exists (so it won't rebuild)."""
-    return (_CACHE / RESOURCES[name].sha256 / "indexed.gff3.gz.tbi").exists()
+    """True if ``name``'s indexed GFF + `.tbi` are already local (no download/build)."""
+    res = RESOURCES[name]
+    if res.index_url:  # hosted pair
+        fname = res.filename or Path(urlsplit(res.url).path).name
+        gff = _CACHE / res.sha256 / fname
+        return gff.exists() and gff.with_name(gff.name + ".tbi").exists()
+    return (_CACHE / res.sha256 / "indexed.gff3.gz.tbi").exists()  # local build
 
 
 def _all_grove_gg(name: str) -> Path:

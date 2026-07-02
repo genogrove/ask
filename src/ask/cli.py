@@ -155,8 +155,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         unindexed = [n for n in _DATASETS if not resources.is_indexed(n)]
         if unindexed:
-            print(f"Indexing {', '.join(unindexed)} (first run only: bgzip + tabix; "
-                  "a few minutes)…", file=sys.stderr)
+            print(f"Fetching {', '.join(unindexed)} (first run only: downloads the "
+                  "indexed dataset, a few hundred MB)…", file=sys.stderr)
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
 
