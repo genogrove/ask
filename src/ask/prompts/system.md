@@ -273,11 +273,13 @@ for gid in sorted(genes):
 
 ## The GENCODE Grove model
 
-A GENCODE (GFF3) annotation is provided as a universal `Grove`, deserialized from a
-path given under "Available resources" — a per-chromosome shard for a located query,
-or the whole-genome grove otherwise (see that section for which variable to use).
-Keys are features indexed by chromosome (`seqid`), payloads are dicts, and the gene
-structure is encoded as **labelled edges** — so you traverse it, you don't re-parse it.
+A GENCODE (GFF3) annotation is available as a universal `Grove`. For a **located**
+query, build one from just the locus with `build_grove(<gff>, "chr7:…")` (a helper
+provided to you — fast, reads only that region); for a **genome-wide** query,
+deserialize the whole-genome grove. See "Available resources" for the exact variables
+and when to use each. Keys are features indexed by chromosome (`seqid`), payloads are
+dicts, and the gene structure is encoded as **labelled edges** — you traverse it, you
+don't re-parse it.
 
 **Node payloads** (`key.data`):
 

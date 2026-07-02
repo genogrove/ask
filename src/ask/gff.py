@@ -190,6 +190,70 @@ def write_sharded_groves(path, out_dir, *, types=None, skip_invalid_lines=False)
     return seqids
 
 
+def build_grove(gff_path, region=""):
+    """Build the modelled Grove from a bgzip+tabix GFF, reading only ``region``.
+
+    ``region`` is a tabix string (1-based inclusive), e.g. ``"chr7:55000000-55300000"``;
+    ``""`` reads the whole file. Returns the same universal Grove as ``load_gff``
+    (gene/transcript/exon keys, contains/first_exon/next edges, cds folded onto
+    exons). Only features **overlapping** ``region`` are loaded — pick a region that
+    covers the features your query needs (a point for "what overlaps here", a gene's
+    span for its full structure).
+
+    Self-contained (only ``pygenogrove``) on purpose: its source is injected into the
+    sandbox so generated code can call it without importing ``ask``.
+    """
+    import pygenogrove as pg
+
+    drop = {"five_prime_UTR", "three_prime_UTR", "UTR", "start_codon", "stop_codon", "Selenocysteine"}
+    feats, cds = [], {}
+    for e in pg.GffReader(str(gff_path), region=region):
+        s, en = e.start - 1, e.end - 1  # GFF 1-based inclusive -> 0-based closed
+        if e.type == "CDS":
+            for pid in (e.get_attribute("Parent") or "").split(","):
+                if pid:
+                    lo, hi = cds.get(pid, (s, en))
+                    cds[pid] = (min(lo, s), max(hi, en))
+            continue
+        if e.type in drop:
+            continue
+        parent = e.get_attribute("Parent")
+        feats.append((e.seqid, s, en, e.strand, e.type, e.get_attribute("ID"),
+                      e.get_gene_name(), e.get_gene_biotype(), parent.split(",") if parent else []))
+
+    g = pg.Grove(order=100)
+    by_id, pending, exons_by_parent = {}, [], {}
+    for seqid, s, en, strand, ftype, fid, name, biotype, pids in feats:
+        pl = {"type": ftype, "id": fid, "name": name, "biotype": biotype}
+        if ftype == "transcript":
+            sp = cds.get(fid)
+            pl["cds_start"], pl["cds_end"] = sp if sp else (None, None)
+        elif ftype == "exon":
+            pl["cds"] = next(([max(s, cds[p][0]), min(en, cds[p][1])]
+                              for p in pids if p in cds and s <= cds[p][1] and en >= cds[p][0]), None)
+        k = g.insert(seqid, pg.GenomicCoordinate(strand, s, en), pl)
+        if fid and fid not in by_id:
+            by_id[fid] = k
+        if ftype == "exon":
+            for p in pids:
+                exons_by_parent.setdefault(p, []).append((s, strand, k))
+        else:
+            for p in pids:
+                pending.append((p, k))
+    for p, ck in pending:
+        pk = by_id.get(p)
+        if pk is not None:
+            g.add_edge(pk, ck, {"rel": "contains"})
+    for p, ex in exons_by_parent.items():
+        ex.sort(key=lambda t: t[0], reverse=(ex[0][1] == "-"))
+        pk = by_id.get(p)
+        if pk is not None:
+            g.add_edge(pk, ex[0][2], {"rel": "first_exon"})
+        for (_, _, a), (_, _, b) in zip(ex, ex[1:]):
+            g.add_edge(a, b, {"rel": "next"})
+    return g
+
+
 def _exon_cds(start: int, end: int, cds_span: dict, parent_ids: list) -> list | None:
     """The exon's coding sub-range = its intersection with the transcript's CDS
     span (0-based closed), or ``None`` if the exon is entirely UTR / non-coding."""

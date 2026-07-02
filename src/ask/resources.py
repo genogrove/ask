@@ -17,7 +17,9 @@ takes a curated *name*, never a URL — so the only data ever fetched is what
 from __future__ import annotations
 
 import hashlib
+import shlex
 import shutil
+import subprocess
 import tempfile
 import urllib.request
 from collections.abc import Iterable
@@ -159,6 +161,71 @@ def resolve(name: str) -> Path:
 def data_roots(names: Iterable[str]) -> list[str]:
     """Resolve ``names`` to local file paths for the sandbox's read-only roots."""
     return [str(resolve(n)) for n in names]
+
+
+# --------------------------------------------------------------------------- #
+# Region access — bgzip + tabix so a query reads only its locus (see ask.gff.
+# build_grove). GENCODE ships plain gzip, so we recompress + index once.
+# --------------------------------------------------------------------------- #
+
+
+def indexed_path(name: str) -> Path:
+    """A bgzip-compressed, coordinate-sorted, tabix-indexed copy of ``name``'s GFF.
+
+    Built once from the plain-gzip download (``resolve``) and cached next to it;
+    region reads (``pg.GffReader(path, region=...)``) require this. Needs htslib's
+    ``bgzip`` and ``tabix`` on PATH. Raises ``RuntimeError`` if they're missing.
+    """
+    src = resolve(name)  # plain-gzip download
+    out = src.with_name("indexed.gff3.gz")
+    tbi = out.with_name(out.name + ".tbi")
+    if out.exists() and tbi.exists():
+        return out
+    for tool in ("bgzip", "tabix"):
+        if shutil.which(tool) is None:
+            raise RuntimeError(
+                f"{tool!r} not found — install htslib for region access "
+                "(e.g. `brew install htslib` / `apt install tabix`)"
+            )
+    tmp = out.with_name("indexed.tmp.gff3.gz")
+    q = shlex.quote(str(src))
+    # Header ('#') lines first, then data sorted by (seqid, start) as tabix requires.
+    pipeline = (
+        f"{{ gzip -dc {q} | grep '^#' ; gzip -dc {q} | grep -v '^#' | sort -k1,1 -k4,4n ; }} "
+        f"| bgzip -c > {shlex.quote(str(tmp))}"
+    )
+    subprocess.run(pipeline, shell=True, check=True)  # noqa: S602 — our own quoted paths
+    subprocess.run(["tabix", "-p", "gff", str(tmp)], check=True)
+    Path(str(tmp) + ".tbi").replace(tbi)
+    tmp.replace(out)  # commit the index (both parts now in place)
+    return out
+
+
+def is_indexed(name: str) -> bool:
+    """True if ``name``'s bgzip+tabix index already exists (so it won't rebuild)."""
+    return (_CACHE / RESOURCES[name].sha256 / "indexed.gff3.gz.tbi").exists()
+
+
+def _all_grove_gg(name: str) -> Path:
+    """Path to the lazily-built whole-genome `.gg` (may not exist yet)."""
+    return _CACHE / "groves" / f"{RESOURCES[name].sha256}.{_GROVE_SCHEMA}" / "_all.gg"
+
+
+def ensure_all_grove(name: str) -> Path:
+    """Build + cache the whole-genome grove (for genome-wide queries) if absent.
+
+    Slow on first call (reads the whole annotation), instant after. Only invoked
+    when a query actually needs the whole genome — located queries never build it.
+    """
+    from ask.gff import build_grove
+
+    gg = _all_grove_gg(name)
+    if not gg.exists():
+        gg.parent.mkdir(parents=True, exist_ok=True)
+        tmp = gg.with_name(gg.name + ".tmp")
+        build_grove(indexed_path(name), region="").serialize(str(tmp))
+        tmp.replace(gg)
+    return gg
 
 
 # Bump when ``ask.gff``'s grove model changes, so a stale `.gg` (valid pygenogrove

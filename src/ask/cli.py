@@ -10,12 +10,13 @@ injects its path as a variable; the generated code only deserializes and queries
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import re
 import sys
 from pathlib import Path
 
-from ask import __version__, llm, resources, sandbox
+from ask import __version__, gff, llm, resources, sandbox
 
 # Default Anthropic model for code generation. Opus is the most capable tier and
 # the connected-interval reasoning here is the paper's headline contribution, so
@@ -62,30 +63,33 @@ def _var_name(resource_name: str) -> str:
 def _dataset_context(names):
     """Resolve datasets to (resources_block, code_preamble, data_paths).
 
-    For each dataset: build/cache its sharded grove index, inject a
-    ``{chrom: path}`` dict of per-chromosome shards plus a whole-genome ``_ALL``
-    path the generated code deserializes, and whitelist every path for the sandbox.
+    Inject the bgzip+tabix GFF path (for fast region reads via the injected
+    ``build_grove`` helper) and the whole-genome grove path (for genome-wide
+    queries, built lazily). Whitelist every path for the sandbox.
     """
-    block_lines, preamble_lines, data_paths = [], [], []
+    block, preamble, data_paths = [], [], []
     for name in names:
-        shards, all_path = resources.grove_index(name)  # builds + caches on first use (slow once)
+        gff_path = str(resources.indexed_path(name))  # bgzip+tabix; built once
+        all_gg = str(resources._all_grove_gg(name))    # path only — built lazily if referenced
         var = _var_name(name)
         desc = resources.RESOURCES[name].description
-        block_lines.append(
-            f"- `{var}` (dict[str, str]): chromosome -> path to a `{name}` Grove **restricted to "
-            f"that chromosome**. For a query confined to one or a few chromosomes, deserialize "
-            f'only those: `g = pg.Grove.deserialize({var}["chr7"])` — a fast, low-memory load.\n'
-            f"- `{var}_ALL` (str): path to the **whole-genome** `{name}` Grove ({desc}) Use it for "
-            f"genome-wide queries, gene-name lookups where the chromosome is unknown, or any query "
-            f"that follows edges across chromosomes. **When unsure, use `{var}_ALL`** — a "
-            f"per-chromosome shard cannot answer a query that needs another chromosome. Both have "
-            f'the structure in "The GENCODE Grove model" above.'
+        block.append(
+            f'- `{var}` (str): path to a tabix-indexed `{name}` GFF ({desc}) Build a '
+            f'region-restricted Grove with `g = build_grove({var}, "chr7:55000000-55300000")` — '
+            f"the region is a tabix string (**1-based inclusive**), and only features overlapping "
+            f"it are loaded (fast). Pick a region covering what the query needs: a point for "
+            f"\"what overlaps here\", a gene's span for its full exon/CDS structure.\n"
+            f"- `{var}_ALL` (str): path to the **whole-genome** `{name}` Grove — "
+            f"`g = pg.Grove.deserialize({var}_ALL)`. Use it ONLY for genome-wide queries or "
+            f"gene-name lookups with no known locus (it reads everything; slower). Prefer "
+            f"`build_grove` with a region whenever the query names a locus.\n"
+            f'Both groves have the structure in "The GENCODE Grove model" above.'
         )
-        preamble_lines.append(f"{var} = {json.dumps(shards)}")
-        preamble_lines.append(f"{var}_ALL = {json.dumps(all_path)}")
-        data_paths.extend(shards.values())
-        data_paths.append(all_path)
-    return "\n".join(block_lines), "\n".join(preamble_lines) + "\n", data_paths
+        preamble.append(f"{var} = {json.dumps(gff_path)}")
+        preamble.append(f"{var}_ALL = {json.dumps(all_gg)}")
+        data_paths += [gff_path, gff_path + ".tbi", all_gg]
+    helper = inspect.getsource(gff.build_grove)  # pure-pygenogrove region loader, runs in the sandbox
+    return "\n".join(block), helper + "\n\n" + "\n".join(preamble) + "\n", data_paths
 
 
 def _render(text: str, fmt: str) -> str:
@@ -149,10 +153,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     try:
-        uncached = [n for n in _DATASETS if not resources.is_grove_cached(n)]
-        if uncached:
-            print(f"Building grove cache for {', '.join(uncached)} "
-                  "(first run only; this can take a few minutes)…", file=sys.stderr)
+        unindexed = [n for n in _DATASETS if not resources.is_indexed(n)]
+        if unindexed:
+            print(f"Indexing {', '.join(unindexed)} (first run only: bgzip + tabix; "
+                  "a few minutes)…", file=sys.stderr)
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
 
@@ -161,6 +165,13 @@ def main(argv: list[str] | None = None) -> int:
         if args.show_code:
             print("# --- generated code ---", file=sys.stderr)
             print(code, file=sys.stderr)
+
+        # Genome-wide queries reference <VAR>_ALL — build that whole-genome grove
+        # lazily, only now that we know the query needs it. Located queries skip it.
+        for name in _DATASETS:
+            if f"{_var_name(name)}_ALL" in code:
+                print(f"Building whole-genome grove for {name} (genome-wide query)…", file=sys.stderr)
+                resources.ensure_all_grove(name)
 
         # JSONL is the output contract, so guarantee `json` is importable even if
         # the generated code forgets the import (it's already in the allowlist).
