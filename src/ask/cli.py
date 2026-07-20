@@ -80,9 +80,12 @@ def _dataset_context(names):
             f"it are loaded (fast). Pick a region covering what the query needs: a point for "
             f"\"what overlaps here\", a gene's span for its full exon/CDS structure.\n"
             f"- `{var}_ALL` (str): path to the **whole-genome** `{name}` Grove — "
-            f"`g = pg.Grove.deserialize({var}_ALL)`. Use it ONLY for genome-wide queries or "
-            f"gene-name lookups with no known locus (it reads everything; slower). Prefer "
-            f"`build_grove` with a region whenever the query names a locus.\n"
+            f"`g = pg.GroveView.open({var}_ALL)`, a lazy reader that pages in only the blocks "
+            f"a query touches (no whole-genome load). Use it for genome-wide queries or gene-name "
+            f"lookups with no known locus. It is query-only — `intersect`, `get_neighbors`, "
+            f"`get_edges`, `get_neighbors_if` work; `flanking`/`insert` do not, so for a "
+            f"nearest-neighbour query use `build_grove` with a region. Prefer `build_grove` "
+            f"whenever the query names a locus.\n"
             f'Both groves have the structure in "The GENCODE Grove model" above.'
         )
         preamble.append(f"{var} = {json.dumps(gff_path)}")

@@ -1,0 +1,1461 @@
+accession	biosample_term	biosample_id	biosample_type	model
+ENCSR825HVE	8988T	EFO:0005713	cell line	DNase-only
+ENCSR356OTG	A172	EFO:0002101	cell line	DNase-only
+ENCSR021KGI	A549	EFO:0001086	cell line	DNase-only
+ENCSR054MMM	A549	EFO:0001086	cell line	DNase-only
+ENCSR090HJT	A549	EFO:0001086	cell line	DNase-only
+ENCSR165ODW	A549	EFO:0001086	cell line	DNase-only
+ENCSR190YDU	A549	EFO:0001086	cell line	DNase-only
+ENCSR349ZBW	A549	EFO:0001086	cell line	DNase-only
+ENCSR424GRN	A549	EFO:0001086	cell line	DNase-only
+ENCSR478GKR	A549	EFO:0001086	cell line	DNase-only
+ENCSR490KUB	A549	EFO:0001086	cell line	DNase-only
+ENCSR586QGX	A549	EFO:0001086	cell line	DNase-only
+ENCSR601XON	A549	EFO:0001086	cell line	DNase-only
+ENCSR629UOB	A549	EFO:0001086	cell line	DNase-only
+ENCSR763OLM	A549	EFO:0001086	cell line	DNase-only
+ENCSR964DGT	A549	EFO:0001086	cell line	DNase-only
+ENCSR584CFN	A673	EFO:0002106	cell line	DNase-only
+ENCSR629UWF	A673	EFO:0002106	cell line	DNase-only
+ENCSR493YUS	ACHN	EFO:0002108	cell line	DNase-only
+ENCSR901LTZ	AG04449	CLO:0034837	cell line	DNase-only
+ENCSR971BWQ	AG04450	EFO:0006270	cell line	DNase-only
+ENCSR155JXP	AG08395	CLO:0033911	cell line	DNase-only
+ENCSR551DPI	AG08396	CLO:0033902	cell line	DNase-only
+ENCSR428QIW	AG09309	CLO:0021752	cell line	DNase-only
+ENCSR012RGL	AG09319	CLO:0021754	cell line	DNase-only
+ENCSR905VRP	AG10803	CLO:0021511	cell line	DNase-only
+ENCSR978XYK	AG20443	CLO:0011092	cell line	DNase-only
+ENCSR206VGK	Ammon's horn	UBERON:0001954	tissue	DNase-only
+ENCSR074ZJQ	B cell	CL:0000236	primary cell	DNase-only
+ENCSR195EYQ	B cell	CL:0000236	primary cell	DNase-only
+ENCSR273TFK	B cell	CL:0000236	primary cell	DNase-only
+ENCSR498WAF	B cell	CL:0000236	primary cell	DNase-only
+ENCSR512ITP	B cell	CL:0000236	primary cell	DNase-only
+ENCSR851HOZ	B cell	CL:0000236	primary cell	DNase-only
+ENCSR225USG	BE2C	EFO:0005725	cell line	DNase-only
+ENCSR526HSH	BE2C	EFO:0005725	cell line	DNase-only
+ENCSR348OAV	BJ	EFO:0002779	cell line	DNase-only
+ENCSR821QDT	C803	EFO:0009495	cell line	DNase-only
+ENCSR055KKJ	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR149LPI	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR303WHX	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR407QQL	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR557PDH	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR557RZP	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR824NLI	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR876WVC	CD14-positive monocyte	CL:0001054	primary cell	DNase-only
+ENCSR719BDF	CD1c-positive myeloid dendritic cell	CL:0002399	primary cell	DNase-only
+ENCSR145FXK	CD4-positive, CD25-positive, alpha-beta regulatory T cell	CL:0000792	primary cell	DNase-only
+ENCSR389YOA	CD4-positive, CD25-positive, alpha-beta regulatory T cell	CL:0000792	primary cell	DNase-only
+ENCSR573RFF	CD4-positive, CD25-positive, alpha-beta regulatory T cell	CL:0000792	primary cell	DNase-only
+ENCSR868NGB	CD4-positive, CD25-positive, alpha-beta regulatory T cell	CL:0000792	primary cell	DNase-only
+ENCSR897CBC	CD4-positive, CD25-positive, alpha-beta regulatory T cell	CL:0000792	primary cell	DNase-only
+ENCSR024DIA	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR079ZFC	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR083VOX	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR084MQO	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR098TOK	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR098XKP	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR142WHC	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR142ZOC	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR156ZPA	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR157TAN	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR163KIB	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR179TLM	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR230BZV	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR253CRU	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR257WRU	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR299HSD	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR389LJB	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR418ZMF	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR420PIO	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR429EGU	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR434XYV	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR455KHU	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR473VSX	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR474LCK	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR487RMH	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR496BEW	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR514FZW	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR572NTP	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR613NXS	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR644AAX	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR661PSL	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR703QVQ	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR740EKN	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR783PJD	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR827WYK	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR833QDW	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR839UMH	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR852SBO	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR870CRW	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR878UQN	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR890KFP	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR911MJV	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR919VGA	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR934UWI	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR935ONX	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR939QYM	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR946YPZ	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR973GUS	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR983JTE	CD4-positive, alpha-beta T cell	CL:0000624	primary cell	DNase-only
+ENCSR097KSH	CD4-positive, alpha-beta memory T cell	CL:0000897	primary cell	DNase-only
+ENCSR100ASN	CD4-positive, alpha-beta memory T cell	CL:0000897	primary cell	DNase-only
+ENCSR352LUA	CD4-positive, alpha-beta memory T cell	CL:0000897	primary cell	DNase-only
+ENCSR507LGY	CD4-positive, alpha-beta memory T cell	CL:0000897	primary cell	DNase-only
+ENCSR632HXW	CD4-positive, alpha-beta memory T cell	CL:0000897	primary cell	DNase-only
+ENCSR037RXN	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR115FXR	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR129TPB	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR226FNO	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR241RQP	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR263YKX	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR386WWH	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR390BRJ	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR395ESQ	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR503IDW	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR592CPY	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR672OAC	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR704MSU	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR730WBL	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR776SMW	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR800OXF	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR801DBI	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR814CPN	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR870YCA	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR898ZLY	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR912FSG	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR933SJZ	CD8-positive, alpha-beta T cell	CL:0000625	primary cell	DNase-only
+ENCSR175JCM	CD8-positive, alpha-beta memory T cell	CL:0000909	primary cell	DNase-only
+ENCSR333SDH	CD8-positive, alpha-beta memory T cell	CL:0000909	primary cell	DNase-only
+ENCSR538GSH	CD8-positive, alpha-beta memory T cell	CL:0000909	primary cell	DNase-only
+ENCSR614TCG	CD8-positive, alpha-beta memory T cell	CL:0000909	primary cell	DNase-only
+ENCSR718NPZ	CMK	EFO:0003037	cell line	DNase-only
+ENCSR027FZE	COLO829	EFO:0002140	cell line	DNase-only
+ENCSR416UCB	CWRU1	EFO:0009501	cell line	DNase-only
+ENCSR284THK	Caco-2	EFO:0001099	cell line	DNase-only
+ENCSR741EHJ	Caco-2	EFO:0001099	cell line	DNase-only
+ENCSR936BUB	Caco-2	EFO:0001099	cell line	DNase-only
+ENCSR679UZK	Caki2	EFO:0002150	cell line	DNase-only
+ENCSR657MTJ	Calu3	EFO:0002819	cell line	DNase-only
+ENCSR158OTN	D341Med	EFO:0002157	cell line	DNase-only
+ENCSR888PNM	D721Med	EFO:0005696	cell line	DNase-only
+ENCSR291JOQ	DND-41	EFO:0007074	cell line	DNase-only
+ENCSR579WIF	Daoy	EFO:0005698	cell line	DNase-only
+ENCSR549VAW	EH	EFO:0007748	cell line	DNase-only
+ENCSR240HHE	EL	EFO:0007749	cell line	DNase-only
+ENCSR118NOT	ELF-1	EFO:0005901	cell line	DNase-only
+ENCSR115DEH	ELR	EFO:0007750	cell line	DNase-only
+ENCSR998GYO	G401	EFO:0002179	cell line	DNase-only
+ENCSR279BKT	GM03348	CLO:0016536	cell line	DNase-only
+ENCSR498EHM	GM03348	CLO:0016536	cell line	DNase-only
+ENCSR558EKO	GM03348	CLO:0016536	cell line	DNase-only
+ENCSR464VYW	GM04503	CLO:0018813	cell line	DNase-only
+ENCSR950MWY	GM04504	CLO:0018812	cell line	DNase-only
+ENCSR192FKQ	GM06990	EFO:0002783	cell line	DNase-only
+ENCSR488QNE	GM10248	EFO:0005334	cell line	DNase-only
+ENCSR596NOT	GM10266	EFO:0005335	cell line	DNase-only
+ENCSR724FZK	GM12864	EFO:0005337	cell line	DNase-only
+ENCSR918WEC	GM12865	EFO:0005338	cell line	DNase-only
+ENCSR604WPK	GM12878	EFO:0002784	cell line	DNase-only
+ENCSR997TVR	GM12878	EFO:0002784	cell line	Extended
+ENCSR887MDA	GM12891	EFO:0002785	cell line	DNase-only
+ENCSR192IAB	GM12892	EFO:0002786	cell line	DNase-only
+ENCSR504WGE	GM13976	EFO:0005345	cell line	DNase-only
+ENCSR718WQC	GM13977	EFO:0005346	cell line	DNase-only
+ENCSR045WCT	GM18507	EFO:0002787	cell line	DNase-only
+ENCSR029NMT	GM19238	EFO:0002788	cell line	DNase-only
+ENCSR208PDS	GM19239	EFO:0002789	cell line	DNase-only
+ENCSR064WRB	GM19240	EFO:0002790	cell line	DNase-only
+ENCSR771XAY	GM20000	EFO:0005352	cell line	DNase-only
+ENCSR999YQC	GM23248	EFO:0005723	cell line	DNase-only
+ENCSR125GRF	GM23338	EFO:0007950	cell line	DNase-only
+ENCSR481MDA	GM23338	EFO:0007950	cell line	DNase-only
+ENCSR440PMA	H1	EFO:0003042	cell line	DNase-only
+ENCSR569PED	H1	EFO:0003042	cell line	DNase-only
+ENCSR648VWQ	H1	EFO:0003042	cell line	DNase-only
+ENCSR834CMH	H4	EFO:0002184	cell line	DNase-only
+ENCSR142SVM	H54	EFO:0002782	cell line	DNase-only
+ENCSR041GOH	H7	EFO:0005904	cell line	DNase-only
+ENCSR676IGH	H7	EFO:0005904	cell line	DNase-only
+ENCSR031FHC	H9	EFO:0003045	cell line	DNase-only
+ENCSR087OMI	H9	EFO:0003045	cell line	DNase-only
+ENCSR177DND	H9	EFO:0003045	cell line	DNase-only
+ENCSR335EAP	H9	EFO:0003045	cell line	DNase-only
+ENCSR421FTS	H9	EFO:0003045	cell line	DNase-only
+ENCSR456DOX	H9	EFO:0003045	cell line	DNase-only
+ENCSR819RAS	H9	EFO:0003045	cell line	DNase-only
+ENCSR167ECG	HAP-1	EFO:0007598	cell line	DNase-only
+ENCSR737IGP	HAP-1	EFO:0007598	cell line	DNase-only
+ENCSR848BJP	HCEC 1CT	EFO:0009500	cell line	DNase-only
+ENCSR094BNV	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR104QVO	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR221BCA	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR357UZR	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR375YOR	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR380XAZ	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR439KTH	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR484VFV	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR547VBD	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR557RYL	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR575WDI	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR599EDN	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR736GEV	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR761IMP	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR877TBP	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR945BOH	HCT116	EFO:0002824	cell line	DNase-only
+ENCSR747FFM	HEK293T	EFO:0001184	cell line	DNase-only
+ENCSR249ZEO	HFF-Myc	EFO:0005710	cell line	DNase-only
+ENCSR749CVC	HFFc6	EFO:0009318	cell line	DNase-only
+ENCSR167SMG	HK-2	CLO:0003771	cell line	DNase-only
+ENCSR028BAB	HL-60	EFO:0002793	cell line	DNase-only
+ENCSR474OQC	HL-60	EFO:0002793	cell line	DNase-only
+ENCSR590KXM	HPDE6-E6E7	EFO:0005711	cell line	DNase-only
+ENCSR706CUT	HS-27A	EFO:0005283	cell line	DNase-only
+ENCSR674SZD	HS-5	EFO:0005282	cell line	DNase-only
+ENCSR940MJO	HT-29	EFO:0001193	cell line	DNase-only
+ENCSR402QFG	HT1080	EFO:0002059	cell line	DNase-only
+ENCSR801RHE	HTR-8/SVneo	EFO:0005709	cell line	DNase-only
+ENCSR471VWI	HeLa-S3	EFO:0002791	cell line	DNase-only
+ENCSR751FTH	HeLa-S3	EFO:0002791	cell line	DNase-only
+ENCSR754LEN	HeLa-S3	EFO:0002791	cell line	DNase-only
+ENCSR877SIG	HeLa-S3	EFO:0002791	cell line	DNase-only
+ENCSR411RGL	HepG2	EFO:0001187	cell line	DNase-only
+ENCSR932TWZ	HepG2	EFO:0001187	cell line	DNase-only
+ENCSR449XTZ	HuH-7	EFO:0005384	cell line	DNase-only
+ENCSR746LWC	HuH-7.5	EFO:0005704	cell line	DNase-only
+ENCSR103IHZ	IMR-90	EFO:0001196	cell line	DNase-only
+ENCSR376SFG	IMR-90	EFO:0001196	cell line	DNase-only
+ENCSR514CUR	Ishikawa	EFO:0005718	cell line	DNase-only
+ENCSR596UBK	Ishikawa	EFO:0005718	cell line	DNase-only
+ENCSR653LQZ	Ishikawa	EFO:0005718	cell line	DNase-only
+ENCSR672IBP	Ishikawa	EFO:0005718	cell line	DNase-only
+ENCSR805BXG	Jurkat, Clone E6-1	CLO:0007045	cell line	DNase-only
+ENCSR171UQE	K562	EFO:0002067	cell line	DNase-only
+ENCSR344DVS	K562	EFO:0002067	cell line	DNase-only
+ENCSR455FAU	K562	EFO:0002067	cell line	DNase-only
+ENCSR512SWG	K562	EFO:0002067	cell line	DNase-only
+ENCSR621BIJ	K562	EFO:0002067	cell line	Extended
+ENCSR627ANP	K562	EFO:0002067	cell line	DNase-only
+ENCSR761IOH	K562	EFO:0002067	cell line	DNase-only
+ENCSR778XFO	K562	EFO:0002067	cell line	DNase-only
+ENCSR390FPA	KBM-7	EFO:0005903	cell line	DNase-only
+ENCSR066FGT	Karpas-422	EFO:0005719	cell line	DNase-only
+ENCSR221FYS	L1-S8	EFO:0007599	cell line	DNase-only
+ENCSR189JSW	L1-S8R	EFO:0007600	cell line	DNase-only
+ENCSR902VMX	LHCN-M2	EFO:0005714	cell line	DNase-only
+ENCSR101SLZ	LNCaP clone FGC	EFO:0005726	cell line	DNase-only
+ENCSR357SDP	LNCaP clone FGC	EFO:0005726	cell line	DNase-only
+ENCSR864JGD	LNCaP clone FGC	EFO:0005726	cell line	DNase-only
+ENCSR355QJI	LoVo	EFO:0006639	cell line	DNase-only
+ENCSR265LDS	M059J	EFO:0005697	cell line	DNase-only
+ENCSR327UFM	MCF 10A	EFO:0001200	cell line	DNase-only
+ENCSR600SNZ	MCF 10A	EFO:0001200	cell line	DNase-only
+ENCSR660RCL	MCF 10A	EFO:0001200	cell line	DNase-only
+ENCSR128OAF	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR274UMN	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR322JOG	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR714SWR	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR804OQE	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR889UTZ	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR936SUR	MCF-7	EFO:0001203	cell line	DNase-only
+ENCSR071LZX	MG63	EFO:0002234	cell line	DNase-only
+ENCSR644TLE	MG63	EFO:0002234	cell line	DNase-only
+ENCSR459UGM	MM.1S	EFO:0005724	cell line	DNase-only
+ENCSR959HJJ	NAMALWA	EFO:0002246	cell line	DNase-only
+ENCSR965UMK	NAMALWA	EFO:0002246	cell line	DNase-only
+ENCSR076SNW	NB4	EFO:0002798	cell line	DNase-only
+ENCSR994TMJ	NCI-H226	EFO:0002285	cell line	DNase-only
+ENCSR861RPY	NCI-H460	EFO:0003044	cell line	DNase-only
+ENCSR372AMM	NCI-H929	EFO:0001221	cell line	DNase-only
+ENCSR210SPK	NT2/D1	EFO:0005236	cell line	DNase-only
+ENCSR038CIU	OCI-LY7	EFO:0006711	cell line	DNase-only
+ENCSR548KGZ	PC-3	EFO:0002074	cell line	DNase-only
+ENCSR034FEW	PC-9	EFO:0002847	cell line	DNase-only
+ENCSR265PWT	PC-9	EFO:0002847	cell line	DNase-only
+ENCSR886RTH	Panc1	EFO:0002713	cell line	DNase-only
+ENCSR108NMM	Peyer's patch	UBERON:0001211	tissue	DNase-only
+ENCSR229MIT	Peyer's patch	UBERON:0001211	tissue	DNase-only
+ENCSR320OYG	Peyer's patch	UBERON:0001211	tissue	DNase-only
+ENCSR519FFR	Peyer's patch	UBERON:0001211	tissue	DNase-only
+ENCSR180PFS	RCC	EFO:0000681	cell line	DNase-only
+ENCSR664KAQ	RCC 7860	EFO:0005707	cell line	DNase-only
+ENCSR628IVL	RKO	EFO:0001232	cell line	DNase-only
+ENCSR517RZQ	RPMI7951	EFO:0005712	cell line	DNase-only
+ENCSR728QKL	RPMI8226	EFO:0002322	cell line	DNase-only
+ENCSR670CPW	RWPE1	EFO:0002323	cell line	DNase-only
+ENCSR516GJF	RWPE2	EFO:0007610	cell line	DNase-only
+ENCSR416DWZ	Right ventricle myocardium inferior	NTR:0000491	tissue	DNase-only
+ENCSR938NNL	Right ventricle myocardium superior	NTR:0000492	tissue	DNase-only
+ENCSR287ILL	SJCRH30	EFO:0005722	cell line	DNase-only
+ENCSR610CSF	SJCRH30	EFO:0005722	cell line	DNase-only
+ENCSR201CNR	SJSA1	EFO:0002330	cell line	DNase-only
+ENCSR961XBH	SJSA1	EFO:0002330	cell line	DNase-only
+ENCSR166UAA	SK-MEL-5	EFO:0005720	cell line	DNase-only
+ENCSR549ACS	SK-N-DZ	EFO:0005721	cell line	DNase-only
+ENCSR768FRX	SK-N-DZ	EFO:0005721	cell line	DNase-only
+ENCSR121YCJ	SK-N-MC	EFO:0002860	cell line	DNase-only
+ENCSR365QKC	SK-N-SH	EFO:0003072	cell line	DNase-only
+ENCSR881LMQ	SK-N-SH	EFO:0003072	cell line	DNase-only
+ENCSR979YKL	SW480	EFO:0002083	cell line	DNase-only
+ENCSR947FQM	T follicular helper cell	CL:0002038	primary cell	DNase-only
+ENCSR000MZA	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR057VHV	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR097GEG	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR101XVJ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR183FUD	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR184DXI	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR194ANX	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR203DZL	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR204YOW	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR213PHH	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR219MVP	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR263APL	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR268BOE	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR283QUQ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR295CCN	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR299PDY	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR300LOZ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR316KSQ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR318PDY	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR320HSP	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR359SEG	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR361VZW	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR372PKM	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR386HDC	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR387TLR	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR389XJG	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR405WTI	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR422YYH	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR439LIH	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR467WPQ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR474TRO	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR475STC	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR488BKM	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR515IAE	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR535KXJ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR573KDB	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR642LEN	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR666KYB	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR677QGP	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR683TJK	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR713JNO	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR724BQX	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR724PZQ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR725FDR	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR725JPH	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR734LND	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR736ETF	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR738DIU	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR742VTU	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR767JTN	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR771WEQ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR774ZPQ	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR792FDE	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR821AHR	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR859MAT	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR866GYX	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR867WQF	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR887HYG	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR930TFY	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR953JQL	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR960UGF	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR962KNU	T-cell	CL:0000084	primary cell	DNase-only
+ENCSR139NVM	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR180OLB	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR228AXA	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR300BKV	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR478MYN	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR627SAK	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR650WQY	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR666WNV	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR693KFX	T-helper 1 cell	CL:0000545	primary cell	DNase-only
+ENCSR107AVB	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR364QWC	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR551WBF	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR578QSZ	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR602DPW	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR709RTL	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR722ELH	T-helper 17 cell	CL:0000899	primary cell	DNase-only
+ENCSR122TPW	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR321IOU	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR442PKR	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR505AWE	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR663BQY	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR718VSK	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR843XSE	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR879XAL	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR920FCW	T-helper 2 cell	CL:0000546	primary cell	DNase-only
+ENCSR130KUS	T-helper 22 cell	CL:0001042	primary cell	DNase-only
+ENCSR113MKY	T-helper 9 cell	CL:0002061	primary cell	DNase-only
+ENCSR435XFY	T47D	EFO:0001247	cell line	DNase-only
+ENCSR699EBL	T47D	EFO:0001247	cell line	DNase-only
+ENCSR821GFE	T47D	EFO:0001247	cell line	DNase-only
+ENCSR559XUI	WERI-Rb-1	EFO:0005715	cell line	DNase-only
+ENCSR897JJL	WERI-Rb-1	EFO:0005715	cell line	DNase-only
+ENCSR545RFV	WI38	EFO:0001260	cell line	DNase-only
+ENCSR605MTG	WI38	EFO:0001260	cell line	DNase-only
+ENCSR464GSY	WTC11	EFO:0009747	cell line	DNase-only
+ENCSR105UWG	activated B cell	NTR:0000506	primary cell	DNase-only
+ENCSR017FRF	activated CD4-positive, CD25-positive, alpha-beta regulatory T cell	NTR:0004148	primary cell	DNase-only
+ENCSR222CLS	activated CD4-positive, CD25-positive, alpha-beta regulatory T cell	NTR:0004148	primary cell	DNase-only
+ENCSR014FRR	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR036YHV	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR096CAF	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR198CHD	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR208NMT	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR239PSK	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR262FQI	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR280CKF	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR312XVI	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR436HAB	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR453FXU	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR489MOA	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR530SWV	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR595ZOX	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR610VYQ	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR624PTN	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR754ABI	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR764OFW	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR779MUH	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR788AXP	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR802RWP	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR805ZRG	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR813WBA	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR837AHR	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR843VMM	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR885KKD	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR886WMD	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR921KVN	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR935ZEQ	activated CD4-positive, alpha-beta T cell	CL:0000896	primary cell	DNase-only
+ENCSR731OOT	activated CD4-positive, alpha-beta memory T cell	NTR:0000499	primary cell	DNase-only
+ENCSR837MZI	activated CD4-positive, alpha-beta memory T cell	NTR:0000499	primary cell	DNase-only
+ENCSR391RFR	activated CD8-positive, alpha-beta T cell	CL:0000906	primary cell	DNase-only
+ENCSR441WIQ	activated CD8-positive, alpha-beta T cell	CL:0000906	primary cell	DNase-only
+ENCSR018YPD	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR208FXR	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR238GQG	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR320AWG	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR357IAC	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR374CYC	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR378RHQ	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR535WTI	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR541IFO	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR605TTF	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR658KGN	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR678ICB	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR684RVK	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR868MTI	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR873DRJ	activated CD8-positive, alpha-beta memory T cell	NTR:0000504	primary cell	DNase-only
+ENCSR079OFW	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR111CSA	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR180PZY	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR190LPJ	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR294TNW	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR378YXC	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR449VNV	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR479BDF	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR511ZDA	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR532YXO	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR610QMI	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR753VTY	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR843JXY	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR880PFK	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR978NKG	activated T-cell	NTR:0000537	primary cell	DNase-only
+ENCSR633RAM	activated T-helper 1 cell	NTR:0000633	primary cell	DNase-only
+ENCSR699QVZ	activated T-helper 1 cell	NTR:0000633	primary cell	DNase-only
+ENCSR792MPP	activated T-helper 1 cell	NTR:0000633	primary cell	DNase-only
+ENCSR818RAK	activated T-helper 1 cell	NTR:0000633	primary cell	DNase-only
+ENCSR686XXB	activated T-helper 2 cell	NTR:0000634	primary cell	DNase-only
+ENCSR671UVX	activated T-helper 9 cell	NTR:0000670	primary cell	DNase-only
+ENCSR310ITG	activated effector memory CD4-positive, alpha-beta T cell	NTR:0000660	primary cell	DNase-only
+ENCSR344JQJ	activated effector memory CD4-positive, alpha-beta T cell	NTR:0000660	primary cell	DNase-only
+ENCSR445QEJ	activated effector memory CD4-positive, alpha-beta T cell	NTR:0000660	primary cell	DNase-only
+ENCSR211PXD	activated gamma-delta T cell	NTR:0000672	primary cell	DNase-only
+ENCSR580OFQ	activated gamma-delta T cell	NTR:0000672	primary cell	DNase-only
+ENCSR219ZSX	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR228ISC	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR340HCM	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR606BRW	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR707NYI	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR743NLT	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR958ITY	activated naive CD4-positive, alpha-beta T cell	NTR:0000497	primary cell	DNase-only
+ENCSR032KDX	activated naive CD8-positive, alpha-beta T cell	NTR:0000502	primary cell	DNase-only
+ENCSR042SRX	activated naive CD8-positive, alpha-beta T cell	NTR:0000502	primary cell	DNase-only
+ENCSR342FWD	activated naive CD8-positive, alpha-beta T cell	NTR:0000502	primary cell	DNase-only
+ENCSR344FWM	activated naive CD8-positive, alpha-beta T cell	NTR:0000502	primary cell	DNase-only
+ENCSR031GVW	adipocyte	CL:0000136	in vitro differentiated cells	DNase-only
+ENCSR070OXK	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR092PIY	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR113FHV	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR170KRK	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR254AIQ	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR262LZW	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR297MJS	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR467RLV	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR578HLV	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR649QRE	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR653XRR	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR683YFO	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR690GUE	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR826XVD	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR894VXU	adrenal gland	UBERON:0002369	tissue	DNase-only
+ENCSR935SVA	amniotic epithelial cell	CL:0002536	primary cell	DNase-only
+ENCSR204AGU	amniotic stem cell	CL:0002639	primary cell	DNase-only
+ENCSR490WSB	aorta	UBERON:0000947	tissue	DNase-only
+ENCSR536JRB	aorta	UBERON:0000947	tissue	DNase-only
+ENCSR335FGV	ascending aorta	UBERON:0001496	tissue	DNase-only
+ENCSR636ITL	ascending aorta	UBERON:0001496	tissue	DNase-only
+ENCSR414CMA	astrocyte	CL:0000127	in vitro differentiated cells	DNase-only
+ENCSR777RNP	astrocyte	CL:0000127	primary cell	DNase-only
+ENCSR484JHD	astrocyte of the cerebellum	CL:0002603	primary cell	DNase-only
+ENCSR381NTL	astrocyte of the hippocampus	CL:0002604	primary cell	DNase-only
+ENCSR583ECS	astrocyte of the spinal cord	CL:0002606	primary cell	DNase-only
+ENCSR847HUI	bipolar neuron	CL:0000103	in vitro differentiated cells	DNase-only
+ENCSR467MNV	body of pancreas	UBERON:0001150	tissue	DNase-only
+ENCSR490POX	body of pancreas	UBERON:0001150	tissue	DNase-only
+ENCSR773TJN	body of pancreas	UBERON:0001150	tissue	DNase-only
+ENCSR794LUD	body of pancreas	UBERON:0001150	tissue	DNase-only
+ENCSR027MZW	brain	UBERON:0000955	tissue	DNase-only
+ENCSR031NQT	brain	UBERON:0000955	tissue	DNase-only
+ENCSR041KGF	brain	UBERON:0000955	organoid	DNase-only
+ENCSR219OBJ	brain	UBERON:0000955	tissue	DNase-only
+ENCSR243AWA	brain	UBERON:0000955	tissue	DNase-only
+ENCSR255THW	brain	UBERON:0000955	tissue	DNase-only
+ENCSR371PSZ	brain	UBERON:0000955	tissue	DNase-only
+ENCSR449JHG	brain	UBERON:0000955	tissue	DNase-only
+ENCSR568BFZ	brain	UBERON:0000955	tissue	DNase-only
+ENCSR591FCB	brain	UBERON:0000955	tissue	DNase-only
+ENCSR627QKP	brain	UBERON:0000955	tissue	DNase-only
+ENCSR754SAJ	brain	UBERON:0000955	tissue	DNase-only
+ENCSR789MNP	brain	UBERON:0000955	tissue	DNase-only
+ENCSR836CGF	brain	UBERON:0000955	tissue	DNase-only
+ENCSR866BSU	brain	UBERON:0000955	organoid	DNase-only
+ENCSR879LIM	brain	UBERON:0000955	tissue	DNase-only
+ENCSR557ZED	brain microvascular endothelial cell	CL:2000044	primary cell	DNase-only
+ENCSR712HIP	brain microvascular endothelial cell	CL:2000044	primary cell	DNase-only
+ENCSR243OLS	brain pericyte	CL:2000043	primary cell	DNase-only
+ENCSR480QFV	breast epithelium	UBERON:0008367	tissue	DNase-only
+ENCSR570OSL	breast epithelium	UBERON:0008367	tissue	DNase-only
+ENCSR100UQM	bronchial epithelial cell	CL:0002328	primary cell	DNase-only
+ENCSR262GGN	bronchial epithelial cell	CL:0002328	primary cell	DNase-only
+ENCSR022HEP	cardiac fibroblast	CL:0002548	primary cell	DNase-only
+ENCSR198OQS	cardiac fibroblast	CL:0002548	primary cell	DNase-only
+ENCSR613MPM	cardiac fibroblast	CL:0002548	primary cell	DNase-only
+ENCSR151FFB	cardiac muscle cell	CL:0000746	in vitro differentiated cells	DNase-only
+ENCSR301ZYZ	cardiac muscle cell	CL:0000746	in vitro differentiated cells	DNase-only
+ENCSR444DKY	cardiac muscle cell	CL:0000746	primary cell	DNase-only
+ENCSR535WIY	cardiac myoblast	CL:0010021	in vitro differentiated cells	DNase-only
+ENCSR620POP	cardiac septum	UBERON:0002099	tissue	DNase-only
+ENCSR867PGC	cardiovascular progenitor cell	CL:0002664	in vitro differentiated cells	DNase-only
+ENCSR094UDW	caudate nucleus	UBERON:0001873	tissue	DNase-only
+ENCSR100OSV	central memory CD4-positive, alpha-beta T cell	CL:0000904	primary cell	DNase-only
+ENCSR363ZIS	central memory CD4-positive, alpha-beta T cell	CL:0000904	primary cell	DNase-only
+ENCSR401RHP	central memory CD4-positive, alpha-beta T cell	CL:0000904	primary cell	DNase-only
+ENCSR991GLF	central memory CD4-positive, alpha-beta T cell	CL:0000904	primary cell	DNase-only
+ENCSR107YIW	central memory CD8-positive, alpha-beta T cell	CL:0000907	primary cell	DNase-only
+ENCSR724TRX	central memory CD8-positive, alpha-beta T cell	CL:0000907	primary cell	DNase-only
+ENCSR613RHA	cerebellar cortex	UBERON:0002129	tissue	DNase-only
+ENCSR902CGQ	cerebellum	UBERON:0002037	tissue	DNase-only
+ENCSR746NSE	chondrocyte	CL:0000138	in vitro differentiated cells	DNase-only
+ENCSR081ZDY	chorion	UBERON:0003124	tissue	DNase-only
+ENCSR652HJF	choroid plexus epithelial cell	CL:0000706	primary cell	DNase-only
+ENCSR097MGW	colonic mucosa	UBERON:0000317	tissue	DNase-only
+ENCSR465BPF	colonic mucosa	UBERON:0000317	tissue	DNase-only
+ENCSR084GRR	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR112NOO	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR213XEF	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR344VIP	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR413JLM	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR427OJO	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR557GWZ	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR564FGO	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR581YJB	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR710WJK	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR790PLU	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR892CTR	common myeloid progenitor, CD34-positive	CL:0001059	primary cell	DNase-only
+ENCSR309PEK	coronary artery	UBERON:0001621	tissue	DNase-only
+ENCSR492CGK	coronary artery	UBERON:0001621	tissue	DNase-only
+ENCSR154KHF	dedifferentiated amniotic fluid mesenchymal stem cell	NTR:0005063	primary cell	DNase-only
+ENCSR246SVY	dermis blood vessel endothelial cell	CL:2000010	primary cell	DNase-only
+ENCSR271GAD	dermis blood vessel endothelial cell	CL:2000010	primary cell	DNase-only
+ENCSR302CFA	dermis blood vessel endothelial cell	CL:2000010	primary cell	DNase-only
+ENCSR843ZVX	dermis blood vessel endothelial cell	CL:2000010	primary cell	DNase-only
+ENCSR589JEB	dermis microvascular lymphatic vessel endothelial cell	CL:2000041	primary cell	DNase-only
+ENCSR735SJQ	dermis microvascular lymphatic vessel endothelial cell	CL:2000041	primary cell	DNase-only
+ENCSR004ZDG	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR007SKZ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR065SFT	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR076USE	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR078VKM	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR128FYS	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR137MPX	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR145GZS	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR149VUN	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR151YGP	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR155RBZ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR156YIR	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR174HZO	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR177FIU	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR178BPP	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR179GOU	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR180FIU	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR197RFH	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR229PSO	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR230QSC	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR249HAP	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR258DMJ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR280CYQ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR285HAJ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR292ZID	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR294KZV	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR309WTP	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR317UNA	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR330MYQ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR348JSL	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR352OBK	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR362XPS	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR438FRG	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR444ZMD	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR464HMB	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR488UPD	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR509UJZ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR569LDL	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR569RJV	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR581UQX	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR584ZKT	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR603QHQ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR693TXK	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR697TXI	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR739GUY	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR746FIO	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR767LIM	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR785DHY	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR786PKE	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR793NFG	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR804MMB	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR908ADG	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR940ZRB	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR944SAJ	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR966YYP	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR982QDF	dorsolateral prefrontal cortex	UBERON:0009834	tissue	DNase-only
+ENCSR909XUK	ecto neural progenitor cell	NTR:0000474	in vitro differentiated cells	DNase-only
+ENCSR303NXU	effector CD4-positive, alpha-beta T cell	CL:0001044	primary cell	DNase-only
+ENCSR370ZOF	effector CD4-positive, alpha-beta T cell	CL:0001044	primary cell	DNase-only
+ENCSR473XTF	effector memory CD4-positive, alpha-beta T cell	CL:0000905	primary cell	DNase-only
+ENCSR889WEP	effector memory CD4-positive, alpha-beta T cell	CL:0000905	primary cell	DNase-only
+ENCSR913OIF	effector memory CD4-positive, alpha-beta T cell	CL:0000905	primary cell	DNase-only
+ENCSR266WFI	effector memory CD8-positive, alpha-beta T cell	CL:0000913	primary cell	DNase-only
+ENCSR501BPX	effector memory CD8-positive, alpha-beta T cell	CL:0000913	primary cell	DNase-only
+ENCSR980SJL	effector memory CD8-positive, alpha-beta T cell	CL:0000913	primary cell	DNase-only
+ENCSR010WLR	embryonic facial prominence	UBERON:0012314	tissue	DNase-only
+ENCSR021EXA	endodermal cell	CL:0000223	in vitro differentiated cells	DNase-only
+ENCSR766MLN	endodermal cell	CL:0000223	in vitro differentiated cells	DNase-only
+ENCSR233OQV	endothelial cell	CL:0000115	in vitro differentiated cells	DNase-only
+ENCSR270IBQ	endothelial cell of umbilical vein	CL:0002618	primary cell	DNase-only
+ENCSR522EFS	endothelial cell of umbilical vein	CL:0002618	primary cell	DNase-only
+ENCSR647KDV	epidermal melanocyte	CL:2000000	primary cell	DNase-only
+ENCSR538LRI	epithelial cell of esophagus	CL:0002252	primary cell	DNase-only
+ENCSR958BWB	epithelial cell of prostate	CL:0002231	primary cell	DNase-only
+ENCSR334SBV	epithelial cell of proximal tubule	CL:0002306	primary cell	DNase-only
+ENCSR820OQX	esophagus muscularis mucosa	UBERON:0004648	tissue	DNase-only
+ENCSR702CWE	esophagus squamous epithelium	UBERON:0006920	tissue	DNase-only
+ENCSR175PRS	eye	UBERON:0000970	tissue	DNase-only
+ENCSR580FLQ	eye	UBERON:0000970	tissue	DNase-only
+ENCSR819LTS	femur	UBERON:0000981	tissue	DNase-only
+ENCSR210RBR	fibroblast of dermis	CL:0002551	primary cell	DNase-only
+ENCSR365FLJ	fibroblast of gingiva	CL:0002552	primary cell	DNase-only
+ENCSR555HVT	fibroblast of lung	CL:0002553	primary cell	DNase-only
+ENCSR954OGD	fibroblast of lung	CL:0002553	primary cell	DNase-only
+ENCSR997YSI	fibroblast of mammary gland	CL:0002555	primary cell	DNase-only
+ENCSR403BAJ	fibroblast of peridontal ligament	CL:2000017	primary cell	DNase-only
+ENCSR587BRL	fibroblast of pulmonary artery	CL:0002557	primary cell	DNase-only
+ENCSR593ATV	fibroblast of skin of abdomen	CL:2000013	primary cell	DNase-only
+ENCSR979HSQ	fibroblast of skin of abdomen	CL:2000013	primary cell	DNase-only
+ENCSR886NXW	fibroblast of skin of back	CL:0011022	primary cell	DNase-only
+ENCSR034TYW	fibroblast of skin of left biceps	NTR:0000521	primary cell	DNase-only
+ENCSR662SVC	fibroblast of skin of left biceps	NTR:0000521	primary cell	DNase-only
+ENCSR034KPI	fibroblast of skin of left quadriceps	NTR:0000522	primary cell	DNase-only
+ENCSR565FRQ	fibroblast of skin of left quadriceps	NTR:0000522	primary cell	DNase-only
+ENCSR446MVF	fibroblast of skin of right biceps	NTR:0000525	primary cell	DNase-only
+ENCSR587YOY	fibroblast of skin of right quadriceps	NTR:0000523	primary cell	DNase-only
+ENCSR360BQF	fibroblast of skin of scalp	CL:4006001	primary cell	DNase-only
+ENCSR596BBP	fibroblast of skin of scalp	CL:4006001	primary cell	DNase-only
+ENCSR467JZT	fibroblast of the aortic adventitia	CL:0002547	primary cell	DNase-only
+ENCSR105XMT	fibroblast of the conjunctiva	CL:0002550	primary cell	DNase-only
+ENCSR570AWB	fibroblast of upper back skin	CL:0011021	primary cell	DNase-only
+ENCSR998QCO	fibroblast of upper back skin	CL:0011021	primary cell	DNase-only
+ENCSR031LUY	fibroblast of villous mesenchyme	CL:0002558	primary cell	DNase-only
+ENCSR752FQO	forelimb muscle	UBERON:0003662	tissue	DNase-only
+ENCSR027RGM	foreskin fibroblast	CL:1001608	primary cell	DNase-only
+ENCSR796YWJ	foreskin fibroblast	CL:1001608	primary cell	DNase-only
+ENCSR947RLQ	foreskin fibroblast	CL:1001608	primary cell	DNase-only
+ENCSR991DRT	foreskin fibroblast	CL:1001608	primary cell	DNase-only
+ENCSR331KQB	foreskin keratinocyte	CL:1001606	primary cell	DNase-only
+ENCSR941XYA	foreskin keratinocyte	CL:1001606	primary cell	DNase-only
+ENCSR425JFF	foreskin melanocyte	CL:2000045	primary cell	DNase-only
+ENCSR922FLL	foreskin melanocyte	CL:2000045	primary cell	DNase-only
+ENCSR052OIR	frontal cortex	UBERON:0001870	tissue	DNase-only
+ENCSR110KGA	frontal cortex	UBERON:0001870	tissue	DNase-only
+ENCSR039EQH	gastrocnemius medialis	UBERON:0011907	tissue	DNase-only
+ENCSR157MXU	gastrocnemius medialis	UBERON:0011907	tissue	DNase-only
+ENCSR386CQG	gastrocnemius medialis	UBERON:0011907	tissue	DNase-only
+ENCSR453ESO	gastrocnemius medialis	UBERON:0011907	tissue	DNase-only
+ENCSR896YHR	gastrocnemius medialis	UBERON:0011907	tissue	DNase-only
+ENCSR979LNE	gastrocnemius medialis	UBERON:0011907	tissue	DNase-only
+ENCSR148OFR	germinal center	UBERON:0010754	tissue	DNase-only
+ENCSR138SKU	globus pallidus	UBERON:0001875	tissue	DNase-only
+ENCSR564ZLE	glomerular endothelial cell	CL:0002188	primary cell	DNase-only
+ENCSR665THS	glomerular visceral epithelial cell	CL:0000653	primary cell	DNase-only
+ENCSR805MWQ	glutamatergic neuron	CL:0000679	in vitro differentiated cells	DNase-only
+ENCSR002YWN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR010JRN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR027MJC	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR030NKL	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR078FYW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR083JGD	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR097UWX	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR099GAB	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR114ETK	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR124XXZ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR175MVB	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR184IHO	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR186LZW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR211YED	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR214EAH	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR220PUL	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR226LZZ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR232JNE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR232NMT	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR234UCO	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR234XRY	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR245MYV	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR248YWS	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR251VNJ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR260SPE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR270ORJ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR274XLI	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR297HTV	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR313CDD	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR322YGO	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR333YLN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR348FJE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR356DGD	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR419ETH	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR430MBO	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR431HOV	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR448FRN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR457WZG	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR489WPU	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR490NCH	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR498RUW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR501HEM	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR522TVW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR525VMC	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR543YSD	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR557GWO	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR560KUI	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR568FSF	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR573LJN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR581KZV	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR586JZB	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR622HAC	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR631IZW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR673FDN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR673ZUI	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR683JFU	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR695DAU	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR718MTO	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR725UJD	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR735IZI	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR737GBJ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR748QYZ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR756WAN	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR800WSR	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR814OFS	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR834QHG	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR844EDS	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR852BNE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR852IBE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR854BPQ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR862GYG	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR862UYG	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR865HXL	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR866VGC	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR882UOP	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR885UEE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR893UVQ	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR896BUX	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR899UXS	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR899YZA	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR907JQW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR938KTW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR955RML	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR965IRW	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR982SWE	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR982TTL	head of caudate nucleus	UBERON:0002626	tissue	DNase-only
+ENCSR010VRG	heart	UBERON:0000948	tissue	DNase-only
+ENCSR027NCQ	heart	UBERON:0000948	tissue	DNase-only
+ENCSR243VLI	heart	UBERON:0000948	tissue	DNase-only
+ENCSR265SYU	heart	UBERON:0000948	tissue	DNase-only
+ENCSR268DCC	heart	UBERON:0000948	tissue	DNase-only
+ENCSR275NYM	heart	UBERON:0000948	tissue	DNase-only
+ENCSR324EAR	heart	UBERON:0000948	tissue	DNase-only
+ENCSR341EEG	heart	UBERON:0000948	tissue	DNase-only
+ENCSR407MNO	heart	UBERON:0000948	tissue	DNase-only
+ENCSR437EQQ	heart	UBERON:0000948	tissue	DNase-only
+ENCSR438ODB	heart	UBERON:0000948	tissue	DNase-only
+ENCSR649JPE	heart	UBERON:0000948	tissue	DNase-only
+ENCSR704MUC	heart	UBERON:0000948	tissue	DNase-only
+ENCSR778WJN	heart	UBERON:0000948	tissue	DNase-only
+ENCSR819HFU	heart	UBERON:0000948	tissue	DNase-only
+ENCSR826YQC	heart	UBERON:0000948	tissue	DNase-only
+ENCSR834LVY	heart	UBERON:0000948	tissue	DNase-only
+ENCSR972IQH	heart	UBERON:0000948	tissue	DNase-only
+ENCSR138ZWW	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR168EWX	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR179GEJ	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR292FRS	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR489QWX	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR515PAT	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR563JJG	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR676IYV	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR763TOQ	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR860BVJ	heart left ventricle	UBERON:0002084	tissue	DNase-only
+ENCSR082DMJ	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR128BSF	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR240USV	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR544QOQ	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR724CAP	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR827IWF	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR841TLK	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR885LJS	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR907ZHH	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR915TUW	heart right ventricle	UBERON:0002080	tissue	DNase-only
+ENCSR153XYE	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR209SSF	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR250ACL	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR410WMX	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR411LYI	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR518GIW	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR559TGX	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR612WUX	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR662YDI	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR741TVN	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR809UPU	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR918QUD	hematopoietic multipotent progenitor cell	CL:0000837	in vitro differentiated cells	DNase-only
+ENCSR612QRK	hepatic stellate cell	CL:0000632	primary cell	DNase-only
+ENCSR540LPL	hepatocyte	CL:0000182	primary cell	DNase-only
+ENCSR819OXZ	hepatocyte	CL:0000182	in vitro differentiated cells	DNase-only
+ENCSR163TEJ	hindlimb muscle	UBERON:0003663	tissue	DNase-only
+ENCSR772VHZ	iPS DF 19.11	EFO:0007096	cell line	DNase-only
+ENCSR416HDS	iPS DF 19.7	EFO:0007095	cell line	DNase-only
+ENCSR920MHM	iPS DF 4.7	EFO:0007097	cell line	DNase-only
+ENCSR846KBH	iPS DF 6.9	EFO:0007098	cell line	DNase-only
+ENCSR082HOQ	iPS-NIHi11	EFO:0007952	cell line	DNase-only
+ENCSR157DJQ	iPS-NIHi7	EFO:0007953	cell line	DNase-only
+ENCSR435JVN	immature natural killer cell	CL:0000823	primary cell	DNase-only
+ENCSR532ITD	immature natural killer cell	CL:0000823	primary cell	DNase-only
+ENCSR611PGI	immature natural killer cell	CL:0000823	primary cell	DNase-only
+ENCSR133SBH	inferior parietal cortex	UBERON:0006088	tissue	DNase-only
+ENCSR533LIC	inflammatory macrophage	CL:0000863	primary cell	DNase-only
+ENCSR781FMK	inflammatory macrophage	CL:0000863	primary cell	DNase-only
+ENCSR937VGG	inflammatory macrophage	CL:0000863	primary cell	DNase-only
+ENCSR969WEY	inflammatory macrophage	CL:0000863	primary cell	DNase-only
+ENCSR979ELZ	inflammatory macrophage	CL:0000863	primary cell	DNase-only
+ENCSR389ZNO	iris pigment epithelial cell	CL:0002565	primary cell	DNase-only
+ENCSR249VUG	islet precursor cell	NTR:0001484	in vitro differentiated cells	DNase-only
+ENCSR366BKU	keratinocyte	CL:0000312	primary cell	DNase-only
+ENCSR998FKR	keratinocyte	CL:0000312	primary cell	DNase-only
+ENCSR115PBS	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR122SNI	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR137SNV	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR267CCM	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR270YRH	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR278BKS	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR439PQS	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR449PQD	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR694NWA	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR716KOD	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR827UXW	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR893SPO	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR934YNP	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR990BBN	kidney	UBERON:0002113	tissue	DNase-only
+ENCSR424MBB	kidney capillary endothelial cell	CL:1000892	primary cell	DNase-only
+ENCSR093IGI	kidney epithelial cell	CL:0002518	primary cell	DNase-only
+ENCSR907TBJ	kidney glomerular epithelial cell	CL:1000510	primary cell	DNase-only
+ENCSR206JHT	kidney tubule cell	CL:1000507	primary cell	DNase-only
+ENCSR681BEB	kidney tubule cell	CL:1000507	primary cell	DNase-only
+ENCSR014MUK	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR027JRK	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR131XFT	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR156MYZ	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR355LTS	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR637BVM	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR651EXI	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR675DNH	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR675GRG	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR677RET	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR748TNI	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR777HQL	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR778BSB	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR851RYP	large intestine	UBERON:0000059	tissue	DNase-only
+ENCSR122ZFA	left cardiac atrium	UBERON:0002079	tissue	DNase-only
+ENCSR359ZYY	left cardiac atrium	UBERON:0002079	tissue	DNase-only
+ENCSR269DYG	left colon	UBERON:0008971	tissue	DNase-only
+ENCSR408UEA	left colon	UBERON:0008971	tissue	DNase-only
+ENCSR920YJH	left forelimb	UBERON:8300002	tissue	DNase-only
+ENCSR482UJZ	left hindlimb	UBERON:8300004	tissue	DNase-only
+ENCSR044FFX	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR111NMH	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR289QGO	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR339UZA	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR389VDH	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR513WUS	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR564HXQ	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR646LCR	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR757SHG	left kidney	UBERON:0004538	tissue	DNase-only
+ENCSR456DWH	left lobe of liver	UBERON:0001115	tissue	DNase-only
+ENCSR013EFQ	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR016PXO	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR051YXR	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR134YKE	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR145OHU	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR152ELC	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR170KGO	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR262DQF	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR364FSK	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR415YZQ	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR457PMF	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR519DDQ	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR619IHY	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR878JTV	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR925BQN	left lung	UBERON:0002168	tissue	DNase-only
+ENCSR236RXA	left renal cortex interstitium	UBERON:0018117	tissue	DNase-only
+ENCSR386YOO	left renal cortex interstitium	UBERON:0018117	tissue	DNase-only
+ENCSR541OXX	left renal cortex interstitium	UBERON:0018117	tissue	DNase-only
+ENCSR931VTT	left renal cortex interstitium	UBERON:0018117	tissue	DNase-only
+ENCSR085PAX	left renal pelvis	UBERON:0018115	tissue	DNase-only
+ENCSR177NKS	left renal pelvis	UBERON:0018115	tissue	DNase-only
+ENCSR503MEB	left renal pelvis	UBERON:0018115	tissue	DNase-only
+ENCSR864LOX	left renal pelvis	UBERON:0018115	tissue	DNase-only
+ENCSR524GHO	left ventricle myocardium inferior	NTR:0000493	tissue	DNase-only
+ENCSR181YTG	left ventricle myocardium superior	NTR:0000494	tissue	DNase-only
+ENCSR347ZII	limb	UBERON:0002101	tissue	DNase-only
+ENCSR750PFY	limb	UBERON:0002101	tissue	DNase-only
+ENCSR257HLT	liver	UBERON:0002107	tissue	DNase-only
+ENCSR731BRS	liver	UBERON:0002107	tissue	DNase-only
+ENCSR260ZMD	lower leg skin	UBERON:0004264	tissue	DNase-only
+ENCSR847VIM	lower leg skin	UBERON:0004264	tissue	DNase-only
+ENCSR370ETB	lower lobe of left lung	UBERON:0008953	tissue	DNase-only
+ENCSR548BBI	lower lobe of left lung	UBERON:0008953	tissue	DNase-only
+ENCSR970INU	lower lobe of left lung	UBERON:0008953	tissue	DNase-only
+ENCSR764OJN	lower lobe of right lung	UBERON:0002171	tissue	DNase-only
+ENCSR084EOB	lung	UBERON:0002048	tissue	DNase-only
+ENCSR134CMY	lung	UBERON:0002048	tissue	DNase-only
+ENCSR151YBS	lung	UBERON:0002048	tissue	DNase-only
+ENCSR194KNE	lung	UBERON:0002048	tissue	DNase-only
+ENCSR208OKU	lung	UBERON:0002048	tissue	DNase-only
+ENCSR286OLZ	lung	UBERON:0002048	tissue	DNase-only
+ENCSR294PCC	lung	UBERON:0002048	tissue	DNase-only
+ENCSR316TSE	lung	UBERON:0002048	tissue	DNase-only
+ENCSR400MNO	lung	UBERON:0002048	tissue	DNase-only
+ENCSR528UQX	lung	UBERON:0002048	tissue	DNase-only
+ENCSR659BFI	lung	UBERON:0002048	tissue	DNase-only
+ENCSR747OZG	lung	UBERON:0002048	tissue	DNase-only
+ENCSR844XAT	lung	UBERON:0002048	tissue	DNase-only
+ENCSR853ZVZ	lung	UBERON:0002048	tissue	DNase-only
+ENCSR078TXJ	lung microvascular endothelial cell	CL:2000016	primary cell	DNase-only
+ENCSR596LGE	lung microvascular endothelial cell	CL:2000016	primary cell	DNase-only
+ENCSR155VGH	mammary epithelial cell	CL:0002327	primary cell	DNase-only
+ENCSR289GDY	mammary epithelial cell	CL:0002327	primary cell	DNase-only
+ENCSR789EZK	mammary epithelial cell	CL:0002327	primary cell	DNase-only
+ENCSR080GWY	medulla oblongata	UBERON:0001896	tissue	DNase-only
+ENCSR228RAU	memory B cell	CL:0000787	primary cell	DNase-only
+ENCSR300MTO	memory B cell	CL:0000787	primary cell	DNase-only
+ENCSR394DCW	mesenchymal stem cell	CL:0000134	in vitro differentiated cells	DNase-only
+ENCSR873VNJ	mesendoderm	NTR:0000856	in vitro differentiated cells	DNase-only
+ENCSR936MAH	mesenteric fat pad	UBERON:0015143	tissue	DNase-only
+ENCSR534FGU	mesodermal cell	CL:0000222	in vitro differentiated cells	DNase-only
+ENCSR028TTK	mesothelial cell of epicardium	CL:0011019	in vitro differentiated cells	DNase-only
+ENCSR449CWZ	mesothelial cell of epicardium	CL:0011019	in vitro differentiated cells	DNase-only
+ENCSR937IVA	midbrain	UBERON:0001891	tissue	DNase-only
+ENCSR524AYL	middle frontal gyrus	UBERON:0002702	tissue	DNase-only
+ENCSR137FXV	mucosa of descending colon	UBERON:0004992	tissue	DNase-only
+ENCSR605GDX	mucosa of descending colon	UBERON:0004992	tissue	DNase-only
+ENCSR961MWH	mucosa of descending colon	UBERON:0004992	tissue	DNase-only
+ENCSR517TPT	mucosa of gallbladder	UBERON:0005033	tissue	DNase-only
+ENCSR097PYK	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR230VIR	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR285FJD	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR362ZWD	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR388KYX	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR407KZM	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR420FVP	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR481PMG	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR515UWP	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR535WSZ	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR594NIQ	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR603XXL	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR646ZSJ	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR720UQO	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR781JMG	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR823LOK	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR863KBY	muscle of arm	UBERON:0001499	tissue	DNase-only
+ENCSR196PTT	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR284TUC	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR322GPY	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR448JEQ	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR478XPU	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR591OBB	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR613YKL	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR758VPI	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR793CBQ	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR793GLF	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR798KSQ	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR805ZSO	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR929ZQE	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR989FHU	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR997ZBH	muscle of back	UBERON:0002324	tissue	DNase-only
+ENCSR068YWL	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR240MMT	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR468XFZ	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR572XTM	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR639ERF	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR641SJQ	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR713KVM	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR729DKE	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR735LWL	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR744BHQ	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR948UXB	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR969TEL	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR994QJV	muscle of leg	UBERON:0001383	tissue	DNase-only
+ENCSR323TCY	muscle of trunk	UBERON:0001774	tissue	DNase-only
+ENCSR518JKK	muscle of trunk	UBERON:0001774	tissue	DNase-only
+ENCSR537UDO	muscle of trunk	UBERON:0001774	tissue	DNase-only
+ENCSR264JNJ	myocyte	CL:0000187	in vitro differentiated cells	DNase-only
+ENCSR984VAS	myotube	CL:0002372	in vitro differentiated cells	DNase-only
+ENCSR114JRP	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR172AKA	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR320PQI	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR409MWJ	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR438SHX	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR451YWL	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR651GWI	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR852QIV	naive B cell	CL:0000788	primary cell	DNase-only
+ENCSR049XWT	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR057JRS	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR192CVB	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR207GTJ	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR228YLS	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR231QMO	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR258NYN	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR303TRL	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR413DKU	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR547DNH	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR602ONM	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR617HPH	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR805LBK	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR899HQG	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR902QZT	naive thymus-derived CD4-positive, alpha-beta T cell	CL:0000895	primary cell	DNase-only
+ENCSR015QKR	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR019JIM	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR140QOX	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR254ZAW	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR261VHD	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR264ZVW	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR274ORH	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR283YIE	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR330KBL	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR560WZZ	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR572LBY	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR881JLS	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR913RIB	naive thymus-derived CD8-positive, alpha-beta T cell	CL:0000900	primary cell	DNase-only
+ENCSR315PBR	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR444CPF	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR481NBP	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR486JFE	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR813LZG	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR825CKF	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR931UNZ	natural killer cell	CL:0000623	primary cell	DNase-only
+ENCSR584AAP	nephron progenitor cell	NTR:0000512	in vitro differentiated cells	DNase-only
+ENCSR331EZU	neural crest cell	CL:0011012	in vitro differentiated cells	DNase-only
+ENCSR776GQD	neural progenitor cell	CL:0011020	in vitro differentiated cells	DNase-only
+ENCSR206XEV	neuronal stem cell	CL:0000047	in vitro differentiated cells	DNase-only
+ENCSR753YSN	non-pigmented ciliary epithelial cell	CL:0002304	primary cell	DNase-only
+ENCSR500QVP	occipital lobe	UBERON:0002021	tissue	DNase-only
+ENCSR264LDY	omental fat pad	UBERON:0010414	tissue	DNase-only
+ENCSR683IOO	omental fat pad	UBERON:0010414	tissue	DNase-only
+ENCSR017RNR	osteoblast	CL:0000062	primary cell	DNase-only
+ENCSR430GDU	osteocyte	CL:0000137	in vitro differentiated cells	DNase-only
+ENCSR019URU	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR050CMT	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR079YSS	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR154RKX	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR257XOE	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR476YHE	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR496SHX	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR554HIP	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR648ATV	ovary	UBERON:0000992	tissue	DNase-only
+ENCSR204ACI	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR480FCZ	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR547BLV	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR685YUN	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR748WVY	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR855BCT	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR864DIM	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR890BYS	pancreas	UBERON:0001264	tissue	DNase-only
+ENCSR077RTJ	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR148DKG	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR155EGA	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR232KEU	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR317DOY	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR330WGR	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR351VRT	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR403FEH	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR420ZQC	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR433LEB	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR459JWH	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR486NIX	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR502YYA	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR576PEC	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR613EZS	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR624FDG	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR683EHD	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR705QYZ	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR793GWX	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR866SVY	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR952CHI	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR965BSR	placenta	UBERON:0001987	tissue	DNase-only
+ENCSR752WRO	pons	UBERON:0000988	tissue	DNase-only
+ENCSR006VBD	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR026UHA	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR031KRW	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR034TGA	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR106NBD	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR196SOF	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR199UNC	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR297ZRG	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR326WEF	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR328ZES	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR332HRZ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR336YYB	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR365PGQ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR374TCY	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR386QUK	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR408RPS	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR409KGF	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR428XIB	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR467FCA	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR485AJM	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR518BYD	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR520WFC	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR531BGV	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR537DDI	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR556APZ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR583KIA	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR604CQU	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR643DYF	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR689QMJ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR702MMO	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR702UZO	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR706ZYQ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR714MYG	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR731QZB	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR746UEY	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR752ANI	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR774BOY	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR783RXJ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR817AQF	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR826FTX	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR850JPM	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR855LWK	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR881UIQ	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR913WNG	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR924FCG	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR940LMH	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR982EZK	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR983PAA	posterior cingulate gyrus	UBERON:0002740	tissue	DNase-only
+ENCSR321IYW	posterior vena cava	UBERON:0001072	tissue	DNase-only
+ENCSR574TBL	progenitor cell of endocrine pancreas	CL:0002351	in vitro differentiated cells	DNase-only
+ENCSR684OZL	prostate gland	UBERON:0002367	tissue	DNase-only
+ENCSR152LHK	psoas muscle	UBERON:0008450	tissue	DNase-only
+ENCSR184IHJ	psoas muscle	UBERON:0008450	tissue	DNase-only
+ENCSR541DFT	psoas muscle	UBERON:0008450	tissue	DNase-only
+ENCSR667UIA	psoas muscle	UBERON:0008450	tissue	DNase-only
+ENCSR721MYX	psoas muscle	UBERON:0008450	tissue	DNase-only
+ENCSR959EGT	pulmonary artery endothelial cell	CL:1001568	primary cell	DNase-only
+ENCSR639WRL	putamen	UBERON:0001874	tissue	DNase-only
+ENCSR095HLE	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR100EUL	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR280VQO	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR285AMD	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR458LPO	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR462ZSD	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR517URS	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR537JGP	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR575IPS	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR588WNM	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR913MBX	renal cortex interstitium	UBERON:0005270	tissue	DNase-only
+ENCSR670TXW	renal cortical epithelial cell	CL:0002584	primary cell	DNase-only
+ENCSR076VYG	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR392IWG	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR419RQY	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR442MAQ	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR478WXB	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR805SPG	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR862QXB	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR868EBW	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR927TUT	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR983CLV	renal pelvis	UBERON:0001224	tissue	DNase-only
+ENCSR330LJB	retina	UBERON:0000966	tissue	DNase-only
+ENCSR617GWV	retina	UBERON:0000966	tissue	DNase-only
+ENCSR814UUJ	retina	UBERON:0000966	tissue	DNase-only
+ENCSR364EUW	retinal pigment epithelial cell	CL:0002586	primary cell	DNase-only
+ENCSR163RFQ	right atrium auricular region	UBERON:0006631	tissue	DNase-only
+ENCSR392RLO	right atrium auricular region	UBERON:0006631	tissue	DNase-only
+ENCSR155PMI	right cardiac atrium	UBERON:0002078	tissue	DNase-only
+ENCSR264NNN	right cardiac atrium	UBERON:0002078	tissue	DNase-only
+ENCSR708GWO	right cardiac atrium	UBERON:0002078	tissue	DNase-only
+ENCSR556ZUC	right forelimb	UBERON:8300001	tissue	DNase-only
+ENCSR848YIG	right hindlimb	UBERON:8300003	tissue	DNase-only
+ENCSR095SOW	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR176ONU	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR401XBQ	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR416SGQ	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR725IQG	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR788VPF	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR800AUJ	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR906ZPR	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR913QEP	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR962XJQ	right kidney	UBERON:0004539	tissue	DNase-only
+ENCSR045MDC	right lobe of liver	UBERON:0001114	tissue	DNase-only
+ENCSR183YXK	right lobe of liver	UBERON:0001114	tissue	DNase-only
+ENCSR301IGZ	right lobe of liver	UBERON:0001114	tissue	DNase-only
+ENCSR588DXH	right lobe of liver	UBERON:0001114	tissue	DNase-only
+ENCSR845CMR	right lobe of liver	UBERON:0001114	tissue	DNase-only
+ENCSR126NWL	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR195XPU	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR235FVW	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR359DFW	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR373JRG	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR481BBB	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR573MAK	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR810XCU	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR814UZN	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR910TKY	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR928UQP	right lung	UBERON:0002167	tissue	DNase-only
+ENCSR073XXR	right renal cortex interstitium	UBERON:0018118	tissue	DNase-only
+ENCSR263ZDA	right renal cortex interstitium	UBERON:0018118	tissue	DNase-only
+ENCSR448KEL	right renal cortex interstitium	UBERON:0018118	tissue	DNase-only
+ENCSR393PMZ	right renal pelvis	UBERON:0018116	tissue	DNase-only
+ENCSR503SHG	right renal pelvis	UBERON:0018116	tissue	DNase-only
+ENCSR637JFZ	right renal pelvis	UBERON:0018116	tissue	DNase-only
+ENCSR843GRX	right renal pelvis	UBERON:0018116	tissue	DNase-only
+ENCSR460HAQ	sciatic nerve	UBERON:0001322	tissue	DNase-only
+ENCSR335WGH	sigmoid colon	UBERON:0001159	tissue	DNase-only
+ENCSR856UML	sigmoid colon	UBERON:0001159	tissue	DNase-only
+ENCSR957VNY	sigmoid colon	UBERON:0001159	tissue	DNase-only
+ENCSR443ENA	skeletal muscle cell	CL:0000188	primary cell	DNase-only
+ENCSR517NRJ	skeletal muscle myoblast	CL:0000515	primary cell	DNase-only
+ENCSR821CNM	skin of body	UBERON:0002097	tissue	DNase-only
+ENCSR044WZN	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR063ILZ	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR212NBX	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR303XCY	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR324PUT	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR385AKL	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR447AAI	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR602SFS	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR607MPQ	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR690NZD	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR722XEP	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR792KRO	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR868VGK	small intestine	UBERON:0002108	tissue	DNase-only
+ENCSR643RBO	smooth muscle cell of the brain vasculature	CL:0002590	primary cell	DNase-only
+ENCSR390BHP	spinal cord	UBERON:0002240	tissue	DNase-only
+ENCSR446TXA	spinal cord	UBERON:0002240	tissue	DNase-only
+ENCSR742EQG	spinal cord	UBERON:0002240	tissue	DNase-only
+ENCSR794OXM	spinal cord	UBERON:0002240	tissue	DNase-only
+ENCSR821ZMY	spinal cord	UBERON:0002240	tissue	DNase-only
+ENCSR846YTV	spinal cord	UBERON:0002240	tissue	DNase-only
+ENCSR277CMT	spleen	UBERON:0002106	tissue	DNase-only
+ENCSR426ZDZ	spleen	UBERON:0002106	tissue	DNase-only
+ENCSR576MTU	spleen	UBERON:0002106	tissue	DNase-only
+ENCSR657WIH	spleen	UBERON:0002106	tissue	DNase-only
+ENCSR674DKQ	spleen	UBERON:0002106	tissue	DNase-only
+ENCSR006OUR	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR028OMO	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR071XLF	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR115NZJ	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR135RVI	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR136HBC	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR136RRJ	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR140ULV	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR142IYT	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR147TQJ	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR149GUM	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR193KXI	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR198BXD	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR222IQS	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR255WME	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR256LQV	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR267LWP	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR301JME	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR321WIU	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR329GLF	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR358NNO	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR389CYV	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR393ZNM	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR439ZQU	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR455HYG	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR469LLJ	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR478FRK	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR505ELV	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR521ZKY	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR528XEF	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR530FUX	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR534ILE	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR568RIC	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR575ICN	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR579QEN	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR640FPA	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR641TVU	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR671EOF	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR684GVK	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR686KWJ	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR687CON	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR699VBU	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR701XQS	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR764SEA	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR774ZES	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR809DGT	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR831IJO	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR837REH	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR842NTB	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR845BJH	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR897AAG	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR904NPU	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR908LYB	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR908RON	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR933SFC	stimulated activated CD4-positive, alpha-beta T cell	NTR:0000663	primary cell	DNase-only
+ENCSR081RER	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR164XKU	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR233ZHZ	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR274DJN	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR282FRQ	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR336UXE	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR407ZOC	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR463ETY	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR508BHW	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR524LBS	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR615FPM	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR658AVY	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR692TGS	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR705OMO	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR721QAR	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR724ICL	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR756WOT	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR781KVT	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR788QFX	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR788UZE	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR792RWW	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR807PJV	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR853VWL	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR863JSX	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR909CMY	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR914NYI	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR943NWA	stimulated activated CD8-positive, alpha-beta memory T cell	NTR:0000669	primary cell	DNase-only
+ENCSR132MYN	stimulated activated effector memory CD8-positive, alpha-beta T cell	NTR:0000668	primary cell	DNase-only
+ENCSR691JHR	stimulated activated effector memory CD8-positive, alpha-beta T cell	NTR:0000668	primary cell	DNase-only
+ENCSR111PUZ	stimulated activated naive B cell	NTR:0000661	primary cell	DNase-only
+ENCSR018IUX	stimulated activated naive CD8-positive, alpha-beta T cell	NTR:0000667	primary cell	DNase-only
+ENCSR251NWI	stimulated activated naive CD8-positive, alpha-beta T cell	NTR:0000667	primary cell	DNase-only
+ENCSR573TSU	stimulated activated naive CD8-positive, alpha-beta T cell	NTR:0000667	primary cell	DNase-only
+ENCSR045AMF	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR046CKU	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR094PBV	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR184WWA	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR189XXA	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR246LLE	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR266DOK	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR318PXA	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR329ZVK	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR342RWQ	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR406ZWT	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR440CSE	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR464EVX	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR516CNX	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR538FSP	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR588VNM	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR677ZHE	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR737XPT	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR801RPE	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR848DFI	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR850SEU	stomach	UBERON:0000945	tissue	DNase-only
+ENCSR457ADT	stromal cell of bone marrow	CL:0010001	primary cell	DNase-only
+ENCSR411DDW	superior temporal gyrus	UBERON:0002769	tissue	DNase-only
+ENCSR083UVL	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR209KSA	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR792GLQ	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR860MGE	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR888GPU	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR921ZVQ	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR947DQU	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR991BVI	suppressor macrophage	CL:0000862	primary cell	DNase-only
+ENCSR439IHT	suprapubic skin	UBERON:0036149	tissue	DNase-only
+ENCSR478AZK	suprapubic skin	UBERON:0036149	tissue	DNase-only
+ENCSR025QUQ	testis	UBERON:0000473	tissue	DNase-only
+ENCSR324QTX	testis	UBERON:0000473	tissue	DNase-only
+ENCSR445ZXK	testis	UBERON:0000473	tissue	DNase-only
+ENCSR944ILJ	testis	UBERON:0000473	tissue	DNase-only
+ENCSR079NCN	thoracic aorta	UBERON:0001515	tissue	DNase-only
+ENCSR113VDK	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR152FIL	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR179VWV	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR205FGK	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR263SYH	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR312XZE	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR608QNK	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR712ISH	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR781CUF	thymus	UBERON:0002370	tissue	DNase-only
+ENCSR121UGD	thyroid gland	UBERON:0002046	tissue	DNase-only
+ENCSR468UXK	thyroid gland	UBERON:0002046	tissue	DNase-only
+ENCSR541LLX	thyroid gland	UBERON:0002046	tissue	DNase-only
+ENCSR608WBW	thyroid gland	UBERON:0002046	tissue	DNase-only
+ENCSR363UHC	tibial artery	UBERON:0007610	tissue	DNase-only
+ENCSR495OBC	tibial artery	UBERON:0007610	tissue	DNase-only
+ENCSR719XKT	tibial artery	UBERON:0007610	tissue	DNase-only
+ENCSR034GBD	tibial nerve	UBERON:0001323	tissue	DNase-only
+ENCSR334KPM	tibial nerve	UBERON:0001323	tissue	DNase-only
+ENCSR364ZUN	tibial nerve	UBERON:0001323	tissue	DNase-only
+ENCSR469MPM	tongue	UBERON:0001723	tissue	DNase-only
+ENCSR598IFM	tongue	UBERON:0001723	tissue	DNase-only
+ENCSR073PZL	transverse colon	UBERON:0001157	tissue	DNase-only
+ENCSR488SKY	transverse colon	UBERON:0001157	tissue	DNase-only
+ENCSR790TQV	transverse colon	UBERON:0001157	tissue	DNase-only
+ENCSR991LOR	transverse colon	UBERON:0001157	tissue	DNase-only
+ENCSR125REA	trophoblast cell	CL:0000351	primary cell	DNase-only
+ENCSR217RHL	trophoblast cell	CL:0000351	in vitro differentiated cells	DNase-only
+ENCSR331HUP	trophoblast cell	CL:0000351	primary cell	DNase-only
+ENCSR647DTF	trophoblast cell	CL:0000351	primary cell	DNase-only
+ENCSR825UFF	trophoblast cell	CL:0000351	primary cell	DNase-only
+ENCSR960KWV	type B pancreatic cell	CL:0000169	in vitro differentiated cells	DNase-only
+ENCSR952KMU	umbilical cord	UBERON:0002331	tissue	DNase-only
+ENCSR398PAI	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR420RMG	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR457UNS	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR519KIQ	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR527PXI	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR545HRY	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR910JVL	upper lobe of left lung	UBERON:0008952	tissue	DNase-only
+ENCSR223TKR	upper lobe of right lung	UBERON:0002170	tissue	DNase-only
+ENCSR569UEJ	ureter	UBERON:0000056	tissue	DNase-only
+ENCSR091VPY	urinary bladder	UBERON:0001255	tissue	DNase-only
+ENCSR121CCQ	urothelium cell line	EFO:0005913	cell line	DNase-only
+ENCSR930ETB	urothelium cell line	EFO:0005913	cell line	DNase-only
+ENCSR081KVZ	uterus	UBERON:0000995	tissue	DNase-only
+ENCSR869WII	uterus	UBERON:0000995	tissue	DNase-only
+ENCSR123AKF	vagina	UBERON:0000996	tissue	DNase-only
+ENCSR738AUI	vagina	UBERON:0000996	tissue	DNase-only

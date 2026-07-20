@@ -275,8 +275,9 @@ for gid in sorted(genes):
 
 A GENCODE (GFF3) annotation is available as a universal `Grove`. For a **located**
 query, build one from just the locus with `build_grove(<gff>, "chr7:…")` (a helper
-provided to you — fast, reads only that region); for a **genome-wide** query,
-deserialize the whole-genome grove. See "Available resources" for the exact variables
+provided to you — fast, reads only that region); for a **genome-wide** query, open the
+whole-genome grove lazily with `pg.GroveView.open(...)` (a query-only reader that pages
+in only the blocks it touches). See "Available resources" for the exact variables
 and when to use each. Keys are features indexed by chromosome (`seqid`), payloads are
 dicts, and the gene structure is encoded as **labelled edges** — you traverse it, you
 don't re-parse it.
