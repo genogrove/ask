@@ -13,6 +13,7 @@ import argparse
 import json
 import re
 import sys
+import time
 from pathlib import Path
 
 from ask import __version__, llm, resources, sandbox
@@ -198,6 +199,7 @@ def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
                 continue
             if question in ("exit", "quit"):
                 break
+            t0 = time.perf_counter()
             try:
                 out, err = _answer(question, system_prompt=system_prompt, preamble=preamble,
                                    args=args, execute=worker.submit)
@@ -209,6 +211,7 @@ def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
             else:
                 sys.stdout.write(out)
                 sys.stdout.flush()
+            print(f"({time.perf_counter() - t0:.2f}s)", file=sys.stderr)
     finally:
         worker.close()
     return 0
