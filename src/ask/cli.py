@@ -10,13 +10,12 @@ injects its path as a variable; the generated code only deserializes and queries
 from __future__ import annotations
 
 import argparse
-import inspect
 import json
 import re
 import sys
 from pathlib import Path
 
-from ask import __version__, gff, llm, resources, sandbox
+from ask import __version__, llm, resources, sandbox
 
 # Default Anthropic model for code generation. Opus is the most capable tier and
 # the connected-interval reasoning here is the paper's headline contribution, so
@@ -51,6 +50,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print the generated Python before running it.",
     )
+    parser.add_argument(
+        "--init",
+        action="store_true",
+        help="Download the dataset grove(s) now (the pinned ~90 MB .gg) and exit, so the "
+             "first real query is instant.",
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
 
@@ -63,35 +68,28 @@ def _var_name(resource_name: str) -> str:
 def _dataset_context(names):
     """Resolve datasets to (resources_block, code_preamble, data_paths).
 
-    Inject the bgzip+tabix GFF path (for fast region reads via the injected
-    ``build_grove`` helper) and the whole-genome grove path (for genome-wide
-    queries, built lazily). Whitelist every path for the sandbox.
+    Inject one handle per dataset: the local path to its prebuilt grove ``.gg``. Every
+    query — located or genome-wide — opens it with ``pg.GroveView.open`` and pages in only
+    the blocks it touches, so there's no tabix GFF, no region-build, and no whole-grove
+    load. ``ensure_all_grove`` has already made the ``.gg`` local (see ``main``).
     """
     block, preamble, data_paths = [], [], []
     for name in names:
-        gff_path = str(resources.indexed_path(name))  # bgzip+tabix; built once
-        all_gg = str(resources._all_grove_gg(name))    # path only — built lazily if referenced
+        gg = str(resources._all_grove_gg(name))  # local .gg (downloaded/built in main)
         var = _var_name(name)
         desc = resources.RESOURCES[name].description
         block.append(
-            f'- `{var}` (str): path to a tabix-indexed `{name}` GFF ({desc}) Build a '
-            f'region-restricted Grove with `g = build_grove({var}, "chr7:55000000-55300000")` — '
-            f"the region is a tabix string (**1-based inclusive**), and only features overlapping "
-            f"it are loaded (fast). Pick a region covering what the query needs: a point for "
-            f"\"what overlaps here\", a gene's span for its full exon/CDS structure.\n"
-            f"- `{var}_ALL` (str): path to the **whole-genome** `{name}` Grove — "
-            f"`g = pg.GroveView.open({var}_ALL)`, a lazy reader that pages in only the blocks "
-            f"a query touches (no whole-genome load). Use it for genome-wide queries or gene-name "
-            f"lookups with no known locus. It is query-only — `intersect`, `flanking`, "
-            f"`get_neighbors`, `get_edges`, `get_neighbors_if` all work (no `insert`/`serialize`). "
-            f"Prefer `build_grove` whenever the query names a locus.\n"
-            f'Both groves have the structure in "The GENCODE Grove model" above.'
+            f'- `{var}` (str): path to the `{name}` grove ({desc}) — open it lazily with '
+            f'`g = pg.GroveView.open({var})`. GroveView pages in only the blocks a query '
+            f"touches, so a **located** query (e.g. a variant at chr7:55191822) reads just that "
+            f"locus, and a **genome-wide / gene-name** query works from the same handle — no "
+            f"region to pick, no whole-grove load. Query-only: `intersect`, `flanking`, "
+            f"`get_neighbors`, `get_edges`, `get_neighbors_if` (no `insert`/`serialize`). See "
+            f'"The GENCODE Grove model" above for the node/edge structure.'
         )
-        preamble.append(f"{var} = {json.dumps(gff_path)}")
-        preamble.append(f"{var}_ALL = {json.dumps(all_gg)}")
-        data_paths += [gff_path, gff_path + ".tbi", all_gg]
-    helper = inspect.getsource(gff.build_grove)  # pure-pygenogrove region loader, runs in the sandbox
-    return "\n".join(block), helper + "\n\n" + "\n".join(preamble) + "\n", data_paths
+        preamble.append(f"{var} = {json.dumps(gg)}")
+        data_paths.append(gg)
+    return "\n".join(block), "\n".join(preamble) + "\n", data_paths
 
 
 def _render(text: str, fmt: str) -> str:
@@ -145,20 +143,39 @@ def _pygenogrove_site_dir() -> str:
     return str(f.parent.parent if f.name == "__init__.py" else f.parent)
 
 
+def _ensure_groves(names) -> None:
+    """Make each dataset's grove ``.gg`` local (download the pinned one, or build once),
+    printing a one-line notice on a real first-run fetch."""
+    pending = [n for n in names if not resources._all_grove_gg(n).exists()]
+    if pending:
+        print(f"Fetching {', '.join(pending)} grove (first run only: a pinned ~90 MB .gg)…",
+              file=sys.stderr)
+    for name in names:
+        resources.ensure_all_grove(name)
+
+
 def main(argv: list[str] | None = None) -> int:
     """Parse arguments and run the end-to-end loop. Returns a process exit code."""
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.init:  # prime the grove(s) ahead of first use, then exit
+        try:
+            _ensure_groves(_DATASETS)
+        except Exception as exc:
+            print(f"genogrove-ask: {exc}", file=sys.stderr)
+            return 1
+        print("Ready.", file=sys.stderr)
+        return 0
 
     if not args.question:
         parser.print_help()
         return 0
 
     try:
-        unindexed = [n for n in _DATASETS if not resources.is_indexed(n)]
-        if unindexed:
-            print(f"Fetching {', '.join(unindexed)} (first run only: downloads the "
-                  "indexed dataset, a few hundred MB)…", file=sys.stderr)
+        # Every query — located or genome-wide — reads the grove via GroveView, so make
+        # it local up front (pinned .gg download on first run; cached after).
+        _ensure_groves(_DATASETS)
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
 
@@ -167,14 +184,6 @@ def main(argv: list[str] | None = None) -> int:
         if args.show_code:
             print("# --- generated code ---", file=sys.stderr)
             print(code, file=sys.stderr)
-
-        # Genome-wide queries reference <VAR>_ALL — ensure that whole-genome grove
-        # lazily (download the pinned .gg, or build once). Located queries skip it.
-        for name in _DATASETS:
-            if f"{_var_name(name)}_ALL" in code:
-                print(f"Preparing whole-genome grove for {name} (first genome-wide query: "
-                      "downloads a pinned ~90 MB .gg)…", file=sys.stderr)
-                resources.ensure_all_grove(name)
 
         # JSONL is the output contract, so guarantee `json` is importable even if
         # the generated code forgets the import (it's already in the allowlist).

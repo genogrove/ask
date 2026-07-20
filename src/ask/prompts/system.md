@@ -238,7 +238,8 @@ BED/GFF interop, not when mixing data types or attaching labelled edges.
 
 ```python
 g.serialize(path: str)              # zlib-compressed .gg; preserves coordinates, payloads, AND edges
-g2 = pg.Grove.deserialize(path)     # static; also pg.BedGrove.deserialize / pg.GffGrove.deserialize
+g2 = pg.GroveView.open(path)        # lazy reader — pages only touched blocks; use this to read a .gg
+g3 = pg.Grove.deserialize(path)     # eager full load (whole grove into memory); prefer GroveView.open
 ```
 
 ### Version introspection
@@ -258,7 +259,7 @@ variant is the **query**, never stored:
 ```python
 import pygenogrove as pg
 
-g = pg.Grove.deserialize(REGULATORY_GG)        # registry-resolved path; edges included
+g = pg.GroveView.open(REGULATORY_GG)           # lazy reader; pages only touched blocks; edges included
 # VCF POS is 1-based -> closed key is POS-1; strand-agnostic -> '*' matches any stored strand.
 variant = pg.GenomicCoordinate("*", 55_191_821, 55_191_821)
 genes = {}
@@ -273,14 +274,13 @@ for gid in sorted(genes):
 
 ## The GENCODE Grove model
 
-A GENCODE (GFF3) annotation is available as a universal `Grove`. For a **located**
-query, build one from just the locus with `build_grove(<gff>, "chr7:…")` (a helper
-provided to you — fast, reads only that region); for a **genome-wide** query, open the
-whole-genome grove lazily with `pg.GroveView.open(...)` (a query-only reader that pages
-in only the blocks it touches). See "Available resources" for the exact variables
-and when to use each. Keys are features indexed by chromosome (`seqid`), payloads are
-dicts, and the gene structure is encoded as **labelled edges** — you traverse it, you
-don't re-parse it.
+A GENCODE (GFF3) annotation is available as a prebuilt universal `Grove`. Open it with
+`g = pg.GroveView.open(<handle>)` (the handle is in "Available resources") — a lazy reader
+that **pages in only the blocks a query touches**. So the *same* handle serves both a
+**located** query (e.g. a variant at `chr7:55191822` — it reads just that locus) and a
+**genome-wide / gene-name** query — no region to pick, no whole-grove load. Keys are
+features indexed by chromosome (`seqid`), payloads are dicts, and the gene structure is
+encoded as **labelled edges** — you traverse it, you don't re-parse it.
 
 **Node payloads** (`key.data`):
 
