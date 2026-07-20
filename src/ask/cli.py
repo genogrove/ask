@@ -168,11 +168,12 @@ def main(argv: list[str] | None = None) -> int:
             print("# --- generated code ---", file=sys.stderr)
             print(code, file=sys.stderr)
 
-        # Genome-wide queries reference <VAR>_ALL — build that whole-genome grove
-        # lazily, only now that we know the query needs it. Located queries skip it.
+        # Genome-wide queries reference <VAR>_ALL — ensure that whole-genome grove
+        # lazily (download the pinned .gg, or build once). Located queries skip it.
         for name in _DATASETS:
             if f"{_var_name(name)}_ALL" in code:
-                print(f"Building whole-genome grove for {name} (genome-wide query)…", file=sys.stderr)
+                print(f"Preparing whole-genome grove for {name} (first genome-wide query: "
+                      "downloads a pinned ~90 MB .gg)…", file=sys.stderr)
                 resources.ensure_all_grove(name)
 
         # JSONL is the output contract, so guarantee `json` is importable even if

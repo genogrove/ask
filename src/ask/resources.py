@@ -113,6 +113,11 @@ class Resource:
     filename: str = ""
     index_url: str = ""
     index_sha256: str = ""
+    # Prebuilt whole-genome grove (.gg). When set, the genome-wide path downloads this
+    # instead of building locally (minutes) — GroveView reads it lazily. Rebuild + re-pin
+    # if the .gg format or the source annotation changes.
+    grove_url: str = ""
+    grove_sha256: str = ""
 
 
 # Curated dataset catalog. Each entry pins an *immutable* release (an explicit
@@ -128,6 +133,10 @@ RESOURCES: dict[str, Resource] = {
         filename="gencode.v50.annotation.sorted.gff3.gz",
         index_url="https://zenodo.org/api/records/21123308/files/gencode.v50.annotation.sorted.gff3.gz.tbi/content",
         index_sha256="52020642c93f01c24488d98b446d705a655d31ea39339fad36cced3b9cc9480a",
+        # Prebuilt grove: gene/transcript/exon + contains/first_exon/next edges, CDS folded
+        # onto exons. pygenogrove v0.7.2, format 0.2. ~90 MB vs the 237 MB tabix GFF.
+        grove_url="https://zenodo.org/api/records/21459419/files/gencode.v50.annotation.grove-fmt0.2.gg/content",
+        grove_sha256="df0fca51476d974369db97159a7d4431bfa870d275eb159f4cb21466d3d1a47e",
         description="GENCODE v50 comprehensive gene annotation, GRCh38 (GFF3, sorted + bgzip + tabix).",
     ),
 }
@@ -251,20 +260,35 @@ def _all_grove_gg(name: str) -> Path:
 
 
 def ensure_all_grove(name: str) -> Path:
-    """Build + cache the whole-genome grove (for genome-wide queries) if absent.
+    """Cache the whole-genome grove (`.gg`) if absent, returning its path.
 
-    Slow on first call (reads the whole annotation), instant after. Only invoked
-    when a query actually needs the whole genome — located queries never build it.
+    Prefers the **pinned prebuilt grove** (``grove_url``): a ~90 MB sha-verified download
+    (seconds) instead of a local build. Falls back to building from the annotation
+    (``build_grove(region="")`` → serialize) — minutes, only if no grove is pinned. Either
+    way it's cached; located queries never trigger this.
     """
-    from ask.gff import build_grove
-
     gg = _all_grove_gg(name)
-    if not gg.exists():
-        gg.parent.mkdir(parents=True, exist_ok=True)
-        tmp = gg.with_name(gg.name + ".tmp")
-        build_grove(indexed_path(name), region="").serialize(str(tmp))
-        tmp.replace(gg)
+    if gg.exists():
+        return gg
+    res = RESOURCES[name]
+    gg.parent.mkdir(parents=True, exist_ok=True)
+    if res.grove_url:  # download the pinned .gg (fast, reproducible)
+        return _download(res.grove_url, res.grove_sha256, gg)
+    from ask.gff import build_grove  # local fallback — no hosted grove pinned
+
+    tmp = gg.with_name(gg.name + ".tmp")
+    build_grove(indexed_path(name), region="").serialize(str(tmp))
+    tmp.replace(gg)
     return gg
+
+
+def grove_view(name: str):
+    """Open the whole-genome grove as a lazy ``GroveView`` (downloads the pinned `.gg`
+    on first use, else builds it). Serves both located and genome-wide queries — pages in
+    only the blocks a query touches; no whole-grove load, no per-query rebuild."""
+    import pygenogrove as pg
+
+    return pg.GroveView.open(str(ensure_all_grove(name)))
 
 
 # Bump when ``ask.gff``'s grove model changes, so a stale `.gg` (valid pygenogrove
