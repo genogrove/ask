@@ -165,22 +165,26 @@ def _answer(question, *, system_prompt, preamble, args, execute):
     """Translate one question to code, run it via ``execute(script)``, and render.
 
     ``execute`` is a ``script -> SandboxResult`` callable (``sandbox.run`` for one-shot,
-    ``Worker.submit`` for interactive). Returns ``(rendered_stdout, error_msg)`` — exactly
-    one is non-empty.
+    ``Worker.submit`` for interactive). Returns ``(rendered_stdout, error_msg, gen_s, exec_s)``
+    — exactly one of stdout/error is non-empty; the two times split code-gen from execution.
     """
+    t0 = time.perf_counter()
     code = llm.generate_query(question, system_prompt, model=args.model)
+    gen_s = time.perf_counter() - t0
     if args.show_code:
         print("# --- generated code ---", file=sys.stderr)
         print(code, file=sys.stderr)
     # JSONL is the output contract, so guarantee `json` is importable even if the
     # generated code forgets the import (it's already in the allowlist).
+    t1 = time.perf_counter()
     result = execute("import json\n" + preamble + code)
+    exec_s = time.perf_counter() - t1
     if result.returncode != 0 or result.timed_out:
-        return "", (result.stderr.strip() or "(the generated code failed with no output)")
+        return "", (result.stderr.strip() or "(the generated code failed with no output)"), gen_s, exec_s
     rendered = _render(result.stdout, args.format)
     if not rendered.strip():
-        return "", "(the generated code produced no output)"
-    return rendered, ""
+        return "", "(the generated code produced no output)", gen_s, exec_s
+    return rendered, "", gen_s, exec_s
 
 
 def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
@@ -199,10 +203,9 @@ def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
                 continue
             if question in ("exit", "quit"):
                 break
-            t0 = time.perf_counter()
             try:
-                out, err = _answer(question, system_prompt=system_prompt, preamble=preamble,
-                                   args=args, execute=worker.submit)
+                out, err, gen_s, exec_s = _answer(question, system_prompt=system_prompt,
+                                                  preamble=preamble, args=args, execute=worker.submit)
             except Exception as exc:  # e.g. an LLM error — keep the session alive
                 print(f"genogrove-ask: {exc}", file=sys.stderr)
                 continue
@@ -211,7 +214,7 @@ def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
             else:
                 sys.stdout.write(out)
                 sys.stdout.flush()
-            print(f"({time.perf_counter() - t0:.2f}s)", file=sys.stderr)
+            print(f"({gen_s + exec_s:.2f}s  llm {gen_s:.2f}s · grove {exec_s:.3f}s)", file=sys.stderr)
     finally:
         worker.close()
     return 0
@@ -251,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
                             data_paths=data_paths, site_dir=site_dir)
 
     try:  # one-shot: a fresh sandbox per invocation
-        out, err = _answer(
+        out, err, _gen_s, _exec_s = _answer(
             args.question, system_prompt=system_prompt, preamble=preamble, args=args,
             execute=lambda s: sandbox.run(s, data_paths=data_paths, extra_syspath=[site_dir]),
         )
