@@ -82,10 +82,9 @@ def _dataset_context(names):
             f"- `{var}_ALL` (str): path to the **whole-genome** `{name}` Grove — "
             f"`g = pg.GroveView.open({var}_ALL)`, a lazy reader that pages in only the blocks "
             f"a query touches (no whole-genome load). Use it for genome-wide queries or gene-name "
-            f"lookups with no known locus. It is query-only — `intersect`, `get_neighbors`, "
-            f"`get_edges`, `get_neighbors_if` work; `flanking`/`insert` do not, so for a "
-            f"nearest-neighbour query use `build_grove` with a region. Prefer `build_grove` "
-            f"whenever the query names a locus.\n"
+            f"lookups with no known locus. It is query-only — `intersect`, `flanking`, "
+            f"`get_neighbors`, `get_edges`, `get_neighbors_if` all work (no `insert`/`serialize`). "
+            f"Prefer `build_grove` whenever the query names a locus.\n"
             f'Both groves have the structure in "The GENCODE Grove model" above.'
         )
         preamble.append(f"{var} = {json.dumps(gff_path)}")
