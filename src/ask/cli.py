@@ -56,6 +56,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Download the dataset grove(s) now (the pinned ~90 MB .gg) and exit, so the "
              "first real query is instant.",
     )
+    parser.add_argument(
+        "-i", "--interactive",
+        action="store_true",
+        help="Interactive session: keep the grove(s) open across questions (the ~200 ms "
+             "open is paid once, then queries are sub-ms). One question per line.",
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
 
@@ -154,6 +160,60 @@ def _ensure_groves(names) -> None:
         resources.ensure_all_grove(name)
 
 
+def _answer(question, *, system_prompt, preamble, args, execute):
+    """Translate one question to code, run it via ``execute(script)``, and render.
+
+    ``execute`` is a ``script -> SandboxResult`` callable (``sandbox.run`` for one-shot,
+    ``Worker.submit`` for interactive). Returns ``(rendered_stdout, error_msg)`` — exactly
+    one is non-empty.
+    """
+    code = llm.generate_query(question, system_prompt, model=args.model)
+    if args.show_code:
+        print("# --- generated code ---", file=sys.stderr)
+        print(code, file=sys.stderr)
+    # JSONL is the output contract, so guarantee `json` is importable even if the
+    # generated code forgets the import (it's already in the allowlist).
+    result = execute("import json\n" + preamble + code)
+    if result.returncode != 0 or result.timed_out:
+        return "", (result.stderr.strip() or "(the generated code failed with no output)")
+    rendered = _render(result.stdout, args.format)
+    if not rendered.strip():
+        return "", "(the generated code produced no output)"
+    return rendered, ""
+
+
+def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
+    """Warm-worker REPL: open the grove(s) once, then answer questions until EOF/'exit'."""
+    worker = sandbox.Worker(data_paths=data_paths, extra_syspath=[site_dir])
+    print("genogrove-ask interactive — one question per line; Ctrl-D or 'exit' to quit.",
+          file=sys.stderr)
+    try:
+        while True:
+            try:
+                question = input("ask> ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print(file=sys.stderr)
+                break
+            if not question:
+                continue
+            if question in ("exit", "quit"):
+                break
+            try:
+                out, err = _answer(question, system_prompt=system_prompt, preamble=preamble,
+                                   args=args, execute=worker.submit)
+            except Exception as exc:  # e.g. an LLM error — keep the session alive
+                print(f"genogrove-ask: {exc}", file=sys.stderr)
+                continue
+            if err:
+                print(err, file=sys.stderr)
+            else:
+                sys.stdout.write(out)
+                sys.stdout.flush()
+    finally:
+        worker.close()
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Parse arguments and run the end-to-end loop. Returns a process exit code."""
     parser = build_parser()
@@ -168,39 +228,37 @@ def main(argv: list[str] | None = None) -> int:
         print("Ready.", file=sys.stderr)
         return 0
 
-    if not args.question:
+    if not args.question and not args.interactive:
         parser.print_help()
         return 0
 
     try:
-        # Every query — located or genome-wide — reads the grove via GroveView, so make
-        # it local up front (pinned .gg download on first run; cached after).
+        # Every query reads the grove via GroveView, so make it local up front (pinned
+        # .gg download on first run; cached after).
         _ensure_groves(_DATASETS)
         resources_block, preamble, data_paths = _dataset_context(_DATASETS)
         site_dir = _pygenogrove_site_dir()
-
         system_prompt = llm.build_system_prompt(resources_block)
-        code = llm.generate_query(args.question, system_prompt, model=args.model)
-        if args.show_code:
-            print("# --- generated code ---", file=sys.stderr)
-            print(code, file=sys.stderr)
-
-        # JSONL is the output contract, so guarantee `json` is importable even if
-        # the generated code forgets the import (it's already in the allowlist).
-        script = "import json\n" + preamble + code
-        result = sandbox.run(script, data_paths=data_paths, extra_syspath=[site_dir])
     except Exception as exc:  # surface a clean message, not a traceback
         print(f"genogrove-ask: {exc}", file=sys.stderr)
         return 1
 
-    if result.returncode != 0 or result.timed_out:
-        print(result.stderr.strip() or "(the generated code failed with no output)", file=sys.stderr)
+    if args.interactive:  # warm worker: grove open paid once for the whole session
+        return _interactive(args, system_prompt=system_prompt, preamble=preamble,
+                            data_paths=data_paths, site_dir=site_dir)
+
+    try:  # one-shot: a fresh sandbox per invocation
+        out, err = _answer(
+            args.question, system_prompt=system_prompt, preamble=preamble, args=args,
+            execute=lambda s: sandbox.run(s, data_paths=data_paths, extra_syspath=[site_dir]),
+        )
+    except Exception as exc:
+        print(f"genogrove-ask: {exc}", file=sys.stderr)
         return 1
-    rendered = _render(result.stdout, args.format)
-    if not rendered.strip():
-        print("(the generated code produced no output)", file=sys.stderr)
+    if err:
+        print(err, file=sys.stderr)
         return 1
-    sys.stdout.write(rendered)
+    sys.stdout.write(out)
     return 0
 
 

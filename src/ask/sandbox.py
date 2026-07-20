@@ -59,10 +59,14 @@ from __future__ import annotations
 
 import json
 import os
+import select
+import shutil
+import struct
 import subprocess
 import sys
 import tempfile
 import threading
+import time
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -365,3 +369,240 @@ def _kill(proc: subprocess.Popen) -> None:
             proc.kill()
         except OSError:
             pass
+
+
+# --------------------------------------------------------------------------- #
+# Warm worker — a persistent sandboxed subprocess for interactive/batch use.
+#
+# run() spawns a fresh interpreter per query, so an expensive first touch (opening
+# a large grove: GroveView reads a whole block directory, ~200ms) is paid every
+# time. A Worker keeps ONE guarded interpreter alive and caches GroveView.open by
+# path, so that cost is paid once per session and each subsequent query reuses the
+# open view (~sub-ms). Same in-child guards as run() (import allowlist, scrubbed
+# primitives, read-only open, stripped env, memory / no-write rlimits, session
+# process group).
+#
+# Two deliberate differences from run(), because the process is long-lived:
+#   * No RLIMIT_CPU — it is cumulative over the process lifetime and would kill the
+#     worker after a few queries. The per-query bound is a *wall-clock* deadline
+#     enforced by the parent: on overrun the worker is killed and transparently
+#     restarted (losing the warm groves). This keeps the hard timeout guarantee.
+#   * The worker's own infra modules (io/struct/traceback) are imported before the
+#     guard, so they stay importable by query code — pure compute, no os/net/exec,
+#     so the boundary is unchanged.
+# Protocol: length-prefixed frames over the worker's stdin (request = query code)
+# and stdout (response = JSON {stdout, stderr, rc}); query prints are captured into
+# buffers, so the real stdout carries only the protocol.
+# --------------------------------------------------------------------------- #
+
+# Imported before the guard so the request loop can use them; then GroveView.open is
+# wrapped with a per-path cache (the whole point of the warm worker).
+_WORKER_INFRA = '''\
+import sys as _sys, io as _io, json as _json, struct as _struct, traceback as _tb
+_sys.path[:0] = [p for p in _SYSPATH_JSON if p not in _sys.path]
+try:
+    import pygenogrove as _pg
+    _gv_open, _gv_cache = _pg.GroveView.open, {}
+    def _cached_gv_open(path, data_offset=0, __o=_gv_open, __c=_gv_cache):
+        k = (str(path), data_offset)
+        if k not in __c:
+            __c[k] = __o(path, data_offset)   # ~200ms once; reused thereafter
+        return __c[k]
+    _pg.GroveView.open = staticmethod(_cached_gv_open)
+except Exception:
+    pass
+'''
+
+# Runs after the guard/open are installed. Each frame = one query; a fresh globals
+# dict per query (no state leak) except the shared GroveView cache.
+_WORKER_LOOP = '''\
+_IN, _OUT = _sys.stdin.buffer, _sys.__stdout__.buffer
+
+def _read_exact(n):
+    b = b""
+    while len(b) < n:
+        c = _IN.read(n - len(b))
+        if not c:
+            return None
+        b += c
+    return b
+
+while True:
+    _hdr = _read_exact(4)
+    if _hdr is None:
+        break
+    _payload = _read_exact(_struct.unpack(">I", _hdr)[0])
+    if _payload is None:
+        break
+    _obuf, _ebuf = _io.StringIO(), _io.StringIO()
+    _so, _se, _rc = _sys.stdout, _sys.stderr, 0
+    _sys.stdout, _sys.stderr = _obuf, _ebuf
+    try:
+        exec(compile(_payload.decode("utf-8"), "<query>", "exec"), {"__name__": "__main__"})
+    except SystemExit:
+        pass
+    except BaseException:
+        _tb.print_exc()
+        _rc = 1
+    finally:
+        _sys.stdout, _sys.stderr = _so, _se
+    _resp = _json.dumps({"stdout": _obuf.getvalue()[:_OUTPUT_CAP],
+                         "stderr": _ebuf.getvalue()[:_OUTPUT_CAP], "rc": _rc}).encode("utf-8")
+    _OUT.write(_struct.pack(">I", len(_resp)) + _resp)
+    _OUT.flush()
+'''
+
+_MAX_FRAME = 64 * 1024 * 1024  # sanity cap on a response frame length
+
+
+class _ProtoError(Exception):
+    """The worker sent a malformed/truncated frame (or died) — trigger a restart."""
+
+
+def _build_worker_script(roots: list[str], syspath: list[str], output_cap: int) -> str:
+    header = (
+        f"_ALLOW_JSON = {json.dumps(sorted(ALLOWED_IMPORTS))}\n"
+        f"_ROOTS_JSON = {json.dumps(roots)}\n"
+        f"_SYSPATH_JSON = {json.dumps(syspath)}\n"
+        f"_OUTPUT_CAP = {int(output_cap)}\n"
+    )
+    return header + _WORKER_INFRA + _BOOTSTRAP + "\n" + _WORKER_LOOP
+
+
+def _apply_worker_limits() -> None:  # pragma: no cover - runs in child
+    """Pre-exec hook for the long-lived worker: own session + memory / no-write /
+    fd caps, but NO RLIMIT_CPU (cumulative — the parent enforces per-query timeouts)."""
+    os.setsid()
+    if resource is None:
+        return
+    _setrlimit(resource.RLIMIT_AS, _DEFAULT_MEMORY_BYTES)
+    _setrlimit(resource.RLIMIT_FSIZE, 0)
+    _setrlimit(resource.RLIMIT_NOFILE, _MAX_OPEN_FDS)
+
+
+class Worker:
+    """A persistent sandboxed interpreter that keeps groves open across queries.
+
+    ``submit(code)`` runs one query and returns a :class:`SandboxResult`, reusing the
+    warm groves. On timeout or a dead/broken worker it kills and restarts transparently
+    (the next ``submit`` re-opens the groves). ``close()`` tears it down. Same guards as
+    :func:`run`; see the section comment for the two long-lived-process differences.
+    """
+
+    def __init__(
+        self,
+        *,
+        data_paths: Mapping[str, object] | Iterable[object] | None = None,
+        extra_syspath: Iterable[object] | None = None,
+        timeout_s: float = DEFAULT_TIMEOUT_S,
+        output_cap: int = DEFAULT_OUTPUT_CAP,
+    ) -> None:
+        self._roots = _normalize_roots(data_paths)
+        self._syspath = _normalize_roots(extra_syspath)
+        self._timeout_s = timeout_s
+        self._output_cap = output_cap
+        self._tmp = tempfile.mkdtemp(prefix="ggask-worker-")
+        Path(self._tmp, "worker.py").write_text(
+            _build_worker_script(self._roots, self._syspath, output_cap), encoding="utf-8"
+        )
+        self._proc: subprocess.Popen | None = None
+        self._start()
+
+    def _start(self) -> None:
+        self._proc = subprocess.Popen(
+            [sys.executable, "-I", "-S", str(Path(self._tmp, "worker.py"))],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            bufsize=0, cwd=self._tmp, env=_child_env(),
+            preexec_fn=_apply_worker_limits if os.name == "posix" else None,
+        )
+
+    def _restart(self) -> None:
+        if self._proc is not None:
+            _kill(self._proc)
+            try:
+                self._proc.wait(timeout=2)
+            except Exception:
+                pass
+        self._start()
+
+    def submit(self, code: str) -> SandboxResult:
+        if self._proc is None or self._proc.poll() is not None:
+            self._restart()
+        try:
+            payload = code.encode("utf-8")
+            self._proc.stdin.write(struct.pack(">I", len(payload)) + payload)  # type: ignore[union-attr]
+            self._proc.stdin.flush()  # type: ignore[union-attr]
+            resp = self._read_frame(self._timeout_s)
+        except TimeoutError:
+            self._restart()
+            return SandboxResult(
+                "", f"[worker] killed after exceeding the {self._timeout_s:g}s wall-clock limit",
+                -1, timed_out=True)
+        except (OSError, _ProtoError, ValueError):
+            self._restart()
+            return SandboxResult("", "[worker] execution failed; the worker was restarted", -1)
+        trunc = len(resp["stdout"]) >= self._output_cap or len(resp["stderr"]) >= self._output_cap
+        return SandboxResult(resp["stdout"], resp["stderr"], int(resp["rc"]), truncated=trunc)
+
+    def _read_frame(self, timeout_s: float) -> dict:
+        deadline = time.monotonic() + timeout_s
+        (n,) = struct.unpack(">I", self._read_n(4, deadline))
+        if n > _MAX_FRAME:
+            raise _ProtoError("frame too large")
+        return json.loads(self._read_n(n, deadline).decode("utf-8"))
+
+    def _read_n(self, n: int, deadline: float) -> bytes:
+        fd = self._proc.stdout.fileno()  # type: ignore[union-attr]
+        buf = b""
+        while len(buf) < n:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError
+            if not select.select([fd], [], [], remaining)[0]:
+                raise TimeoutError
+            chunk = os.read(fd, n - len(buf))
+            if not chunk:
+                raise _ProtoError("worker closed the pipe")
+            buf += chunk
+        return buf
+
+    def close(self) -> None:
+        if self._proc is not None:
+            _kill(self._proc)
+            try:
+                self._proc.wait(timeout=2)
+            except Exception:
+                pass
+            self._proc = None
+        shutil.rmtree(self._tmp, ignore_errors=True)
+
+    def __enter__(self) -> "Worker":
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
+
+
+def _selftest() -> None:
+    """Protocol/capture/timeout/restart check — stdlib only (no pygenogrove needed)."""
+    w = Worker(data_paths=[], extra_syspath=[], timeout_s=2.0)
+    try:
+        r = w.submit('print("hello"); print("world")')
+        assert r.stdout.split() == ["hello", "world"] and r.returncode == 0, r
+        r = w.submit('x = 1 / 0')                       # error -> rc 1, traceback in stderr
+        assert r.returncode == 1 and "ZeroDivisionError" in r.stderr, r
+        r = w.submit('import re; print(re.sub("a", "b", "banana"))')  # warm reuse, allowlisted import
+        assert r.stdout.strip() == "bbnbnb", r
+        r = w.submit('while True: pass')                # timeout -> kill + restart
+        assert r.timed_out, r
+        r = w.submit('print("alive after restart")')    # transparently restarted
+        assert "alive after restart" in r.stdout, r
+        r = w.submit('open("/etc/passwd")')             # guard still holds post-restart
+        assert r.returncode == 1 and "restricted" in r.stderr, r
+    finally:
+        w.close()
+    print("worker selftest OK")
+
+
+if __name__ == "__main__":
+    _selftest()
