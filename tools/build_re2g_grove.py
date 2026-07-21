@@ -42,6 +42,7 @@ def _selftest() -> None:
     base = pg.Grove(order=100)
     base.insert("chr8", pg.GenomicCoordinate("+", 127735000, 127742000),
                 {"type": "gene", "id": "ENSG00000136997.20", "name": "MYC"})
+
     base_gg = Path(tempfile.mkdtemp()) / "base.gg"
     base.serialize(str(base_gg))
 
@@ -68,7 +69,8 @@ def _selftest() -> None:
     gv = pg.GroveView.open(str(out))
 
     # variant ∩ enhancer -> regulates -> the SAME MYC gene node (shared key).
-    hits = list(gv.intersect(pg.GenomicCoordinate("+", 150, 150), "chr8"))
+    # "*" wildcard strand — enhancers are unstranded, genes are +/-.
+    hits = list(gv.intersect(pg.GenomicCoordinate("*", 150, 150), "chr8"))
     enh = [h for h in hits if h.data.get("type") == "enhancer"]
     assert len(enh) == 1 and enh[0].data["class"] == "intergenic", [h.data for h in enh]
     assert enh[0].value.end == 199, enh[0].value.end  # half-open [100,200) -> closed [100,199]

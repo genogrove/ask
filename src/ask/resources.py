@@ -545,7 +545,9 @@ def augment_grove(base_gg, edges):
         if base in gene_cache:
             return gene_cache[base]
         hit = None
-        for k in g.intersect(pg.GenomicCoordinate(".", tss, tss), chrom):
+        # "*" is the strand wildcard — genes carry real strands (+/-), so a "." query
+        # would match nothing. See pygenogrove test_object_grove (strand is significant).
+        for k in g.intersect(pg.GenomicCoordinate("*", tss, tss), chrom):
             d = k.data
             if d.get("type") == "gene" and (d.get("id") or "").split(".")[0] == base:
                 hit = k
@@ -567,7 +569,7 @@ def augment_grove(base_gg, edges):
         chrom, es, ee = e["chr"], int(e["start"]), int(e["end"]) - 1  # half-open -> closed
         ek = (chrom, es, ee)
         if ek not in enh:  # one node per element; class (col 5) is the only stored annotation
-            enh[ek] = g.insert(chrom, pg.GenomicCoordinate("+", es, ee),
+            enh[ek] = g.insert(chrom, pg.GenomicCoordinate(".", es, ee),  # unstranded element
                                {"type": "enhancer", "class": e["class"]})
         # score (col 56) is the whole payload — distance/class are derivable from the nodes.
         g.add_edge(enh[ek], gene, {"rel": "regulates", "score": float(e["Score"])})
