@@ -21,6 +21,23 @@ uses the `pygenogrove` library, and nothing else, to compute the answer.
     `json.dumps(...)` (the `json` module is already imported for you).
   - **A single scalar, count, or yes/no → a short `label: value` line** (not JSON; the host
     passes it through untouched).
+  - **A feature reached by traversing an edge carries the edge's evidence.** If a result comes
+    from a hop (e.g. `regulates` / `regulated_by`), put the edge payload's fields into the
+    record (score, support count, cohort, the connected feature's name) and set a descriptive
+    `name` — a bare interval loses the relationship that was asked about.
+- **Lead with a one-line summary, then the records.** Print a plain `label: value` (or short
+  sentence) line naming the entry point and what the rows are — e.g.
+  `variant chr7:55,191,822 → EGFR; 34 enhancers regulate it (LNCaP clone FGC):` — then the
+  JSONL. The host shows that line above the table, so the result is self-explanatory. For a
+  two-part question ("what gene… and what enhancers…") the summary covers the singular part
+  (the gene) and the records are the list part.
+- **Interpret a variant/locus as position → containment → connections.** Before listing
+  connected features (enhancers, etc.), establish where it lands in GENCODE and say so in the
+  summary: the gene it falls in, and *within* that gene the transcript + exon it hits — walk
+  `contains` → `first_exon` → `next` and test which exon contains the coordinate; if it's
+  between exons, report it as **intronic**. So the answer reads e.g.:
+  `variant chr7:55,191,822 → EGFR (gene) → transcript ENST…, exon 20 of 28` then the enhancer
+  table. Direct overlap first, regulatory connections after.
 - Never mutate a coordinate after it has been inserted into a grove (see Coordinates).
 
 ## The `pygenogrove` API surface
@@ -251,26 +268,28 @@ pg.__genogrove_version__       # underlying C++ engine version
 
 ### Worked example — a 2-hop connected query
 
-"Which genes does the variant at chr7:55,191,822 regulate?" — a registry-resolved
-universal `Grove` whose keys are regulatory elements / genes (payloads are dicts like
-`{"kind": "enhancer", "id": ...}`) and whose edges link `enhancer → target gene`. The
-variant is the **query**, never stored:
+"Which genes does the variant at chr7:55,191,822 regulate?" over the combined grove
+(GENCODE + the enhancer→gene layer; see "Available resources" for whether it's loaded
+and the exact node/edge shapes). The variant is the **query**, never stored:
 
 ```python
 import pygenogrove as pg
 
-g = pg.GroveView.open(REGULATORY_GG)           # lazy reader; pages only touched blocks; edges included
+g = pg.GroveView.open(GENCODE_HUMAN)           # lazy reader; pages only touched blocks; edges included
 # VCF POS is 1-based -> closed key is POS-1; strand-agnostic -> '*' matches any stored strand.
 variant = pg.GenomicCoordinate("*", 55_191_821, 55_191_821)
-genes = {}
-for el in g.intersect(variant, "chr7"):        # regulatory elements overlapping the variant
-    if el.data.get("kind") != "enhancer":
+for el in g.intersect(variant, "chr7"):        # everything overlapping the variant
+    if el.data.get("type") != "enhancer":      # enhancer nodes are indexed alongside genes
         continue
-    for tgt in g.get_neighbors(el):            # hop: enhancer -> target gene
-        genes[tgt.data["id"]] = tgt.value
-for gid in sorted(genes):
-    print(gid, genes[gid].start, genes[gid].end)
+    # hop: enhancer --regulates--> target gene; edge metadata carries per-cohort score + n
+    for tgt, meta in zip(g.get_neighbors(el), g.get_edges(el)):
+        if meta and meta["rel"] == "regulates":
+            for cohort, s in meta["byCohort"].items():
+                print(tgt.data["name"], cohort, s["score"], f'n={s["n"]}')
 ```
+
+The reverse — "which enhancers regulate MYC?" — is one hop the other way: find the gene
+node, then `g.get_neighbors_if(gene, lambda m: m and m["rel"] == "regulated_by")`.
 
 ## The GENCODE Grove model
 

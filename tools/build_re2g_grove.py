@@ -109,7 +109,7 @@ def main(argv):
     base_gg = resources.ensure_all_grove("gencode.human")
     grove, stats = resources.augment_grove(
         base_gg, {label: [resources.re2g_edges(a, "") for a in accessions]})
-    out = resources._all_grove_gg("gencode.human").with_name("+re2g-" + "-".join(accessions) + ".gg")
+    out = resources.augmented_grove_path("gencode.human", {label: accessions})  # same cache the CLI uses
     out.parent.mkdir(parents=True, exist_ok=True)
     grove.serialize(str(out))
     print(f"grove: {out}")

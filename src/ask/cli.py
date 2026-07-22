@@ -23,9 +23,21 @@ from ask import __version__, llm, resources, sandbox
 # we do not downgrade by default.
 DEFAULT_MODEL = "claude-opus-4-8"
 
-# Datasets exposed to a query. One curated entry for now; the loop generalizes to
-# the whole catalog once more resources are added.
-_DATASETS = ("gencode.human",)
+# The base annotation grove. The regulatory (enhancer→gene) layer is augmented onto it
+# per cohort, on demand — see the rE2G helpers in ``ask.resources``.
+_BASE = "gencode.human"
+
+# When a question needs enhancers but names no tissue, augment with this cohort and say so.
+DEFAULT_COHORT = "EFO:0005726"  # LNCaP clone FGC (prostate cancer) — the flagship cohort
+
+# A question wants the regulatory layer if it mentions it. Cheap intent check (no extra LLM
+# call): gene/transcript/exon questions stay on plain GENCODE; only these pull a cohort.
+_ENHANCER_HINT = re.compile(r"enhanc|regulat|cis-?reg|\bccre\b|\bcre\b|regulatory element", re.I)
+
+
+def _wants_enhancers(question: str) -> bool:
+    """True if the question asks about the regulatory layer (enhancers / regulation)."""
+    return bool(_ENHANCER_HINT.search(question or ""))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -42,9 +54,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--format",
-        choices=("bed", "tsv", "json"),
-        default="bed",
-        help="Output format for results (default: bed). Scalar answers ignore this.",
+        choices=("text", "bed", "tsv", "json"),
+        default="text",
+        help="Output format (default: text — an aligned table showing every field, led by "
+             "the summary line; bed/tsv/json are machine formats). Scalar answers ignore this.",
     )
     parser.add_argument(
         "--show-code",
@@ -63,45 +76,102 @@ def build_parser() -> argparse.ArgumentParser:
         help="Interactive session: keep the grove(s) open across questions (the ~200 ms "
              "open is paid once, then queries are sub-ms). One question per line.",
     )
+    parser.add_argument(
+        "--cohort",
+        action="append",
+        metavar="NAME",
+        help="Load the enhancer→gene layer for this ENCODE-rE2G cohort (name or ontology id, "
+             "e.g. 'LNCaP' or 'EFO:0005726'; repeatable for several). Enables enhancer "
+             "queries. Omit and enhancers still load for an enhancer question, defaulting to "
+             f"the flagship cohort. See --list-cohorts.",
+    )
+    parser.add_argument(
+        "--list-cohorts",
+        action="store_true",
+        help="List the available ENCODE-rE2G cohorts (name, ontology id, type, replicates) "
+             "and exit.",
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return parser
 
 
-def _var_name(resource_name: str) -> str:
-    """A Python identifier for a dataset's injected path variable."""
-    return re.sub(r"\W", "_", resource_name).upper()
+def _resolve_cohorts(specs):
+    """Map ``--cohort`` specs to ``{cohort name: [accessions]}`` via ``re2g_cohorts``.
 
-
-def _dataset_context(names):
-    """Resolve datasets to (resources_block, code_preamble, data_paths).
-
-    Inject one handle per dataset: the local path to its prebuilt grove ``.gg``. Every
-    query — located or genome-wide — opens it with ``pg.GroveView.open`` and pages in only
-    the blocks it touches, so there's no tabix GFF, no region-build, and no whole-grove
-    load. ``ensure_all_grove`` has already made the ``.gg`` local (see ``main``).
+    Each spec matches a cohort by exact ontology id or case-insensitive substring of its
+    name; the most-replicated match wins (the catalog is sorted by replicate count). Raises
+    ``SystemExit`` with a pointer to ``--list-cohorts`` on no match.
     """
-    block, preamble, data_paths = [], [], []
-    for name in names:
-        gg = str(resources._all_grove_gg(name))  # local .gg (downloaded/built in main)
-        var = _var_name(name)
-        desc = resources.RESOURCES[name].description
-        block.append(
-            f'- `{var}` (str): path to the `{name}` grove ({desc}) — open it lazily with '
-            f'`g = pg.GroveView.open({var})`. GroveView pages in only the blocks a query '
-            f"touches, so a **located** query (e.g. a variant at chr7:55191822) reads just that "
-            f"locus, and a **genome-wide / gene-name** query works from the same handle — no "
-            f"region to pick, no whole-grove load. Query-only: `intersect`, `flanking`, "
-            f"`get_neighbors`, `get_edges`, `get_neighbors_if` (no `insert`/`serialize`). See "
-            f'"The GENCODE Grove model" above for the node/edge structure.'
+    catalog = resources.re2g_cohorts()
+    chosen = {}
+    for spec in specs:
+        s = spec.strip().lower()
+        match = next((c for c in catalog if c["ontology_id"].lower() == s), None) or \
+            next((c for c in catalog if s in c["name"].lower()), None)
+        if match is None:
+            raise SystemExit(f"genogrove-ask: no cohort matches {spec!r} — see --list-cohorts")
+        chosen[match["name"]] = match["accessions"]
+    return chosen
+
+
+def _list_cohorts() -> None:
+    """Print the available rE2G cohorts (most-replicated first) to stdout."""
+    print(f"{'ontology id':16}  {'reps':>4}  {'type':16}  name")
+    for c in resources.re2g_cohorts():
+        print(f"{c['ontology_id']:16}  {c['n_replicates']:>4}  {c['type']:16}  {c['name']}")
+
+
+def _grove_context(cohorts):
+    """Resolve the grove to (resources_block, code_preamble, data_paths, note).
+
+    ``cohorts`` is ``{name: [accessions]}`` (empty → plain GENCODE). A non-empty set augments
+    GENCODE with those cohorts' rE2G enhancer→gene edges (built/cached on first use) and adds
+    the regulatory layer to the prompt. One handle, ``GENCODE_HUMAN``, is injected either way;
+    the query opens it lazily with ``pg.GroveView.open``. ``note`` (for the user) names the
+    cohorts, or is empty for a plain-GENCODE run.
+    """
+    var = "GENCODE_HUMAN"
+    if cohorts:
+        gg = str(resources.ensure_augmented_grove(_BASE, cohorts))
+        labels = "; ".join(cohorts)
+        block = (
+            f"- `{var}` (str): a **combined grove** — GENCODE gene/transcript/exon structure "
+            f"PLUS the ENCODE-rE2G enhancer→gene layer for cohort(s): **{labels}**. Open it "
+            f"lazily with `g = pg.GroveView.open({var})`.\n"
+            f"  - **Enhancer nodes** carry `{{'type':'enhancer','class':...}}` and are spatially "
+            f"indexed, so `intersect` at a variant/region returns them alongside genes.\n"
+            f"  - **Edges** (filter by `rel` with `get_neighbors_if`): `regulates` "
+            f"(enhancer→gene) and its reverse `regulated_by` (gene→enhancer, for 'enhancers of "
+            f"a gene'). Each carries `byCohort`: `{{'<cohort>': {{'score': <rE2G confidence>, "
+            f"'n': <replicates supporting it>}}}}`. Rank/threshold on `score`; use `n` for "
+            f"confidence; a link with `class=='promoter'` and ~0 distance is a self-promoter.\n"
+            f"  - GENCODE structure is unchanged (see \"The GENCODE Grove model\" above): a "
+            f"gene node reached via `regulated_by` still has its `first_exon`/`next` chain.\n"
+            f"  - **Return the evidence, not bare intervals.** Each enhancer result record must "
+            f"carry the connection: `type` (`\"enhancer\"`), `class`, the connected gene's "
+            f"`name`, and from the relevant `byCohort` entry the `score` (put it in a `score` "
+            f"field) and `n` and cohort label. Give it a descriptive `name` too, e.g. "
+            f"`f\"enh:{{cls}}→{{gene}}\"`. A `.`-only interval with no score/target is not an "
+            f"answer. Sort by `n` then `score` so the confident links lead."
         )
-        preamble.append(f"{var} = {json.dumps(gg)}")
-        data_paths.append(gg)
-    return "\n".join(block), "\n".join(preamble) + "\n", data_paths
+        note = f"Enhancers loaded for cohort(s): {labels}."
+    else:
+        gg = str(resources.ensure_all_grove(_BASE))
+        block = (
+            f"- `{var}` (str): path to the GENCODE grove "
+            f"({resources.RESOURCES[_BASE].description}) — open it lazily with "
+            f"`g = pg.GroveView.open({var})`. A **located** query (a variant at chr7:55191822) "
+            f"reads just that locus; a **genome-wide / gene-name** query works from the same "
+            f"handle. Query-only: `intersect`, `flanking`, `get_neighbors`, `get_edges`, "
+            f'`get_neighbors_if`. See "The GENCODE Grove model" above for the node/edge structure.'
+        )
+        note = ""
+    return block, f"{var} = {json.dumps(gg)}\n", [gg], note
 
 
 def _render(text: str, fmt: str) -> str:
-    """Render the generated code's stdout. JSONL feature records become ``fmt``;
-    non-JSON lines (a scalar ``label: value``) pass through unchanged."""
+    """Render the generated code's stdout. Non-JSON lines (the agent's ``label: value``
+    summary) **lead**, then the JSONL feature records become the chosen ``fmt`` table."""
     records, passthrough = [], []
     for line in text.splitlines():
         s = line.strip()
@@ -114,19 +184,40 @@ def _render(text: str, fmt: str) -> str:
         if isinstance(obj, dict):
             records.append(obj)
         else:
-            passthrough.append(line)
-    out = [_format_records(records, fmt)] if records else []
-    out.extend(passthrough)
+            passthrough.append(line)  # a summary / scalar line — shown before the table
+    out = list(passthrough)
+    if records:
+        out.append(_format_records(records, fmt))
     return "\n".join(p for p in out if p) + "\n"
+
+
+def _record_columns(records: list[dict]) -> list[str]:
+    """Column order across (possibly heterogeneous) records: coordinates, then identity,
+    then edge evidence, then anything else — union of keys, stable order."""
+    order = ["chrom", "start", "end", "strand", "name", "type", "class",
+             "score", "n", "cohort", "target", "id", "biotype"]
+    cols = [k for k in order if any(k in r for r in records)]
+    for r in records:  # append any keys the agent used that aren't in the preferred order
+        for k in r:
+            if k not in cols:
+                cols.append(k)
+    return cols
 
 
 def _format_records(records: list[dict], fmt: str) -> str:
     if fmt == "json":
         return "\n".join(json.dumps(r) for r in records)
-    if fmt == "tsv":
-        cols = list(records[0])
-        rows = ["\t".join(cols)]
-        rows += ["\t".join(str(r.get(c, "")) for c in cols) for r in records]
+    cols = _record_columns(records)
+    if fmt in ("text", "tsv"):
+        if fmt == "tsv":
+            rows = ["\t".join(cols)]
+            rows += ["\t".join(str(r.get(c, "")) for c in cols) for r in records]
+            return "\n".join(rows)
+        # text: an aligned, human-readable table (every field visible), padded per column.
+        width = {c: max(len(c), max((len(str(r.get(c, ""))) for r in records), default=0)) for c in cols}
+        fmt_row = lambda vals: "  ".join(str(v).ljust(width[c]) for c, v in zip(cols, vals))
+        rows = [fmt_row(cols)]
+        rows += [fmt_row([r.get(c, "") for c in cols]) for r in records]
         return "\n".join(rows)
     # BED: 0-based closed -> half-open (end + 1); host owns the conversion, once.
     rows = ["#chrom\tstart\tend\tname\tscore\tstrand"]
@@ -150,15 +241,24 @@ def _pygenogrove_site_dir() -> str:
     return str(f.parent.parent if f.name == "__init__.py" else f.parent)
 
 
-def _ensure_groves(names) -> None:
-    """Make each dataset's grove ``.gg`` local (download the pinned one, or build once),
-    printing a one-line notice on a real first-run fetch."""
-    pending = [n for n in names if not resources._all_grove_gg(n).exists()]
-    if pending:
-        print(f"Fetching {', '.join(pending)} grove (first run only: a pinned ~90 MB .gg)…",
-              file=sys.stderr)
-    for name in names:
-        resources.ensure_all_grove(name)
+def _cohorts_for(args):
+    """Decide which cohorts to load: explicit ``--cohort``, else the default cohort when a
+    one-shot question asks about enhancers, else none (plain GENCODE). Returns
+    ``{cohort name: [accessions]}`` (empty for a plain-GENCODE run)."""
+    if args.cohort:
+        return _resolve_cohorts(args.cohort)
+    if not args.interactive and _wants_enhancers(args.question):
+        return _resolve_cohorts([DEFAULT_COHORT])  # enhancer question, no tissue named
+    return {}
+
+
+def _prepare(cohorts) -> None:
+    """Print a first-run notice if the grove(s) this run needs aren't cached yet."""
+    if not resources._all_grove_gg(_BASE).exists():
+        print(f"Fetching {_BASE} grove (first run only: a pinned ~90 MB .gg)…", file=sys.stderr)
+    if cohorts and not resources.augmented_grove_path(_BASE, cohorts).exists():
+        print(f"Building the enhancer grove for {', '.join(cohorts)} "
+              "(first run: ENCODE download + augment)…", file=sys.stderr)
 
 
 def _answer(question, *, system_prompt, preamble, args, execute):
@@ -225,9 +325,14 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    if args.init:  # prime the grove(s) ahead of first use, then exit
+    if args.list_cohorts:
+        _list_cohorts()
+        return 0
+
+    if args.init:  # prime the base grove ahead of first use, then exit
         try:
-            _ensure_groves(_DATASETS)
+            _prepare({})
+            resources.ensure_all_grove(_BASE)
         except Exception as exc:
             print(f"genogrove-ask: {exc}", file=sys.stderr)
             return 1
@@ -239,15 +344,23 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     try:
-        # Every query reads the grove via GroveView, so make it local up front (pinned
-        # .gg download on first run; cached after).
-        _ensure_groves(_DATASETS)
-        resources_block, preamble, data_paths = _dataset_context(_DATASETS)
+        # Pick the cohort(s) this run needs, then make the grove local (base .gg download +,
+        # if a cohort is needed, the augmented build). The query opens it via GroveView.
+        cohorts = _cohorts_for(args)
+        _prepare(cohorts)
+        resources_block, preamble, data_paths, note = _grove_context(cohorts)
         site_dir = _pygenogrove_site_dir()
         system_prompt = llm.build_system_prompt(resources_block)
+    except SystemExit:
+        raise  # a clean --cohort resolution error already carries its message
     except Exception as exc:  # surface a clean message, not a traceback
         print(f"genogrove-ask: {exc}", file=sys.stderr)
         return 1
+
+    if note:  # tell the user which cohort's enhancers are in play (esp. the default)
+        default_used = not args.cohort
+        print(note + (" (default — pass --cohort to choose another; --list-cohorts to see them)"
+                      if default_used else ""), file=sys.stderr)
 
     if args.interactive:  # warm worker: grove open paid once for the whole session
         return _interactive(args, system_prompt=system_prompt, preamble=preamble,

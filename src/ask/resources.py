@@ -620,6 +620,24 @@ def augment_grove(base_gg, cohorts):
                "missed_targets": missed, "self_promoters": self_prom}
 
 
+# Bump when the rE2G augmentation's node/edge schema changes, so a stale combined `.gg`
+# (valid pygenogrove but built from an older edge model) is rebuilt, not silently served.
+# v2 = byCohort edge map + reverse regulated_by edges.
+_RE2G_SCHEMA = "2"
+
+
+def augmented_grove_path(base_name: str, cohorts) -> Path:
+    """The cache path for the combined grove of ``base_name`` + ``cohorts`` (may not exist).
+
+    Cache identity = the edge-schema version + every accession involved (sorted), so a
+    different cohort set — or a schema bump — is a different grove, and the same set reuses
+    the cache. Lets a caller check ``.exists()`` before triggering the (slow, first-run)
+    build in ``ensure_augmented_grove``.
+    """
+    all_accs = sorted(a for accs in cohorts.values() for a in accs)
+    return _all_grove_gg(base_name).with_name(f"+re2g{_RE2G_SCHEMA}-" + "-".join(all_accs) + ".gg")
+
+
 def ensure_augmented_grove(base_name: str, cohorts) -> Path:
     """Build + cache the combined grove = ``base_name``'s GENCODE grove augmented with the
     given **cohorts**. ``cohorts`` maps a cohort label → its replicate accession list (e.g.
@@ -628,10 +646,7 @@ def ensure_augmented_grove(base_name: str, cohorts) -> Path:
     path, built once and cached keyed by the full cohort/accession set. Fetching needs htslib
     + network; the query path only opens the resulting local `.gg` via ``GroveView``.
     """
-    # Cache identity = every accession involved (sorted), so a different cohort set is a
-    # different grove and the same set reuses the cache.
-    all_accs = sorted(a for accs in cohorts.values() for a in accs)
-    gg = _all_grove_gg(base_name).with_name("+re2g-" + "-".join(all_accs) + ".gg")
+    gg = augmented_grove_path(base_name, cohorts)
     if gg.exists():
         return gg
     base_gg = ensure_all_grove(base_name)  # the pinned GENCODE .gg
