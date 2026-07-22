@@ -520,25 +520,33 @@ def _tss_pos(raw: str) -> int:
     return int(raw.split("-")[0].split(":")[-1])
 
 
-def augment_grove(base_gg, edges):
-    """Augment the GENCODE grove **in place** with rE2G enhancer→gene edges.
+def augment_grove(base_gg, cohorts):
+    """Augment the GENCODE grove **in place** with one or more cohorts' rE2G edges.
 
-    Deserialize ``base_gg`` (the built GENCODE `.gg`) into a mutable ``pg.Grove`` —
-    every gene/transcript/exon key already present — then for each rE2G row add an
-    **enhancer** node and a ``{"rel": "regulates"}`` edge from it onto the *existing*
-    GENCODE **gene** key. That cross-index edge over a shared gene key is the point:
-    a query goes ``variant ∩ enhancer → get_neighbors_if("regulates") → gene →
-    first_exon/next`` in one traversal, no second grove.
+    Deserialize ``base_gg`` (the built GENCODE `.gg`) into a mutable ``pg.Grove`` — every
+    gene/transcript/exon key already present — then add an **enhancer** node per rE2G
+    element and a bidirectional pair of edges to the *existing* GENCODE **gene** key:
+    ``{"rel": "regulates"}`` (enhancer→gene, for ``variant ∩ enhancer → gene``) and
+    ``{"rel": "regulated_by"}`` (gene→enhancer, for ``gene → its enhancers`` — pygenogrove
+    has no reverse-neighbor call). The cross-index edge over a shared gene key is the point:
+    one traversal reaches from a variant/gene into the regulatory layer and back.
 
-    The gene is located by intersecting the grove at the rE2G ``target_tss`` and matching
-    the GENCODE gene's ENSG id (versioned, so compared on the base) to ``target_ensembl``.
-    rE2G targets absent from GENCODE are counted, not invented. BED is half-open; the
-    key is 0-based closed, so ``end`` shifts by one. Returns ``(grove, stats)``.
+    ``cohorts`` maps a **cohort label → its list of replicate edge-sets** (each from
+    ``re2g_edges``). A link (enhancer element → gene) is merged *within* a cohort across its
+    replicates (score = **max**, n = **replicate support**) and *across* cohorts into one
+    edge whose payload is a per-cohort map — genogrove is a simple graph (one edge per pair),
+    so tissue-specificity lives in the metadata, not parallel edges::
+
+        {"rel": "regulates", "byCohort": {"<label>": {"score": .., "n": ..}, ...}}
+
+    The gene is located by intersecting at the rE2G ``TargetGeneTSS`` and matching the GENCODE
+    gene's ENSG id (versioned → compared on the base) to ``TargetGeneEnsemblID``. rE2G targets
+    absent from GENCODE are counted, not invented. BED is half-open; the key is 0-based closed,
+    so ``end`` shifts by one. Returns ``(grove, stats)``.
     """
     import pygenogrove as pg
 
     g = pg.Grove.deserialize(str(base_gg))
-    enh: dict[tuple, object] = {}       # (chrom, start, end) -> enhancer Key (deduped)
     gene_cache: dict[str, object] = {}  # base ENSG id -> gene Key, or None (confirmed miss)
 
     def find_gene(chrom, tss, base):
@@ -555,42 +563,82 @@ def augment_grove(base_gg, edges):
         gene_cache[base] = hit
         return hit
 
-    linked = missed = self_prom = 0
-    for e in edges:
-        gene = find_gene(e["chr"], _tss_pos(e["TargetGeneTSS"]), e["TargetGeneEnsemblID"].split(".")[0])
-        if gene is None:  # rE2G target not in this GENCODE build — report, don't fabricate
-            missed += 1
-            continue
-        # Self-promoters (element IS the gene's own promoter) are kept — they're
-        # self-identifying (class="promoter" + ~0 derivable distance), so let the agent
-        # filter them, don't drop links at build time. Tallied for visibility.
-        if e["isSelfPromoter"].upper() == "TRUE":
-            self_prom += 1
-        chrom, es, ee = e["chr"], int(e["start"]), int(e["end"]) - 1  # half-open -> closed
-        ek = (chrom, es, ee)
+    # Pass 1: fold all replicates of all cohorts into one link table. Link key = (element
+    # interval, gene ENSG). Per cohort we keep score=max and reps=set of replicate indices,
+    # so a link's cohorts and per-cohort support fall out. Within a cohort a link is unique
+    # per replicate, so the reps set size is the support count.
+    links: dict[tuple, dict] = {}
+    missed = 0
+    for label, replicates in cohorts.items():
+        for rep_i, edges in enumerate(replicates):
+            for e in edges:
+                base = e["TargetGeneEnsemblID"].split(".")[0]
+                gene = find_gene(e["chr"], _tss_pos(e["TargetGeneTSS"]), base)
+                if gene is None:  # rE2G target not in this GENCODE build — count, don't fabricate
+                    missed += 1
+                    continue
+                chrom, es, ee = e["chr"], int(e["start"]), int(e["end"]) - 1  # half-open -> closed
+                lk = links.get((chrom, es, ee, base))
+                if lk is None:
+                    lk = links[(chrom, es, ee, base)] = {
+                        "chrom": chrom, "es": es, "ee": ee, "gene": gene, "class": e["class"],
+                        "self_prom": e["isSelfPromoter"].upper() == "TRUE", "by": {}}
+                c = lk["by"].get(label)
+                score = float(e["Score"])
+                if c is None:
+                    lk["by"][label] = {"score": score, "reps": {rep_i}}
+                else:
+                    c["score"] = max(c["score"], score)
+                    c["reps"].add(rep_i)
+
+    # Pass 2: materialise deduped enhancer nodes + the regulates / regulated_by edge pair,
+    # each carrying the per-cohort {score, n} map.
+    enh: dict[tuple, object] = {}  # (chrom, start, end) -> enhancer Key (an element may hit many genes)
+    self_prom = 0
+    per_cohort: dict[str, dict] = {c: {"links": 0, "n_dist": {}} for c in cohorts}
+    for lk in links.values():
+        ek = (lk["chrom"], lk["es"], lk["ee"])
         if ek not in enh:  # one node per element; class (col 5) is the only stored annotation
-            enh[ek] = g.insert(chrom, pg.GenomicCoordinate(".", es, ee),  # unstranded element
-                               {"type": "enhancer", "class": e["class"]})
-        # score (col 56) is the whole payload — distance/class are derivable from the nodes.
-        g.add_edge(enh[ek], gene, {"rel": "regulates", "score": float(e["Score"])})
-        linked += 1
-    return g, {"enhancers": len(enh), "regulates": linked,
+            enh[ek] = g.insert(lk["chrom"], pg.GenomicCoordinate(".", lk["es"], lk["ee"]),
+                               {"type": "enhancer", "class": lk["class"]})
+        by_cohort = {}
+        for label, c in lk["by"].items():
+            n = len(c["reps"])
+            by_cohort[label] = {"score": c["score"], "n": n}
+            stat = per_cohort[label]
+            stat["links"] += 1
+            stat["n_dist"][n] = stat["n_dist"].get(n, 0) + 1
+        # score/class derive from the nodes; self-promoters stay (self-identifying via
+        # class + ~0 distance). Bidirectional so gene→enhancer is one clean hop.
+        g.add_edge(enh[ek], lk["gene"], {"rel": "regulates", "byCohort": by_cohort})
+        g.add_edge(lk["gene"], enh[ek], {"rel": "regulated_by", "byCohort": by_cohort})
+        if lk["self_prom"]:
+            self_prom += 1
+    for stat in per_cohort.values():  # tidy: sort each cohort's n_dist by support count
+        stat["n_dist"] = {k: stat["n_dist"][k] for k in sorted(stat["n_dist"])}
+    return g, {"enhancers": len(enh), "regulates": len(links), "cohorts": per_cohort,
                "missed_targets": missed, "self_promoters": self_prom}
 
 
-def ensure_augmented_grove(base_name: str, accession: str) -> Path:
-    """Build + cache the combined grove = ``base_name``'s GENCODE grove augmented with
-    biosample ``accession``'s rE2G edges. Returns its `.gg` path (built once, then cached
-    beside the base grove). Fetching the edges needs htslib + network; the query path only
-    opens the resulting local `.gg` via ``GroveView``.
+def ensure_augmented_grove(base_name: str, cohorts) -> Path:
+    """Build + cache the combined grove = ``base_name``'s GENCODE grove augmented with the
+    given **cohorts**. ``cohorts`` maps a cohort label → its replicate accession list (e.g.
+    from ``re2g_cohorts()``); each replicate's BED is fetched and merged (per-cohort ``score``
+    = max, ``n`` = replicate support, held in a ``byCohort`` edge map). Returns the `.gg`
+    path, built once and cached keyed by the full cohort/accession set. Fetching needs htslib
+    + network; the query path only opens the resulting local `.gg` via ``GroveView``.
     """
-    gg = _all_grove_gg(base_name).with_name(f"+re2g-{accession}.gg")
+    # Cache identity = every accession involved (sorted), so a different cohort set is a
+    # different grove and the same set reuses the cache.
+    all_accs = sorted(a for accs in cohorts.values() for a in accs)
+    gg = _all_grove_gg(base_name).with_name("+re2g-" + "-".join(all_accs) + ".gg")
     if gg.exists():
         return gg
     base_gg = ensure_all_grove(base_name)  # the pinned GENCODE .gg
     gg.parent.mkdir(parents=True, exist_ok=True)
     tmp = gg.with_name(gg.name + ".tmp")
-    grove, _stats = augment_grove(base_gg, re2g_edges(accession, ""))
+    edge_sets = {label: [re2g_edges(a, "") for a in sorted(accs)] for label, accs in cohorts.items()}
+    grove, _stats = augment_grove(base_gg, edge_sets)
     grove.serialize(str(tmp))
     tmp.replace(gg)
     return gg
