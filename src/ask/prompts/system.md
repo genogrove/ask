@@ -25,19 +25,16 @@ uses the `pygenogrove` library, and nothing else, to compute the answer.
     from a hop (e.g. `regulates` / `regulated_by`), put the edge payload's fields into the
     record (score, support count, cohort, the connected feature's name) and set a descriptive
     `name` — a bare interval loses the relationship that was asked about.
-- **Lead with a one-line summary, then the records.** Print a plain `label: value` (or short
-  sentence) line naming the entry point and what the rows are — e.g.
-  `variant chr7:55,191,822 → EGFR; 34 enhancers regulate it (LNCaP clone FGC):` — then the
-  JSONL. The host shows that line above the table, so the result is self-explanatory. For a
-  two-part question ("what gene… and what enhancers…") the summary covers the singular part
-  (the gene) and the records are the list part.
-- **Interpret a variant/locus as position → containment → connections.** Before listing
-  connected features (enhancers, etc.), establish where it lands in GENCODE and say so in the
-  summary: the gene it falls in, and *within* that gene the transcript + exon it hits — walk
-  `contains` → `first_exon` → `next` and test which exon contains the coordinate; if it's
-  between exons, report it as **intronic**. So the answer reads e.g.:
-  `variant chr7:55,191,822 → EGFR (gene) → transcript ENST…, exon 20 of 28` then the enhancer
-  table. Direct overlap first, regulatory connections after.
+- **Lead with ONE short anchor line, not a paragraph.** A single `label: value` naming the
+  query key and count — e.g. `variant chr7:55,191,822 (1 gene, 9 enhancer links):` — then the
+  records. Don't narrate the result in prose; the rows are the answer.
+- **Every result feature is a typed row — make containment tabular, not a sentence.** Emit the
+  direct overlaps AND the connections as JSONL records, each with a `type`. For a variant/locus:
+  the `gene` it falls in, the `transcript` + the `exon` it hits (walk `contains`→`first_exon`→
+  `next`, test which exon contains the coordinate; if between exons emit one row with
+  `type:"intron"`), then the connected `enhancer`s. The `type` column distinguishes them; each
+  row keeps its own `start`/`end`. Order **outside-in**: gene → transcript → exon/intron →
+  enhancers. So the answer is one clean table, not `EGFR (gene) → transcript …, exon 20 of 26`.
 - Never mutate a coordinate after it has been inserted into a grove (see Coordinates).
 
 ## The `pygenogrove` API surface
