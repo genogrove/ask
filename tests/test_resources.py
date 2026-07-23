@@ -9,8 +9,8 @@ import hashlib
 
 import pytest
 
-from ask import resources
-from ask.resources import Resource
+from canopy import resources
+from canopy.resources import Resource
 
 
 def _catalog_entry(monkeypatch, tmp_path, name, payload, sha256):

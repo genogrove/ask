@@ -144,7 +144,7 @@ RESOURCES: dict[str, Resource] = {
 
 # Content-addressed cache: <CACHE>/<sha256>/<filename>. A file only lands here
 # after its checksum is verified, so a cache hit needs no re-verification.
-_CACHE = Path.home() / ".cache" / "genogrove-ask"
+_CACHE = Path.home() / ".cache" / "genogrove-canopy"
 
 
 def resolve(name: str) -> Path:
@@ -197,7 +197,7 @@ def data_roots(names: Iterable[str]) -> list[str]:
 
 
 # --------------------------------------------------------------------------- #
-# Region access — bgzip + tabix so a query reads only its locus (see ask.gff.
+# Region access — bgzip + tabix so a query reads only its locus (see canopy.gff.
 # build_grove). GENCODE ships plain gzip, so we recompress + index once.
 # --------------------------------------------------------------------------- #
 
@@ -274,7 +274,7 @@ def ensure_all_grove(name: str) -> Path:
     gg.parent.mkdir(parents=True, exist_ok=True)
     if res.grove_url:  # download the pinned .gg (fast, reproducible)
         return _download(res.grove_url, res.grove_sha256, gg)
-    from ask.gff import build_grove  # local fallback — no hosted grove pinned
+    from canopy.gff import build_grove  # local fallback — no hosted grove pinned
 
     tmp = gg.with_name(gg.name + ".tmp")
     build_grove(indexed_path(name), region="").serialize(str(tmp))
@@ -291,7 +291,7 @@ def grove_view(name: str):
     return pg.GroveView.open(str(ensure_all_grove(name)))
 
 
-# Bump when ``ask.gff``'s grove model changes, so a stale `.gg` (valid pygenogrove
+# Bump when ``canopy.gff``'s grove model changes, so a stale `.gg` (valid pygenogrove
 # but built from an older schema) is rebuilt rather than silently served.
 _GROVE_SCHEMA = "1"
 
@@ -307,10 +307,10 @@ def grove_index(name: str) -> tuple[dict[str, str], str]:
     chromosome plus a whole-genome ``_all.gg``. A query deserializes only the
     shard(s) for the chromosome(s) it touches (fast, low-memory); ``_all`` is the
     whole-genome grove for genome-wide or cross-chromosome queries. Built in one
-    streaming pass on first use (``ask.gff.write_sharded_groves``) and cached under
+    streaming pass on first use (``canopy.gff.write_sharded_groves``) and cached under
     ``<cache>/groves/<sha>.<schema>/``; bump ``_GROVE_SCHEMA`` for model changes.
     """
-    from ask.gff import write_sharded_groves
+    from canopy.gff import write_sharded_groves
 
     d = _grove_dir(name)
     if not (d / "_all.gg").exists():

@@ -10,8 +10,8 @@ import pytest
 
 pg = pytest.importorskip("pygenogrove")
 
-from ask import resources
-from ask.resources import Resource
+from canopy import resources
+from canopy.resources import Resource
 
 GFF3 = (
     "##gff-version 3\n"

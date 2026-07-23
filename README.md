@@ -1,4 +1,4 @@
-# genogrove ask
+# canopy
 
 **Natural-language interface for [genogrove](https://github.com/genogrove/genogrove) — ask plain-English questions over connected genomic intervals, powered by [pygenogrove](https://github.com/genogrove/pygenogrove).**
 
@@ -16,12 +16,12 @@ in per-chromosome B+ trees, with a directed graph overlay linking related keys
 otherwise require a brittle `intersect | awk | sort | join` pipeline become a single
 traversal of that structure.
 
-`genogrove ask` puts a natural-language front end on top of it. You ask a question in
+`canopy` puts a natural-language front end on top of it. You ask a question in
 plain English; the tool translates it into Python that drives `pygenogrove`, runs that
 Python in a sandbox, and prints the result.
 
 ```console
-$ genogrove ask "Which transcripts share an exon with the variant at chr7:55,191,822?"
+$ canopy "Which transcripts share an exon with the variant at chr7:55,191,822?"
 ```
 
 ## How it works (architecture)
@@ -57,7 +57,7 @@ plan interpreter — the bindings *are* the interface the model targets.
 | `gff.py` | Loads GFF/GENCODE into a universal `Grove` — gene/transcript/exon keys, `contains`/`first_exon`/`next` edges, CDS folded onto exons. |
 | `prompts/system.md` | The system prompt that teaches the model the `pygenogrove` surface, the GENCODE grove model, and the rules for generated code. |
 
-**Dependency direction is one-way:** `ask → pygenogrove`. `pygenogrove` stays a lean,
+**Dependency direction is one-way:** `canopy → pygenogrove`. `pygenogrove` stays a lean,
 stable bindings layer with no LLM dependency, so `pip install pygenogrove` never drags
 in an LLM SDK.
 
@@ -79,8 +79,8 @@ C++/htslib extension, not yet on PyPI — so you need a compiler, CMake, and hts
 # pygenogrove's .github/scripts/install-htslib-linux.sh
 $ brew install uv htslib cmake
 
-$ git clone https://github.com/genogrove/ask
-$ cd ask
+$ git clone https://github.com/genogrove/canopy
+$ cd canopy
 # `env VAR=… cmd` works in bash, zsh AND fish; it points CMake at htslib for the build.
 $ env CMAKE_PREFIX_PATH=/opt/homebrew CMAKE_ARGS="-DCMAKE_PREFIX_PATH=/opt/homebrew/opt/htslib" uv sync
 $ uv run python -c "import pygenogrove as pg; print(pg.__version__)"   # -> 0.6.2
@@ -91,7 +91,7 @@ pre-indexed GENCODE dataset — a few hundred MB — and caches it, then located
 read only their locus via tabix):
 
 ```console
-$ env ANTHROPIC_API_KEY=sk-ant-... uv run genogrove-ask --show-code \
+$ env ANTHROPIC_API_KEY=sk-ant-... uv run canopy --show-code \
     "Which gene contains the variant at chr7:55,191,822?"
 ```
 
@@ -99,7 +99,7 @@ The data layer in **Try it** below runs without a key.
 
 ## Try it: the GFF → Grove model
 
-The data layer (`ask.gff` + `ask.resources`) is implemented and tested — **no Claude /
+The data layer (`canopy.gff` + `canopy.resources`) is implemented and tested — **no Claude /
 API key needed.** After the `uv sync` above, run the loader tests against the real
 bindings (they `importorskip`, so they actually run here rather than skip):
 
@@ -113,7 +113,7 @@ Load a GENCODE locus and query it. Save this as `query.py`, then `uv run python 
 
 ```python
 import pygenogrove as pg
-from ask import gff, resources
+from canopy import gff, resources
 
 # Sub-second locus load via tabix (downloads the pre-indexed GENCODE — a few hundred MB — once):
 path = resources.indexed_path("gencode.human")   # bgzip+tabix GFF (+ .tbi), sha256-verified, cached
@@ -133,17 +133,17 @@ for k in g.intersect(q, "chr7"):
 
 Then traverse: `get_neighbors(gene)` gives transcripts (`contains`), and `first_exon` →
 `next` walks a transcript's splice chain, each exon carrying its `cds` range. The full
-schema is in [`prompts/system.md`](src/ask/prompts/system.md) under "The GENCODE Grove model".
+schema is in [`prompts/system.md`](src/canopy/prompts/system.md) under "The GENCODE Grove model".
 
 `build_grove(path, region)` reads only the locus, so it stays fast for any query that names
 one. For **genome-wide** questions (no locus — "count all protein-coding genes"), build the
 whole-genome grove once with `resources.ensure_all_grove("gencode.human")` (slow first call,
 then a fast `deserialize`).
 
-## The `genogrove ask` surface
+## The `genogrove canopy` surface
 
-In the genogrove paper and docs the command is written `genogrove ask <question>`.
-That is a thin alias over the `genogrove-ask` console script this package installs —
+In the genogrove paper and docs the command is written `genogrove canopy <question>`.
+That is a thin alias over the `canopy` console script this package installs —
 the application layer lives here, separate from the core C++ CLI, because it has a
 different release cadence and audience.
 

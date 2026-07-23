@@ -3,8 +3,8 @@
 
 import json
 
-from ask import llm
-from ask.cli import _render, _var_name
+from canopy import llm
+from canopy.cli import _render, _var_name
 
 
 def test_build_system_prompt_injects_resources_block():

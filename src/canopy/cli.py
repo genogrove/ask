@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Command-line entry point for genogrove ask.
+"""Command-line entry point for canopy.
 
 A thin wrapper: parse the question, then orchestrate the three stages — generate
-Python (:mod:`ask.llm`), execute it under restrictions (:mod:`ask.sandbox`), and
+Python (:mod:`canopy.llm`), execute it under restrictions (:mod:`canopy.sandbox`), and
 print the result. The host resolves each dataset to a serialized ``.gg`` and
 injects its path as a variable; the generated code only deserializes and queries.
 """
@@ -16,7 +16,7 @@ import sys
 import time
 from pathlib import Path
 
-from ask import __version__, llm, resources, sandbox
+from canopy import __version__, llm, resources, sandbox
 
 # Default Anthropic model for code generation. Opus is the most capable tier and
 # the connected-interval reasoning here is the paper's headline contribution, so
@@ -24,7 +24,7 @@ from ask import __version__, llm, resources, sandbox
 DEFAULT_MODEL = "claude-opus-4-8"
 
 # The base annotation grove. The regulatory (enhancer→gene) layer is augmented onto it
-# per cohort, on demand — see the rE2G helpers in ``ask.resources``.
+# per cohort, on demand — see the rE2G helpers in ``canopy.resources``.
 _BASE = "gencode.human"
 
 # When a question needs enhancers but names no tissue, augment with this cohort and say so.
@@ -41,9 +41,9 @@ def _wants_enhancers(question: str) -> bool:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Construct the argument parser for the ``genogrove-ask`` command."""
+    """Construct the argument parser for the ``canopy`` command."""
     parser = argparse.ArgumentParser(
-        prog="genogrove-ask",
+        prog="canopy",
         description="Ask plain-English questions over connected genomic intervals.",
     )
     parser.add_argument("question", nargs="?", help="The natural-language question to answer.")
@@ -109,7 +109,7 @@ def _resolve_cohorts(specs):
         match = next((c for c in catalog if c["ontology_id"].lower() == s), None) or \
             next((c for c in catalog if s in c["name"].lower()), None)
         if match is None:
-            raise SystemExit(f"genogrove-ask: no cohort matches {spec!r} — see --list-cohorts")
+            raise SystemExit(f"canopy: no cohort matches {spec!r} — see --list-cohorts")
         chosen[match["name"]] = match["accessions"]
     return chosen
 
@@ -290,7 +290,7 @@ def _answer(question, *, system_prompt, preamble, args, execute):
 def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
     """Warm-worker REPL: open the grove(s) once, then answer questions until EOF/'exit'."""
     worker = sandbox.Worker(data_paths=data_paths, extra_syspath=[site_dir])
-    print("genogrove-ask interactive — one question per line; Ctrl-D or 'exit' to quit.",
+    print("canopy interactive — one question per line; Ctrl-D or 'exit' to quit.",
           file=sys.stderr)
     try:
         while True:
@@ -307,7 +307,7 @@ def _interactive(args, *, system_prompt, preamble, data_paths, site_dir) -> int:
                 out, err, gen_s, exec_s = _answer(question, system_prompt=system_prompt,
                                                   preamble=preamble, args=args, execute=worker.submit)
             except Exception as exc:  # e.g. an LLM error — keep the session alive
-                print(f"genogrove-ask: {exc}", file=sys.stderr)
+                print(f"canopy: {exc}", file=sys.stderr)
                 continue
             if err:
                 print(err, file=sys.stderr)
@@ -334,7 +334,7 @@ def main(argv: list[str] | None = None) -> int:
             _prepare({})
             resources.ensure_all_grove(_BASE)
         except Exception as exc:
-            print(f"genogrove-ask: {exc}", file=sys.stderr)
+            print(f"canopy: {exc}", file=sys.stderr)
             return 1
         print("Ready.", file=sys.stderr)
         return 0
@@ -354,7 +354,7 @@ def main(argv: list[str] | None = None) -> int:
     except SystemExit:
         raise  # a clean --cohort resolution error already carries its message
     except Exception as exc:  # surface a clean message, not a traceback
-        print(f"genogrove-ask: {exc}", file=sys.stderr)
+        print(f"canopy: {exc}", file=sys.stderr)
         return 1
 
     if note:  # tell the user which cohort's enhancers are in play (esp. the default)
@@ -372,7 +372,7 @@ def main(argv: list[str] | None = None) -> int:
             execute=lambda s: sandbox.run(s, data_paths=data_paths, extra_syspath=[site_dir]),
         )
     except Exception as exc:
-        print(f"genogrove-ask: {exc}", file=sys.stderr)
+        print(f"canopy: {exc}", file=sys.stderr)
         return 1
     if err:
         print(err, file=sys.stderr)

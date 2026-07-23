@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "genogrove-ask"
+name = "genogrove-canopy"
 version = "0.1.0"
 description = "Natural-language interface for genogrove — ask plain-English questions over connected genomic intervals, powered by pygenogrove."
 readme = "README.md"
@@ -27,11 +27,11 @@ classifiers = [
 ]
 
 # Runtime dependencies. The dependency direction is strictly one-way:
-# genogrove-ask depends on pygenogrove; pygenogrove never references this package.
+# genogrove-canopy depends on pygenogrove; pygenogrove never references this package.
 dependencies = [
     "anthropic>=0.92",
     # Pinned for Level 2 reproducibility; the exact build (commit) is pinned in
-    # [tool.uv.sources] below and mirrored in ask.resources.
+    # [tool.uv.sources] below and mirrored in canopy.resources.
     "pygenogrove==0.7.2",
 ]
 
@@ -44,14 +44,14 @@ dev = [
 ]
 
 [project.scripts]
-# Standalone entry point. The paper's `genogrove ask <question>` surface is a thin
-# alias over this command (see README → "The `genogrove ask` surface").
-genogrove-ask = "ask.cli:main"
+# Standalone entry point. The paper's `genogrove canopy <question>` surface is a thin
+# alias over this command (see README → "The `genogrove canopy` surface").
+canopy = "canopy.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/genogrove/ask"
-Repository = "https://github.com/genogrove/ask"
-Issues = "https://github.com/genogrove/ask/issues"
+Homepage = "https://github.com/genogrove/canopy"
+Repository = "https://github.com/genogrove/canopy"
+Issues = "https://github.com/genogrove/canopy/issues"
 
 # pygenogrove is not yet published to PyPI; resolve it from its GitHub repo.
 # Pinning an immutable commit here is part of the Level 2 reproducibility commitment
@@ -60,7 +60,7 @@ Issues = "https://github.com/genogrove/ask/issues"
 pygenogrove = { git = "https://github.com/genogrove/pygenogrove", rev = "2584321499cb23f814456236f1c3564a2efa956c" }
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ask"]
+packages = ["src/canopy"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

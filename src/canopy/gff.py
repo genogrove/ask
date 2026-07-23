@@ -3,7 +3,7 @@
 
 The canonical GENCODE -> Grove transform. Pair with ``resources.resolve``::
 
-    from ask import gff, resources
+    from canopy import gff, resources
     g = gff.load_gff(resources.resolve("gencode.human"), region=("chr7", 55_000_000, 55_300_000))
 
 Targets the universal ``pg.Grove`` (JSON payloads + labelled edges), not the

@@ -8,7 +8,7 @@ import pytest
 
 pg = pytest.importorskip("pygenogrove")
 
-from ask.gff import load_gff
+from canopy.gff import load_gff
 
 GFF3 = (
     "##gff-version 3\n"
@@ -139,7 +139,7 @@ SHARDED = (
 
 
 def test_write_sharded_groves_splits_by_chromosome(tmp_path) -> None:
-    from ask.gff import write_sharded_groves
+    from canopy.gff import write_sharded_groves
 
     p = tmp_path / "two.gff3"
     p.write_text(SHARDED)

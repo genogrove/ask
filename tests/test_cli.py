@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Smoke tests for the CLI skeleton."""
 
-from ask.cli import build_parser, main
+from canopy.cli import build_parser, main
 
 
 def test_parser_builds():
@@ -15,4 +15,4 @@ def test_parser_builds():
 def test_no_question_prints_help_and_succeeds(capsys):
     assert main([]) == 0
     out = capsys.readouterr().out
-    assert "genogrove-ask" in out
+    assert "canopy" in out

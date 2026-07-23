@@ -9,9 +9,9 @@ import pytest
 
 pg = pytest.importorskip("pygenogrove")
 
-from ask import sandbox
-from ask.cli import _pygenogrove_site_dir
-from ask.gff import load_gff
+from canopy import sandbox
+from canopy.cli import _pygenogrove_site_dir
+from canopy.gff import load_gff
 
 GFF3 = (
     "##gff-version 3\n"
