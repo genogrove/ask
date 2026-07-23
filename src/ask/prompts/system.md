@@ -126,7 +126,6 @@ g.remove_edge(source, target) -> bool             # False if the edge did not ex
 g.has_edge(source, target) -> bool
 g.get_neighbors(source) -> list[Key]              # outgoing target keys
 g.get_edges(source) -> list                       # edge payloads, parallel to get_neighbors (None if unlabelled)
-g.get_edge_list(source) -> list[(Key, metadata)]  # (target, payload) pairs — the zip of the two above
 g.get_neighbors_if(source, predicate) -> list[Key]  # targets whose decoded metadata satisfies predicate(metadata)
 g.out_degree(source) -> int
 g.edge_count() -> int
